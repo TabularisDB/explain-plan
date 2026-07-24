@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+/* The explain views ship prebuilt from npm — tell Tailwind to scan them so
+   every utility class they emit is generated. */
+@source "../node_modules/@tabularis/explain/dist";
+
+@theme {
+  /* Expose CSS variables as Tailwind colors — same tokens as the Tabularis
+     desktop app, which the @tabularis/explain views rely on. */
+  --color-base: var(--bg-base);
+  --color-elevated: var(--bg-elevated);
+  --color-overlay: var(--bg-overlay);
+  --color-input: var(--bg-input);
+  --color-tooltip: var(--bg-tooltip);
+
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-surface-tertiary: var(--surface-tertiary);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-active: var(--surface-active);
+  --color-surface-disabled: var(--surface-disabled);
+
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+  --color-disabled: var(--text-disabled);
+  --color-accent: var(--text-accent);
+  --color-inverse: var(--text-inverse);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-success: var(--accent-success);
+  --color-accent-warning: var(--accent-warning);
+  --color-accent-error: var(--accent-error);
+  --color-accent-info: var(--accent-info);
+
+  --color-subtle: var(--border-subtle);
+  --color-default: var(--border-default);
+  --color-strong: var(--border-strong);
+  --color-focus: var(--border-focus);
+}
+
+:root {
+  --font-base: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-size-base: 14px;
+  --font-mono: "JetBrains Mono", "Consolas", "Courier New", monospace;
+
+  font-family: var(--font-base);
+  font-size: var(--font-size-base);
+  color-scheme: dark;
+
+  /* Tabularis Dark */
+  --bg-base: #020617;
+  --bg-elevated: #0f172a;
+  --bg-overlay: #1e293b;
+  --bg-input: #0f172a;
+  --bg-tooltip: #1e293b;
+
+  --surface-primary: #1e293b;
+  --surface-secondary: #334155;
+  --surface-tertiary: #475569;
+  --surface-hover: #334155;
+  --surface-active: #3b82f6;
+  --surface-disabled: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #7583a0;
+  --text-disabled: #475569;
+  --text-accent: #3b82f6;
+  --text-inverse: #020617;
+
+  --accent-primary: #3b82f6;
+  --accent-secondary: #8b5cf6;
+  --accent-success: #22c55e;
+  --accent-warning: #f59e0b;
+  --accent-error: #ef4444;
+  --accent-info: #06b6d4;
+
+  --color-error: #ef4444;
+  --color-error-text: #f87171;
+  --color-error-bg: rgba(127, 29, 29, 0.2);
+  --color-error-border: rgba(127, 29, 29, 0.5);
+
+  --color-success: #22c55e;
+  --color-success-text: #4ade80;
+  --color-success-bg: rgba(20, 83, 45, 0.2);
+  --color-success-border: rgba(20, 83, 45, 0.5);
+
+  --color-warning: #f59e0b;
+  --color-warning-text: #fbbf24;
+  --color-warning-bg: rgba(120, 53, 15, 0.2);
+  --color-warning-border: rgba(161, 98, 7, 0.5);
+
+  --color-info: #3b82f6;
+  --color-info-text: #60a5fa;
+  --color-info-bg: rgba(29, 78, 216, 0.2);
+  --color-info-border: rgba(29, 78, 216, 0.5);
+
+  --border-subtle: #1e293b;
+  --border-default: #334155;
+  --border-strong: #5b6b82;
+  --border-focus: #3b82f6;
+
+  --radius-sm: 0.25rem;
+  --radius-base: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .bg-base { background-color: var(--bg-base); }
+  .bg-elevated { background-color: var(--bg-elevated); }
+  .bg-overlay { background-color: var(--bg-overlay); }
+  .bg-input { background-color: var(--bg-input); }
+  .bg-tooltip { background-color: var(--bg-tooltip); }
+
+  .bg-surface-primary { background-color: var(--surface-primary); }
+  .bg-surface-secondary { background-color: var(--surface-secondary); }
+  .bg-surface-tertiary { background-color: var(--surface-tertiary); }
+  .bg-surface-hover { background-color: var(--surface-hover); }
+  .bg-surface-active { background-color: var(--surface-active); }
+  .bg-surface-disabled { background-color: var(--surface-disabled); }
+
+  .text-primary { color: var(--text-primary); }
+  .text-secondary { color: var(--text-secondary); }
+  .text-muted { color: var(--text-muted); }
+  .text-disabled { color: var(--text-disabled); }
+  .text-accent { color: var(--text-accent); }
+  .text-inverse { color: var(--text-inverse); }
+
+  .text-accent-primary { color: var(--accent-primary); }
+  .text-accent-secondary { color: var(--accent-secondary); }
+  .text-accent-success { color: var(--accent-success); }
+  .text-accent-warning { color: var(--accent-warning); }
+  .text-accent-error { color: var(--accent-error); }
+  .text-accent-info { color: var(--accent-info); }
+
+  .border-subtle { border-color: var(--border-subtle); }
+  .border-default { border-color: var(--border-default); }
+  .border-strong { border-color: var(--border-strong); }
+  .border-focus { border-color: var(--border-focus); }
+
+  .bg-accent-primary { background-color: var(--accent-primary); }
+  .bg-accent-secondary { background-color: var(--accent-secondary); }
+  .bg-accent-success { background-color: var(--accent-success); }
+  .bg-accent-warning { background-color: var(--accent-warning); }
+  .bg-accent-error { background-color: var(--accent-error); }
+  .bg-accent-info { background-color: var(--accent-info); }
+
+  .font-mono-theme { font-family: var(--font-mono); }
+
+  .font-mono.truncate {
+    min-width: 0;
+  }
+
+  .rounded-theme-sm { border-radius: var(--radius-sm); }
+  .rounded-theme { border-radius: var(--radius-base); }
+  .rounded-theme-lg { border-radius: var(--radius-lg); }
+  .rounded-theme-xl { border-radius: var(--radius-xl); }
+
+  .text-error { color: var(--color-error); }
+  .text-error-text { color: var(--color-error-text); }
+  .bg-error-bg { background-color: var(--color-error-bg); }
+  .border-error-border { border-color: var(--color-error-border); }
+
+  .text-success { color: var(--color-success); }
+  .text-success-text { color: var(--color-success-text); }
+  .bg-success-bg { background-color: var(--color-success-bg); }
+  .border-success-border { border-color: var(--color-success-border); }
+
+  .text-warning { color: var(--color-warning); }
+  .text-warning-text { color: var(--color-warning-text); }
+  .bg-warning-bg { background-color: var(--color-warning-bg); }
+  .border-warning-border { border-color: var(--color-warning-border); }
+
+  .text-info { color: var(--color-info); }
+  .text-info-text { color: var(--color-info-text); }
+  .bg-info-bg { background-color: var(--color-info-bg); }
+  .border-info-border { border-color: var(--color-info-border); }
+
+  .focus-border-focus:focus { border-color: var(--border-focus); }
+}
+
+select {
+  color-scheme: dark !important;
+}
+
+select,
+select option {
+  background-color: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-base) !important;
+}
+
+/* ReactFlow dark theme */
+.react-flow__controls {
+  background-color: var(--surface-primary) !important;
+  border: 1px solid var(--border-default) !important;
+}
+
+.react-flow__controls-button {
+  background-color: var(--surface-primary) !important;
+  border-bottom: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--surface-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+}
+
+.react-flow__minimap {
+  background-color: var(--surface-primary) !important;
+  border: 1px solid var(--border-default) !important;
+}
+
+.react-flow__edge-path {
+  stroke: var(--accent-primary) !important;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--text-accent) !important;
+}
+
+.react-flow__edge-text {
+  fill: var(--text-primary) !important;
+}
+
+.react-flow__edge-textbg {
+  fill: var(--surface-primary) !important;
+}
+
+/* Custom scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--surface-secondary);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-tertiary);
+}
+
+::selection {
+  background-color: var(--surface-active);
+  color: var(--text-primary);
+}

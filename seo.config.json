@@ -1,0 +1,22 @@
+{
+  "title": "Explain Plan — Visualize PostgreSQL, MySQL & SQLite query plans",
+  "description": "Free online EXPLAIN plan visualizer. Paste the EXPLAIN output of a PostgreSQL, MySQL, MariaDB or SQLite query and explore it as an interactive graph, diagram, table and statistics — with automatic performance findings. Nothing leaves your browser.",
+  "keywords": [
+    "explain plan",
+    "query plan visualizer",
+    "postgres explain analyze",
+    "mysql explain format=json",
+    "sqlite explain query plan",
+    "sql performance",
+    "query optimization",
+    "tabularis"
+  ],
+  "author": "Tabularis",
+  "siteName": "Tabularis Explain Plan",
+  "url": "https://explain.tabularis.dev",
+  "image": "/og.png",
+  "twitterCard": "summary_large_image",
+  "themeColor": "#020617",
+  "robots": "index, follow",
+  "locale": "en_US"
+}
