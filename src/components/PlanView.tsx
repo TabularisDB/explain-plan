@@ -16,6 +16,8 @@ import {
   type ExplainViewMode,
 } from "@tabularis/explain/react";
 
+import { AiUpsellView } from "./AiUpsellView";
+
 interface PlanViewProps {
   plan: ExplainPlan;
 }
@@ -45,7 +47,7 @@ export function PlanView({ plan }: PlanViewProps) {
         plan={plan}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
-        aiEnabled={false}
+        aiEnabled
       />
       <ExplainOverviewBar
         plan={plan}
@@ -54,7 +56,9 @@ export function PlanView({ plan }: PlanViewProps) {
       />
 
       <div className="min-h-0 flex-1 overflow-hidden">
-        {viewMode === "raw" && plan.raw_output ? (
+        {viewMode === "ai" ? (
+          <AiUpsellView />
+        ) : viewMode === "raw" && plan.raw_output ? (
           <pre className="custom-scrollbar h-full overflow-auto p-4 font-mono-theme text-xs leading-relaxed text-secondary">
             {plan.raw_output}
           </pre>

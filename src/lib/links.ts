@@ -8,4 +8,6 @@ export const TABULARIS = {
   npmPackage: "https://www.npmjs.com/package/@tabularis/explain",
   video: "https://tabularis.dev/videos/wiki/05-visual-explain.mp4",
   videoPoster: "https://tabularis.dev/videos/wiki/05-visual-explain.jpg",
+  videoOverview: "https://tabularis.dev/videos/overview.mp4",
+  videoOverviewPoster: "https://tabularis.dev/videos/overview-hero.webp",
 } as const;
