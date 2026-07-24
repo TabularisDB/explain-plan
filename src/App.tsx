@@ -20,14 +20,11 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-base">
-      <header className="flex shrink-0 items-center justify-between border-b border-default bg-elevated/50 px-6 py-3">
+    <div className="flex min-h-full flex-col bg-base">
+      <header className="flex h-14 shrink-0 items-center justify-between border-b border-default bg-elevated/50 px-6">
         <a href="/" className="flex items-center gap-2">
           <img src="/tabularis-logo.svg" alt="Tabularis" className="h-6 w-6" />
           <span className="text-sm font-bold text-primary">Explain Plan</span>
-          <span className="rounded bg-surface-secondary px-1.5 py-0.5 text-[10px] font-medium text-secondary">
-            Postgres · MySQL · SQLite
-          </span>
         </a>
         <div className="flex items-center gap-3">
           {plan && (
@@ -51,8 +48,16 @@ export default function App() {
         </div>
       </header>
 
-      <main className="min-h-0 flex-1 overflow-y-auto">
-        {plan ? <PlanView plan={plan} /> : <PlanInput onPlan={handlePlan} />}
+      <main className="flex-1">
+        {plan ? (
+          // The graph needs a definite height: fill the viewport below the
+          // header, with the footer flowing after it instead of staying fixed.
+          <div className="h-[calc(100dvh-3.5rem)] min-h-[420px]">
+            <PlanView plan={plan} />
+          </div>
+        ) : (
+          <PlanInput onPlan={handlePlan} />
+        )}
       </main>
 
       <Footer />
