@@ -15,7 +15,7 @@ const FOOTER_LINKS = [
 export function Footer() {
   return (
     <footer className="shrink-0 border-t border-default bg-elevated/50 px-6 py-5">
-      <div className="mx-auto max-w-5xl">
+      <div>
         {/* Top: brand + tagline on the left, Tabularis links on the right. */}
         <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
           <div className="flex items-center gap-3">
