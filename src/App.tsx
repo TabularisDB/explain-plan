@@ -4,6 +4,7 @@ import type { ExplainPlan } from "@tabularis/explain";
 import { PlanInput } from "./components/PlanInput";
 import { PlanView } from "./components/PlanView";
 import { Footer } from "./components/Footer";
+import { CookieConsent } from "./components/CookieConsent";
 import {
   TabularisPromoModal,
   isPromoDismissed,
@@ -63,6 +64,8 @@ export default function App() {
       <Footer />
 
       {showPromo && <TabularisPromoModal onClose={() => setShowPromo(false)} />}
+
+      <CookieConsent />
     </div>
   );
 }

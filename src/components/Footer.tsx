@@ -96,17 +96,36 @@ export function Footer() {
             </a>
             .
           </span>
-          <span>
-            © {new Date().getFullYear()} Tabularis Project — Crafted by{" "}
+          <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>
+              © {new Date().getFullYear()} Tabularis Project — Crafted by{" "}
+              <a
+                href="https://github.com/debba"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-primary"
+              >
+                Debba
+              </a>
+              .
+            </span>
             <a
-              href="https://github.com/debba"
+              href={TABULARIS.cookiePolicy}
               target="_blank"
               rel="noreferrer"
               className="hover:text-primary"
             >
-              Debba
+              Cookie Policy
             </a>
-            .
+            <button
+              type="button"
+              onClick={() =>
+                window.dispatchEvent(new Event("tabularis:manage-cookies"))
+              }
+              className="cursor-pointer hover:text-primary"
+            >
+              Manage Cookies
+            </button>
           </span>
         </div>
       </div>
