@@ -42,7 +42,9 @@ export function PlanView({ plan }: PlanViewProps) {
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
+    // `plan-view` scopes the mobile CSS overrides in index.css that restack
+    // the prebuilt @tabularis/explain desktop layouts on small screens.
+    <div className="plan-view flex h-full min-h-0 flex-col">
       <ExplainSummaryBar
         plan={plan}
         viewMode={viewMode}
@@ -81,8 +83,8 @@ export function PlanView({ plan }: PlanViewProps) {
         ) : viewMode === "stats" ? (
           <ExplainStatsView plan={plan} metrics={metrics} />
         ) : (
-          <div className="flex h-full">
-            <div className="min-w-0 flex-1 border-r border-default">
+          <div className="flex h-full flex-col md:flex-row">
+            <div className="min-h-0 min-w-0 flex-1 border-default md:border-r">
               <ExplainGraph
                 plan={plan}
                 metrics={metrics}
@@ -91,7 +93,13 @@ export function PlanView({ plan }: PlanViewProps) {
                 onSelectNode={setSelectedNodeId}
               />
             </div>
-            <div className="w-[320px] shrink-0 overflow-y-auto bg-base/50">
+            {/* On phones the details panel only appears once a node is
+                tapped, as a bottom sheet under the graph. */}
+            <div
+              className={`w-[320px] shrink-0 overflow-y-auto bg-base/50 ${
+                selectedNode ? "" : "max-md:hidden"
+              }`}
+            >
               <ExplainNodeDetails
                 node={selectedNode}
                 hasAnalyzeData={plan.has_analyze_data}

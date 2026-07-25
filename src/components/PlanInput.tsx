@@ -103,7 +103,7 @@ export function PlanInput({ onPlan }: PlanInputProps) {
                   onChange={(event) =>
                     setEngine(event.target.value as EngineChoice)
                   }
-                  className="rounded-lg border border-default bg-input px-3 py-1.5 text-sm text-primary focus:border-focus focus:outline-none"
+                  className="rounded-lg border border-default bg-input px-3 py-1.5 text-[16px] text-primary focus:border-focus focus:outline-none sm:text-sm"
                 >
                   {ENGINE_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -113,7 +113,7 @@ export function PlanInput({ onPlan }: PlanInputProps) {
                 </select>
               </label>
 
-              <div className="flex items-center gap-2 text-xs text-muted">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
                 Try a sample:
                 {SAMPLES.map((sample) => (
                   <button
@@ -142,7 +142,8 @@ export function PlanInput({ onPlan }: PlanInputProps) {
                 "MySQL:       EXPLAIN FORMAT=JSON SELECT …   or   EXPLAIN ANALYZE SELECT …\n" +
                 "SQLite:      EXPLAIN QUERY PLAN SELECT …"
               }
-              className="h-72 w-full resize-y rounded-lg border border-default bg-input/80 p-4 font-mono-theme text-xs text-primary shadow-inner backdrop-blur-sm placeholder:text-muted focus:border-focus focus:outline-none"
+              // 16px on phones: iOS Safari auto-zooms on focus below that.
+              className="h-72 w-full resize-y rounded-lg border border-default bg-input/80 p-4 font-mono-theme text-[16px] text-primary shadow-inner backdrop-blur-sm placeholder:text-muted focus:border-focus focus:outline-none sm:text-xs"
             />
 
             {error && (

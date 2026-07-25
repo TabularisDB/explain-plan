@@ -461,6 +461,122 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   Mobile layout for the analysis views. The @tabularis/explain components
+   ship prebuilt for desktop — single-row toolbars and fixed 320px details
+   side panels — so these overrides restack them on small screens. */
+
+@media (max-width: 767px) {
+  /* Summary bar: let the timing metrics wrap instead of overflowing. */
+  .plan-view > div:first-child {
+    flex-wrap: wrap;
+    row-gap: 0.375rem;
+  }
+
+  /* Segmented toggles (view-mode tabs, diagram metric picker) scroll
+     horizontally instead of squeezing their buttons. */
+  .plan-view .bg-surface-secondary.rounded-lg {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .plan-view .bg-surface-secondary.rounded-lg::-webkit-scrollbar {
+    display: none;
+  }
+  .plan-view .bg-surface-secondary.rounded-lg button {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* View-mode tabs take their own full-width row; inactive tabs collapse to
+     icon-only (the svg keeps its attribute size at font-size 0) while the
+     active tab shows its label, so all six fit without scrolling. */
+  .plan-view > div:first-child > .bg-surface-secondary.rounded-lg {
+    flex: 1 1 100%;
+  }
+  .plan-view > div:first-child > .bg-surface-secondary.rounded-lg button {
+    flex: 1 0 auto;
+    justify-content: center;
+    gap: 0;
+    padding: 0.45rem 0.5rem;
+    font-size: 0;
+  }
+  .plan-view
+    > div:first-child
+    > .bg-surface-secondary.rounded-lg
+    button[class*="bg-blue-900"],
+  .plan-view
+    > div:first-child
+    > .bg-surface-secondary.rounded-lg
+    button[class*="bg-purple-900"] {
+    gap: 0.375rem;
+    font-size: 11px;
+  }
+
+  /* Overview: the finding cards become one horizontally-scrollable strip
+     instead of a tall wrapped stack that pushes the plan off-screen. */
+  /* (.gap-2 picks the finding cards; the driver-notes legend uses gap-x-4
+     and must keep wrapping its long text.) */
+  .plan-view > div:nth-child(2) .flex-wrap.gap-2 {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .plan-view > div:nth-child(2) .flex-wrap.gap-2::-webkit-scrollbar {
+    display: none;
+  }
+  .plan-view > div:nth-child(2) .flex-wrap.gap-2 > button {
+    flex: 0 0 auto;
+    max-width: 240px;
+  }
+  .plan-view > div:nth-child(2) {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  /* Tables: tighter cells, and in the tree table drop the low-value columns
+     (row index, estimate gap, filter — the details sheet still has them) so
+     type/relation/cost/rows/time fit with little or no horizontal scrolling.
+     nth-last-child keeps working when the optional actual-rows column is
+     absent. Scoped via :has(> thead) so the diagram/stats tables are
+     untouched. */
+  .plan-view table th,
+  .plan-view table td {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .plan-view table:has(> thead) th:first-child,
+  .plan-view table:has(> thead) td:first-child,
+  .plan-view table:has(> thead) th:nth-last-child(-n + 2),
+  .plan-view table:has(> thead) td:nth-last-child(-n + 2) {
+    display: none;
+  }
+
+  /* Diagram view: shrink the heat-bar column so node names keep room. */
+  .plan-view table td[class*="w-1/2"] {
+    width: 30%;
+  }
+
+  /* Views pairing content with a fixed 320px node-details side panel stack
+     vertically: content on top, details as a capped bottom sheet. */
+  .plan-view div:has(> [class*="w-[320px]"]) {
+    flex-direction: column;
+  }
+  .plan-view div:has(> [class*="w-[320px]"]) > :first-child {
+    min-height: 0;
+    border-right: none;
+  }
+  .plan-view [class*="w-[320px]"] {
+    width: 100%;
+    flex: 0 0 auto;
+    max-height: 45%;
+    overflow-y: auto;
+    border-top: 1px solid var(--border-default);
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Cookie consent banner — same markup and look as tabularis.dev. */
 
 .cookie-banner {
