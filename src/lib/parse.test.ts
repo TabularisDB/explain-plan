@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parsePlan } from "./parse";
+import { parsePlan, prettifyJson } from "./parse";
 import { SAMPLES } from "../samples";
 
 const sample = (engine: string) =>
@@ -67,5 +67,33 @@ describe("parsePlan", () => {
     expect(() => parsePlan("not a plan at all", "auto")).toThrow(
       /Could not detect/,
     );
+  });
+});
+
+describe("prettifyJson", () => {
+  it("pretty-prints a compact JSON object", () => {
+    expect(prettifyJson('{"query_block":{"select_id":1}}')).toBe(
+      '{\n  "query_block": {\n    "select_id": 1\n  }\n}',
+    );
+  });
+
+  it("pretty-prints a compact JSON array", () => {
+    expect(prettifyJson('[{"Plan":{"Node Type":"Seq Scan"}}]')).toBe(
+      '[\n  {\n    "Plan": {\n      "Node Type": "Seq Scan"\n    }\n  }\n]',
+    );
+  });
+
+  it("leaves plain-text plans alone", () => {
+    expect(prettifyJson("Seq Scan on users  (cost=0.00..155.00)")).toBeNull();
+    expect(prettifyJson(sample("sqlite"))).toBeNull();
+  });
+
+  it("leaves invalid JSON alone", () => {
+    expect(prettifyJson('{"query_block": broken')).toBeNull();
+  });
+
+  it("leaves already-formatted JSON alone", () => {
+    const formatted = '{\n  "a": 1\n}';
+    expect(prettifyJson(formatted)).toBeNull();
   });
 });

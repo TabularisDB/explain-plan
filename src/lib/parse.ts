@@ -16,6 +16,25 @@ export const ENGINE_OPTIONS: Array<{ value: EngineChoice; label: string }> = [
 ];
 
 /**
+ * Pretty-print pasted text when it is a JSON document (Postgres FORMAT JSON
+ * array or MySQL FORMAT=JSON object). Returns null for plain-text plans,
+ * invalid JSON, or JSON that is already formatted this way, so the caller
+ * can leave the paste untouched.
+ */
+export function prettifyJson(text: string): string | null {
+  const trimmed = text.trim();
+  if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) {
+    return null;
+  }
+  try {
+    const formatted = JSON.stringify(JSON.parse(trimmed), null, 2);
+    return formatted === trimmed ? null : formatted;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Parse a pasted EXPLAIN payload for the chosen engine. With `"auto"` the
  * engines are tried in order of how distinctive their formats are —
  * Postgres (JSON array / `cost=` text), SQLite (`|--` tree or `id|parent|…`

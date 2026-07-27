@@ -803,3 +803,37 @@ select option {
   background-color: var(--surface-active);
   color: var(--text-primary);
 }
+
+/* Plan input editor (react-simple-code-editor + Prism JSON highlighting) */
+.plan-editor textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* react-simple-code-editor makes the textarea text transparent so the
+   highlighted <pre> shows through; WebKit propagates that to the
+   placeholder, so restore it while the editor is empty. */
+.plan-editor textarea:placeholder-shown {
+  -webkit-text-fill-color: var(--text-muted);
+}
+
+.plan-editor .token.property {
+  color: var(--color-sky-300, #7dd3fc);
+}
+
+.plan-editor .token.string {
+  color: var(--color-emerald-300, #6ee7b7);
+}
+
+.plan-editor .token.number {
+  color: var(--color-amber-300, #fcd34d);
+}
+
+.plan-editor .token.boolean,
+.plan-editor .token.null {
+  color: var(--color-violet-300, #c4b5fd);
+}
+
+.plan-editor .token.punctuation,
+.plan-editor .token.operator {
+  color: var(--text-muted);
+}

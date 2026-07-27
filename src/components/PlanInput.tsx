@@ -1,7 +1,15 @@
-import { useState, type FormEvent } from "react";
+import { useState, type ClipboardEvent, type FormEvent } from "react";
+import Editor from "react-simple-code-editor";
+import Prism from "prismjs";
+import "prismjs/components/prism-json";
 import { AlertCircle, GitBranch, Play, ShieldCheck, Zap } from "lucide-react";
 import type { ExplainPlan } from "@tabularis/explain";
-import { ENGINE_OPTIONS, parsePlan, type EngineChoice } from "../lib/parse";
+import {
+  ENGINE_OPTIONS,
+  parsePlan,
+  prettifyJson,
+  type EngineChoice,
+} from "../lib/parse";
 import { TABULARIS } from "../lib/links";
 import { ShareLinks } from "./ShareLinks";
 import { SAMPLES } from "../samples";
@@ -29,6 +37,17 @@ const HIGHLIGHTS = [
   },
 ] as const;
 
+/**
+ * Highlight JSON documents (Postgres FORMAT JSON / MySQL FORMAT=JSON) with
+ * Prism; text-format plans are rendered as-is (HTML-escaped).
+ */
+function highlightPlan(code: string): string {
+  if (/^\s*[{[]/.test(code)) {
+    return Prism.highlight(code, Prism.languages.json, "json");
+  }
+  return code.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+}
+
 interface PlanInputProps {
   onPlan: (plan: ExplainPlan) => void;
 }
@@ -37,6 +56,21 @@ export function PlanInput({ onPlan }: PlanInputProps) {
   const [engine, setEngine] = useState<EngineChoice>("auto");
   const [raw, setRaw] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  // The paste event bubbles from the editor's inner textarea up to the
+  // wrapping <div>, where react-simple-code-editor forwards extra props.
+  const handlePaste = (event: ClipboardEvent<HTMLDivElement>) => {
+    const formatted = prettifyJson(event.clipboardData.getData("text"));
+    const target = event.target;
+    if (formatted === null || !(target instanceof HTMLTextAreaElement)) {
+      return;
+    }
+    event.preventDefault();
+    const { selectionStart, selectionEnd, value } = target;
+    setRaw(
+      value.slice(0, selectionStart) + formatted + value.slice(selectionEnd),
+    );
+  };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -132,19 +166,25 @@ export function PlanInput({ onPlan }: PlanInputProps) {
               </div>
             </div>
 
-            <textarea
-              value={raw}
-              onChange={(event) => setRaw(event.target.value)}
-              spellCheck={false}
-              placeholder={
-                "Paste your EXPLAIN output here…\n\n" +
-                "PostgreSQL:  EXPLAIN (ANALYZE, BUFFERS) SELECT …   or   EXPLAIN (FORMAT JSON) SELECT …\n" +
-                "MySQL:       EXPLAIN FORMAT=JSON SELECT …   or   EXPLAIN ANALYZE SELECT …\n" +
-                "SQLite:      EXPLAIN QUERY PLAN SELECT …"
-              }
-              // 16px on phones: iOS Safari auto-zooms on focus below that.
-              className="h-72 w-full resize-y rounded-lg border border-default bg-input/80 p-4 font-mono-theme text-[16px] text-primary shadow-inner backdrop-blur-sm placeholder:text-muted focus:border-focus focus:outline-none sm:text-xs"
-            />
+            {/* 16px on phones: iOS Safari auto-zooms on focus below that. */}
+            <div className="plan-editor h-72 resize-y overflow-auto rounded-lg border border-default bg-input/80 font-mono-theme text-[16px] text-primary shadow-inner backdrop-blur-sm focus-within:border-focus sm:text-xs">
+              <Editor
+                value={raw}
+                onValueChange={setRaw}
+                highlight={highlightPlan}
+                onPaste={handlePaste}
+                padding={16}
+                spellCheck={false}
+                placeholder={
+                  "Paste your EXPLAIN output here…\n\n" +
+                  "PostgreSQL:  EXPLAIN (ANALYZE, BUFFERS) SELECT …   or   EXPLAIN (FORMAT JSON) SELECT …\n" +
+                  "MySQL:       EXPLAIN FORMAT=JSON SELECT …   or   EXPLAIN ANALYZE SELECT …\n" +
+                  "SQLite:      EXPLAIN QUERY PLAN SELECT …"
+                }
+                textareaClassName="focus:outline-none"
+                className="min-h-full"
+              />
+            </div>
 
             {error && (
               <div className="flex items-start gap-2 rounded-lg border border-error-border bg-error-bg px-4 py-3 text-sm text-error-text">
