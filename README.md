@@ -1,5 +1,7 @@
 # Explain Plan
 
+[![Discord](https://img.shields.io/discord/1502944695808950282?color=5865F2&logo=discord&logoColor=white)](https://discord.com/invite/K2hmhfHRSt)
+
 A free online EXPLAIN plan visualizer: paste the EXPLAIN output of
 a **PostgreSQL**, **MySQL/MariaDB** or **SQLite** query and explore it as an
 interactive graph, diagram, table and statistics view — with automatic
@@ -12,6 +14,8 @@ Built on [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain
 the engine behind the [Visual EXPLAIN](https://tabularis.dev/solutions/visual-explain)
 feature of [Tabularis](https://tabularis.dev), and styled with the same
 Tabularis dark theme.
+
+**Discord** — [Join our Discord server](https://discord.com/invite/K2hmhfHRSt) to talk with the maintainers, share feedback, and get help from the community.
 
 ## Supported input formats
 
