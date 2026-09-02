@@ -1,4 +1,8 @@
 allowBuilds:
   esbuild: false
 minimumReleaseAgeExclude:
-  - '@tabularis/explain@0.1.0'
+  - '@tabularis/explain@0.2.0'
+  - '@tabularis/explain-sqlserver@1.0.0-beta.1'
+overrides:
+  '@tabularis/explain@^0.2.0': file:vendor/tabularis-explain-0.2.0.tgz
+  '@tabularis/explain-sqlserver@^1.0.0-beta.1': file:vendor/tabularis-explain-sqlserver-1.0.0-beta.1.tgz

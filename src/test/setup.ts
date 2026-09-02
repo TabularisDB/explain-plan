@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom/vitest";
+import "@tabularis/explain-sqlserver";
 
 // jsdom lacks the observers and media APIs @xyflow/react touches.
 class ResizeObserverStub {

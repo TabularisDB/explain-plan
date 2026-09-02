@@ -2,7 +2,7 @@
   "name": "explain-plan",
   "private": true,
   "version": "0.1.0",
-  "description": "Paste a PostgreSQL, MySQL/MariaDB or SQLite EXPLAIN output and visualise the query plan.",
+  "description": "Paste a PostgreSQL, MySQL/MariaDB, SQLite or SQL Server EXPLAIN output and visualise the query plan.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@tabularis/explain": "^0.1.0",
+    "@tabularis/explain": "^0.2.0",
+    "@tabularis/explain-sqlserver": "^1.0.0-beta.1",
     "@xyflow/react": "^12.10.2",
     "clsx": "^2.1.1",
     "dagre": "^0.8.5",

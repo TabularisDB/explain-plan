@@ -13,6 +13,7 @@ export const ENGINE_OPTIONS: Array<{ value: EngineChoice; label: string }> = [
   { value: "postgres", label: "PostgreSQL" },
   { value: "mysql", label: "MySQL / MariaDB" },
   { value: "sqlite", label: "SQLite" },
+  { value: "sqlserver", label: "SQL Server" },
 ];
 
 /**
@@ -36,9 +37,10 @@ export function prettifyJson(text: string): string | null {
 
 /**
  * Parse a pasted EXPLAIN payload for the chosen engine. With `"auto"` the
- * engines are tried in order of how distinctive their formats are —
- * Postgres (JSON array / `cost=` text), SQLite (`|--` tree or `id|parent|…`
- * rows), then MySQL, whose text parser is the most permissive.
+ * engines are tried in order of how distinctive their formats are — SQL
+ * Server (`ShowPlanXML`), Postgres (JSON array / `cost=` text), SQLite (`|--`
+ * tree or `id|parent|…` rows), then MySQL, whose text parser is the most
+ * permissive.
  */
 export function parsePlan(raw: string, engine: EngineChoice): ExplainPlan {
   const trimmed = raw.trim();
@@ -53,7 +55,12 @@ export function parsePlan(raw: string, engine: EngineChoice): ExplainPlan {
     return parseExplainFor(trimmed, engine);
   }
 
-  for (const candidate of ["postgres", "sqlite", "mysql"] as const) {
+  for (const candidate of [
+    "sqlserver",
+    "postgres",
+    "sqlite",
+    "mysql",
+  ] as const) {
     // The MySQL text parser accepts almost any text, so when sniffing only
     // hand it input that plausibly is an EXPLAIN ANALYZE tree ("-> " lines)
     // or a FORMAT=JSON document.
