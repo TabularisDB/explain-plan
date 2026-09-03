@@ -3,9 +3,9 @@
 [![Discord](https://img.shields.io/discord/1502944695808950282?color=5865F2&logo=discord&logoColor=white)](https://discord.com/invite/K2hmhfHRSt)
 
 A free online EXPLAIN plan visualizer: paste the EXPLAIN output of
-a **PostgreSQL**, **MySQL/MariaDB** or **SQLite** query and explore it as an
-interactive graph, diagram, table and statistics view — with automatic
-performance findings.
+a **PostgreSQL**, **MySQL/MariaDB**, **SQLite** or **SQL Server** query and
+explore it as an interactive graph, diagram, table and statistics view — with
+automatic performance findings.
 
 Everything runs in the browser. No query is ever executed and nothing is
 uploaded to a server.
@@ -24,14 +24,17 @@ Tabularis dark theme.
 | PostgreSQL | `EXPLAIN (FORMAT JSON)`, plain `EXPLAIN` / `EXPLAIN ANALYZE` text |
 | MySQL / MariaDB | `EXPLAIN FORMAT=JSON`, `EXPLAIN ANALYZE` / `ANALYZE FORMAT=TEXT` trees |
 | SQLite | `EXPLAIN QUERY PLAN` — the sqlite3 shell tree (`|--` / `` `-- ``) or raw `id\|parent\|…\|detail` rows |
+| SQL Server | `SHOWPLAN_XML` estimated plans and `STATISTICS XML` actual plans (`ShowPlanXML` documents) |
 
 The engine can be selected explicitly or auto-detected from the pasted text.
+SQL Server's `ShowPlanXML` root element makes its format unambiguous.
 
 ## Stack
 
 - [Vite](https://vite.dev) + [React 19](https://react.dev) + TypeScript
 - [Tailwind CSS 4](https://tailwindcss.com) with the Tabularis colour tokens
 - [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain) for parsing, analysis and the plan views
+- [`@tabularis/explain-sqlserver`](https://www.npmjs.com/package/@tabularis/explain-sqlserver) for SQL Server SHOWPLAN XML
 - [Vitest](https://vitest.dev) + Testing Library for tests
 
 ## Development

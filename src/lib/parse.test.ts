@@ -1,9 +1,23 @@
+import { getExplainParser } from "@tabularis/explain";
 import { describe, expect, it } from "vitest";
 import { parsePlan, prettifyJson } from "./parse";
 import { SAMPLES } from "../samples";
+import SQLSERVER_TRIVIAL_SCAN from "../test/fixtures/sqlserver-trivial-scan.xml?raw";
 
 const sample = (engine: string) =>
   SAMPLES.find((candidate) => candidate.engine === engine)!.text;
+
+describe("SQL Server parser registration", () => {
+  it("registers SHOWPLAN XML before application parsing starts", () => {
+    const parser = getExplainParser("sqlserver-showplan-xml");
+    expect(parser).toMatchObject({
+      engine: "sqlserver",
+      label: "SQL Server SHOWPLAN XML",
+    });
+    expect(parser?.parse).toBeTypeOf("function");
+    expect(parser?.sniff?.(sample("sqlserver"))).toBe(true);
+  });
+});
 
 describe("parsePlan", () => {
   it("parses the PostgreSQL sample with its engine hint", () => {
@@ -32,12 +46,33 @@ describe("parsePlan", () => {
     expect(details).toContain("Search");
   });
 
+  it("parses the SQL Server STATISTICS XML sample with its engine hint", () => {
+    const plan = parsePlan(sample("sqlserver"), "sqlserver");
+    expect(plan.driver).toBe("sqlserver");
+    expect(plan.root.node_type).toBe("Table Scan");
+    expect(plan.root.relation).toBe("ss034_small");
+    expect(plan.root.actual_rows).toBe(2);
+    expect(plan.root.actual_time_ms).toBe(0);
+    expect(plan.execution_time_ms).toBe(0);
+    expect(plan.has_analyze_data).toBe(true);
+  });
+
+  it("keeps estimated-only SQL Server plans free of invented timings", () => {
+    const plan = parsePlan(SQLSERVER_TRIVIAL_SCAN, "sqlserver");
+    expect(plan.root.node_type).toBe("Table Scan");
+    expect(plan.root.actual_rows).toBeNull();
+    expect(plan.root.actual_time_ms).toBeNull();
+    expect(plan.execution_time_ms).toBeNull();
+    expect(plan.has_analyze_data).toBe(false);
+  });
+
   it("auto-detects each sample's engine", () => {
     expect(parsePlan(sample("postgres"), "auto").root.node_type).toBe(
       "Hash Join",
     );
     expect(parsePlan(sample("mysql"), "auto").driver).toBe("mysql");
     expect(parsePlan(sample("sqlite"), "auto").driver).toBe("sqlite");
+    expect(parsePlan(sample("sqlserver"), "auto").driver).toBe("sqlserver");
   });
 
   it("parses Postgres EXPLAIN (FORMAT JSON) output", () => {

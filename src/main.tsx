@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import "@tabularis/explain-sqlserver";
 import "@xyflow/react/dist/style.css";
 import "./index.css";
 import "./i18n";

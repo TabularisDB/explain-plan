@@ -1,12 +1,14 @@
 {
-  "title": "Explain Plan — Visualize PostgreSQL, MySQL & SQLite query plans",
-  "description": "Free online EXPLAIN plan visualizer. Paste the EXPLAIN output of a PostgreSQL, MySQL, MariaDB or SQLite query and explore it as an interactive graph, diagram, table and statistics — with automatic performance findings. Nothing leaves your browser.",
+  "title": "Explain Plan — PostgreSQL, MySQL, SQLite & SQL Server viewer",
+  "description": "Free online EXPLAIN plan and SHOWPLAN XML viewer. Paste a PostgreSQL, MySQL, MariaDB, SQLite or SQL Server execution plan and explore its graph, diagram, table and statistics. Nothing leaves your browser.",
   "keywords": [
     "explain plan",
     "query plan visualizer",
     "postgres explain analyze",
     "mysql explain format=json",
     "sqlite explain query plan",
+    "SQL Server execution plan",
+    "SHOWPLAN XML viewer",
     "sql performance",
     "query optimization",
     "tabularis"

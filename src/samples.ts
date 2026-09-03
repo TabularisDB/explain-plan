@@ -1,4 +1,5 @@
 import type { EngineChoice } from "./lib/parse";
+import SQLSERVER_STATISTICS_XML from "./samples/sqlserver-statistics.xml?raw";
 
 export interface SamplePlan {
   engine: Exclude<EngineChoice, "auto">;
@@ -87,4 +88,9 @@ export const SAMPLES: SamplePlan[] = [
   { engine: "postgres", label: "PostgreSQL sample", text: POSTGRES_SAMPLE },
   { engine: "mysql", label: "MySQL sample", text: MYSQL_SAMPLE },
   { engine: "sqlite", label: "SQLite sample", text: SQLITE_SAMPLE },
+  {
+    engine: "sqlserver",
+    label: "SQL Server sample",
+    text: SQLSERVER_STATISTICS_XML,
+  },
 ];

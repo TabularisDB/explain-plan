@@ -24,6 +24,9 @@ describe("App", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "SQLite" })).toBeInTheDocument();
     expect(
+      screen.getByRole("option", { name: "SQL Server" }),
+    ).toBeInTheDocument();
+    expect(
       screen.getByRole("link", { name: "Tabularis" }),
     ).toHaveAttribute("href", "https://tabularis.dev");
     expect(
@@ -51,6 +54,32 @@ describe("App", () => {
     // …and the plan is rendered behind it.
     expect(screen.getByText("Graph")).toBeInTheDocument();
     expect(screen.getByText("Raw Output")).toBeInTheDocument();
+  });
+
+  it("renders every plan view for a SQL Server runtime sample", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    await user.click(
+      screen.getByRole("button", { name: "SQL Server sample" }),
+    );
+    expect(screen.getByRole("combobox")).toHaveValue("sqlserver");
+    await user.click(screen.getByRole("button", { name: /visualize plan/i }));
+    await user.click(
+      screen.getByRole("button", { name: /continue in browser/i }),
+    );
+
+    expect(container.querySelector(".react-flow")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Diagram" }));
+    expect(screen.getByText("Metric")).toBeInTheDocument();
+    expect(screen.getByText("Table Scan")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Table" }));
+    expect(screen.getByRole("table")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Stats" }));
+    expect(screen.getByText("Time by Operation")).toBeInTheDocument();
   });
 
   it("shows a readable error for unparseable input", async () => {
