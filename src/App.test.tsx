@@ -73,7 +73,7 @@ describe("App", () => {
 
     await user.click(screen.getByRole("button", { name: "Diagram" }));
     expect(screen.getByText("Metric")).toBeInTheDocument();
-    expect(screen.getByText("Table Scan")).toBeInTheDocument();
+    expect(screen.getByText("Nested Loops")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Table" }));
     expect(screen.getByRole("table")).toBeInTheDocument();

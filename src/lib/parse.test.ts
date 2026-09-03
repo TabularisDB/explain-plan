@@ -49,12 +49,33 @@ describe("parsePlan", () => {
   it("parses the SQL Server STATISTICS XML sample with its engine hint", () => {
     const plan = parsePlan(sample("sqlserver"), "sqlserver");
     expect(plan.driver).toBe("sqlserver");
-    expect(plan.root.node_type).toBe("Table Scan");
-    expect(plan.root.relation).toBe("ss034_small");
-    expect(plan.root.actual_rows).toBe(2);
-    expect(plan.root.actual_time_ms).toBe(0);
-    expect(plan.execution_time_ms).toBe(0);
+    expect(plan.root.node_type).toBe("Top");
+    expect(plan.root.actual_rows).toBe(50);
+    expect(plan.root.actual_time_ms).toBe(11);
+    expect(plan.execution_time_ms).toBe(11);
     expect(plan.has_analyze_data).toBe(true);
+
+    const walk = (node: typeof plan.root): string[] => [
+      node.node_type,
+      ...node.children.flatMap(walk),
+    ];
+    expect(walk(plan.root)).toEqual([
+      "Top",
+      "Sort",
+      "Compute Scalar",
+      "Hash Match",
+      "Nested Loops",
+      "Index Seek",
+      "Index Seek",
+    ]);
+
+    const join = plan.root.children[0].children[0].children[0].children[0];
+    expect(join.join_type).toBe("Inner Join");
+    const [customers, orders] = join.children;
+    expect(customers.relation).toBe("customers");
+    expect(orders.relation).toBe("orders");
+    expect(orders.actual_loops).toBe(412);
+    expect(orders.actual_rows).toBe(2137);
   });
 
   it("keeps estimated-only SQL Server plans free of invented timings", () => {

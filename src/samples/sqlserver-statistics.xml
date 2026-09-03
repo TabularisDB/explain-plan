@@ -1,1 +1,316 @@
-<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.564" Build="16.0.4265.3"><BatchSequence><Batch><Statements><StmtSimple StatementText="SELECT [id],[label] FROM [dbo].[ss034_small] WHERE [id]&gt;=@1" StatementId="1" StatementCompId="1" StatementType="SELECT" StatementSqlHandle="0x0900CFAC7C37F8E21FFA2C8796C91AF25E290000000000000000000000000000000000000000000000000000" DatabaseContextSettingsId="2" ParentObjectId="0" StatementParameterizationType="2" RetrievedFromCache="true" StatementSubTreeCost="0.0032853" StatementEstRows="2" SecurityPolicyApplied="false" StatementOptmLevel="TRIVIAL" QueryHash="0x84CF7ABBFEB7E147" QueryPlanHash="0x94670C99E18DC0DD" CardinalityEstimationModelVersion="160"><StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false"></StatementSetOptions><QueryPlan DegreeOfParallelism="1" CachedPlanSize="24" CompileTime="3" CompileCPU="3" CompileMemory="112"><MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0" GrantedMemory="0" MaxUsedMemory="0"></MemoryGrantInfo><OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="327411" EstimatedPagesCached="163705" EstimatedAvailableDegreeOfParallelism="4" MaxCompileMemory="18250776"></OptimizerHardwareDependentProperties><OptimizerStatsUsage><StatisticsInfo LastUpdate="2026-09-02T21:20:55.68" ModificationCount="0" SamplingPercent="100" Statistics="[_WA_Sys_00000001_27F8EE98]" Table="[ss034_small]" Schema="[dbo]" Database="[tabularis_test]"></StatisticsInfo></OptimizerStatsUsage><QueryTimeStats ElapsedTime="0" CpuTime="0"></QueryTimeStats><RelOp NodeId="0" PhysicalOp="Table Scan" LogicalOp="Table Scan" EstimateRows="2" EstimatedRowsRead="3" EstimateIO="0.0032035" EstimateCPU="8.18e-05" AvgRowSize="65" EstimatedTotalSubtreeCost="0.0032853" TableCardinality="3" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row"><OutputList><ColumnReference Database="[tabularis_test]" Schema="[dbo]" Table="[ss034_small]" Column="id"></ColumnReference><ColumnReference Database="[tabularis_test]" Schema="[dbo]" Table="[ss034_small]" Column="label"></ColumnReference></OutputList><RunTimeInformation><RunTimeCountersPerThread Thread="0" ActualRows="2" Batches="0" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="1" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" ActualRowsRead="3" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row"></RunTimeCountersPerThread></RunTimeInformation><TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0" Storage="RowStore"><DefinedValues><DefinedValue><ColumnReference Database="[tabularis_test]" Schema="[dbo]" Table="[ss034_small]" Column="id"></ColumnReference></DefinedValue><DefinedValue><ColumnReference Database="[tabularis_test]" Schema="[dbo]" Table="[ss034_small]" Column="label"></ColumnReference></DefinedValue></DefinedValues><Object Database="[tabularis_test]" Schema="[dbo]" Table="[ss034_small]" IndexKind="Heap" Storage="RowStore"></Object><Predicate><ScalarOperator ScalarString="[tabularis_test].[dbo].[ss034_small].[id]&gt;=CONVERT_IMPLICIT(int,[@1],0)"><Compare CompareOp="GE"><ScalarOperator><Identifier><ColumnReference Database="[tabularis_test]" Schema="[dbo]" Table="[ss034_small]" Column="id"></ColumnReference></Identifier></ScalarOperator><ScalarOperator><Identifier><ColumnReference Column="ConstExpr1003"><ScalarOperator><Convert DataType="int" Style="0" Implicit="1"><ScalarOperator><Identifier><ColumnReference Column="@1"></ColumnReference></Identifier></ScalarOperator></Convert></ScalarOperator></ColumnReference></Identifier></ScalarOperator></Compare></ScalarOperator></Predicate></TableScan></RelOp><ParameterList><ColumnReference Column="@1" ParameterDataType="tinyint" ParameterCompiledValue="(2)" ParameterRuntimeValue="(2)"></ColumnReference></ParameterList></QueryPlan></StmtSimple></Statements></Batch></BatchSequence></ShowPlanXML>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.564" Build="16.0.4265.3">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="SELECT TOP (50) c.name, c.country, COUNT(o.id) AS orders, SUM(o.total) AS revenue FROM dbo.customers AS c JOIN dbo.orders AS o ON o.customer_id = c.id WHERE c.country = N'IT' AND o.created_at &gt;= '2026-01-01' GROUP BY c.name, c.country ORDER BY revenue DESC" StatementId="1" StatementCompId="1" StatementType="SELECT" StatementSqlHandle="0x0900D3A6E1B27F4C9A1E5C2B7D8F0A3E6B41000000000000000000000000000000000000000000000000000000" DatabaseContextSettingsId="2" ParentObjectId="0" StatementParameterizationType="0" RetrievedFromCache="false" StatementSubTreeCost="1.46213" StatementEstRows="50" SecurityPolicyApplied="false" StatementOptmLevel="FULL" StatementOptmEarlyAbortReason="GoodEnoughPlanFound" QueryHash="0x2F7A9C1E4B8D6053" QueryPlanHash="0xA1C3E5F7B9D02468" CardinalityEstimationModelVersion="160">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false"></StatementSetOptions>
+          <QueryPlan DegreeOfParallelism="1" MemoryGrant="1184" CachedPlanSize="72" CompileTime="14" CompileCPU="14" CompileMemory="1216">
+            <MissingIndexes>
+              <MissingIndexGroup Impact="38.4127">
+                <MissingIndex Database="[shop]" Schema="[dbo]" Table="[orders]">
+                  <ColumnGroup Usage="EQUALITY">
+                    <Column Name="[customer_id]" ColumnId="2"></Column>
+                  </ColumnGroup>
+                  <ColumnGroup Usage="INEQUALITY">
+                    <Column Name="[created_at]" ColumnId="4"></Column>
+                  </ColumnGroup>
+                  <ColumnGroup Usage="INCLUDE">
+                    <Column Name="[total]" ColumnId="3"></Column>
+                  </ColumnGroup>
+                </MissingIndex>
+              </MissingIndexGroup>
+            </MissingIndexes>
+            <MemoryGrantInfo SerialRequiredMemory="512" SerialDesiredMemory="1184" RequiredMemory="512" DesiredMemory="1184" RequestedMemory="1184" GrantWaitTime="0" GrantedMemory="1184" MaxUsedMemory="368" MaxQueryMemory="1123504"></MemoryGrantInfo>
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="327411" EstimatedPagesCached="163705" EstimatedAvailableDegreeOfParallelism="4" MaxCompileMemory="18250776"></OptimizerHardwareDependentProperties>
+            <OptimizerStatsUsage>
+              <StatisticsInfo LastUpdate="2026-09-01T08:12:41.37" ModificationCount="0" SamplingPercent="100" Statistics="[IX_customers_country]" Table="[customers]" Schema="[dbo]" Database="[shop]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2026-09-01T08:12:41.40" ModificationCount="1284" SamplingPercent="100" Statistics="[IX_orders_customer]" Table="[orders]" Schema="[dbo]" Database="[shop]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2026-09-01T08:12:41.40" ModificationCount="1284" SamplingPercent="100" Statistics="[_WA_Sys_00000004_1B0907CE]" Table="[orders]" Schema="[dbo]" Database="[shop]"></StatisticsInfo>
+            </OptimizerStatsUsage>
+            <QueryTimeStats CpuTime="9" ElapsedTime="11"></QueryTimeStats>
+            <RelOp NodeId="0" PhysicalOp="Top" LogicalOp="Top" EstimateRows="50" EstimateIO="0" EstimateCPU="5e-06" AvgRowSize="47" EstimatedTotalSubtreeCost="1.46213" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList>
+                <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                <ColumnReference Column="Expr1004"></ColumnReference>
+                <ColumnReference Column="Expr1005"></ColumnReference>
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="50" Batches="0" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="11" ActualCPUms="9"></RunTimeCountersPerThread>
+              </RunTimeInformation>
+              <Top RowCount="0" IsPercent="0" WithTies="0">
+                <TopExpression>
+                  <ScalarOperator ScalarString="(50)">
+                    <Const ConstValue="(50)"></Const>
+                  </ScalarOperator>
+                </TopExpression>
+                <RelOp NodeId="1" PhysicalOp="Sort" LogicalOp="TopN Sort" EstimateRows="50" EstimateIO="0.0112613" EstimateCPU="0.0287402" AvgRowSize="47" EstimatedTotalSubtreeCost="1.46212" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                    <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                    <ColumnReference Column="Expr1004"></ColumnReference>
+                    <ColumnReference Column="Expr1005"></ColumnReference>
+                  </OutputList>
+                  <MemoryFractions Input="1" Output="1"></MemoryFractions>
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="0" ActualRebinds="1" ActualRewinds="0" ActualRows="50" Batches="0" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="11" ActualCPUms="9" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" InputMemoryGrant="1184" OutputMemoryGrant="1184" UsedMemoryGrant="368"></RunTimeCountersPerThread>
+                  </RunTimeInformation>
+                  <TopSort Distinct="0" Rows="50">
+                    <OrderBy>
+                      <OrderByColumn Ascending="0">
+                        <ColumnReference Column="Expr1005"></ColumnReference>
+                      </OrderByColumn>
+                    </OrderBy>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="408" EstimateIO="0" EstimateCPU="4.08e-05" AvgRowSize="47" EstimatedTotalSubtreeCost="1.42212" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                      <OutputList>
+                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                        <ColumnReference Column="Expr1004"></ColumnReference>
+                        <ColumnReference Column="Expr1005"></ColumnReference>
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1004"></ColumnReference>
+                            <ScalarOperator ScalarString="CONVERT_IMPLICIT(int,[Expr1010],0)">
+                              <Convert DataType="int" Style="0" Implicit="1">
+                                <ScalarOperator>
+                                  <Identifier>
+                                    <ColumnReference Column="Expr1010"></ColumnReference>
+                                  </Identifier>
+                                </ScalarOperator>
+                              </Convert>
+                            </ScalarOperator>
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1005"></ColumnReference>
+                            <ScalarOperator ScalarString="CASE WHEN [Expr1010]=(0) THEN NULL ELSE [Expr1011] END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="EQ">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Expr1010"></ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="(0)"></Const>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Const ConstValue="NULL"></Const>
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1011"></ColumnReference>
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Hash Match" LogicalOp="Aggregate" EstimateRows="408" EstimateIO="0" EstimateCPU="0.0486224" AvgRowSize="47" EstimatedTotalSubtreeCost="1.42208" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                            <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                            <ColumnReference Column="Expr1010"></ColumnReference>
+                            <ColumnReference Column="Expr1011"></ColumnReference>
+                          </OutputList>
+                          <MemoryFractions Input="1" Output="1"></MemoryFractions>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="0" ActualRows="408" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="10" ActualCPUms="8" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" InputMemoryGrant="1184" OutputMemoryGrant="1184" UsedMemoryGrant="368"></RunTimeCountersPerThread>
+                          </RunTimeInformation>
+                          <Hash>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1010"></ColumnReference>
+                                <ScalarOperator ScalarString="COUNT([shop].[dbo].[orders].[id] as [o].[id])">
+                                  <Aggregate AggType="COUNT" Distinct="0">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="id"></ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Aggregate>
+                                </ScalarOperator>
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1011"></ColumnReference>
+                                <ScalarOperator ScalarString="SUM([shop].[dbo].[orders].[total] as [o].[total])">
+                                  <Aggregate AggType="SUM" Distinct="0">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="total"></ColumnReference>
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Aggregate>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <HashKeysBuild>
+                              <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                              <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                            </HashKeysBuild>
+                            <BuildResidual>
+                              <ScalarOperator ScalarString="[shop].[dbo].[customers].[name] as [c].[name] = [shop].[dbo].[customers].[name] as [c].[name] AND [shop].[dbo].[customers].[country] as [c].[country] = [shop].[dbo].[customers].[country] as [c].[country]">
+                                <Logical Operation="AND">
+                                  <ScalarOperator>
+                                    <Compare CompareOp="IS">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="IS">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Logical>
+                              </ScalarOperator>
+                            </BuildResidual>
+                            <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="2104" EstimateIO="0" EstimateCPU="0.00170505" AvgRowSize="68" EstimatedTotalSubtreeCost="1.37346" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                                <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                                <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="id"></ColumnReference>
+                                <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="total"></ColumnReference>
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="0" ActualRows="2137" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="9" ActualCPUms="7" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0"></RunTimeCountersPerThread>
+                              </RunTimeInformation>
+                              <NestedLoops Optimized="0">
+                                <OuterReferences>
+                                  <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="id"></ColumnReference>
+                                </OuterReferences>
+                                <RelOp NodeId="5" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="408" EstimatedRowsRead="408" EstimateIO="0.00386574" EstimateCPU="0.0006058" AvgRowSize="55" EstimatedTotalSubtreeCost="0.00447154" TableCardinality="4079" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="id"></ColumnReference>
+                                    <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                                    <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                                  </OutputList>
+                                  <RunTimeInformation>
+                                    <RunTimeCountersPerThread Thread="0" ActualRows="412" ActualRowsRead="412" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="6" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0"></RunTimeCountersPerThread>
+                                  </RunTimeInformation>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="id"></ColumnReference>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="name"></ColumnReference>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[shop]" Schema="[dbo]" Table="[customers]" Index="[IX_customers_country]" Alias="[c]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="country"></ColumnReference>
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="N'IT'">
+                                                <Const ConstValue="N'IT'"></Const>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                                <RelOp NodeId="6" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="5.15686" EstimatedRowsRead="12" EstimateIO="0.003125" EstimateCPU="0.0001703" AvgRowSize="23" EstimatedTotalSubtreeCost="1.36729" TableCardinality="48950" Parallel="0" EstimateRebinds="407" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="id"></ColumnReference>
+                                    <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="total"></ColumnReference>
+                                  </OutputList>
+                                  <RunTimeInformation>
+                                    <RunTimeCountersPerThread Thread="0" ActualRebinds="412" ActualRewinds="0" ActualRows="2137" ActualRowsRead="4986" Batches="0" ActualEndOfScans="412" ActualExecutions="412" ActualExecutionMode="Row" ActualElapsedms="8" ActualCPUms="6" ActualScans="0" ActualLogicalReads="1263" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0"></RunTimeCountersPerThread>
+                                  </RunTimeInformation>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="id"></ColumnReference>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="total"></ColumnReference>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[shop]" Schema="[dbo]" Table="[orders]" Index="[IX_orders_customer]" Alias="[o]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="customer_id"></ColumnReference>
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="[shop].[dbo].[customers].[id] as [c].[id]">
+                                                <Identifier>
+                                                  <ColumnReference Database="[shop]" Schema="[dbo]" Table="[customers]" Alias="[c]" Column="id"></ColumnReference>
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                    <Predicate>
+                                      <ScalarOperator ScalarString="[shop].[dbo].[orders].[created_at] as [o].[created_at]&gt;='2026-01-01'">
+                                        <Compare CompareOp="GE">
+                                          <ScalarOperator>
+                                            <Identifier>
+                                              <ColumnReference Database="[shop]" Schema="[dbo]" Table="[orders]" Alias="[o]" Column="created_at"></ColumnReference>
+                                            </Identifier>
+                                          </ScalarOperator>
+                                          <ScalarOperator>
+                                            <Const ConstValue="'2026-01-01'"></Const>
+                                          </ScalarOperator>
+                                        </Compare>
+                                      </ScalarOperator>
+                                    </Predicate>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                          </Hash>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </TopSort>
+                </RelOp>
+              </Top>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>
