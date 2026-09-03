@@ -36,6 +36,85 @@ export function prettifyJson(text: string): string | null {
 }
 
 /**
+ * Pretty-print pasted text when it is an XML document (SQL Server SHOWPLAN
+ * output is emitted on a single line). Elements are indented two spaces per
+ * level; text-only elements stay on one line. Returns null for non-XML text,
+ * unbalanced markup, or XML that is already formatted this way.
+ */
+export function prettifyXml(text: string): string | null {
+  const trimmed = text.trim();
+  if (!trimmed.startsWith("<")) {
+    return null;
+  }
+
+  const tokens = trimmed.match(
+    /<!\[CDATA\[[\s\S]*?\]\]>|<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<![^>]*>|<[^>]+>|[^<]+/g,
+  );
+  if (!tokens) {
+    return null;
+  }
+
+  const lines: string[] = [];
+  const stack: string[] = [];
+  let depth = 0;
+  const indent = () => "  ".repeat(depth);
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+
+    if (!token.startsWith("<")) {
+      const content = token.trim();
+      if (content !== "") {
+        lines.push(indent() + content);
+      }
+      continue;
+    }
+
+    if (token.startsWith("</")) {
+      const name = token.slice(2, -1).trim();
+      if (stack.pop() !== name) {
+        return null;
+      }
+      depth--;
+      lines.push(indent() + token);
+      continue;
+    }
+
+    const isElement = !/^<[!?]/.test(token);
+    const selfClosing = token.endsWith("/>");
+    if (!isElement || selfClosing) {
+      lines.push(indent() + token);
+      continue;
+    }
+
+    const name = token.slice(1, -1).trim().split(/\s/, 1)[0];
+    const textNext = tokens[i + 1];
+    const closeNext = tokens[i + 2];
+    if (
+      textNext !== undefined &&
+      !textNext.startsWith("<") &&
+      closeNext === `</${name}>`
+    ) {
+      // <Name>text</Name> — keep text-only elements on a single line.
+      lines.push(indent() + token + textNext.trim() + closeNext);
+      i += 2;
+      continue;
+    }
+
+    lines.push(indent() + token);
+    stack.push(name);
+    depth++;
+  }
+
+  if (stack.length > 0) {
+    return null;
+  }
+
+  const formatted = lines.join("\n");
+  return formatted === trimmed ? null : formatted;
+}
+
+/**
  * Parse a pasted EXPLAIN payload for the chosen engine. With `"auto"` the
  * engines are tried in order of how distinctive their formats are — SQL
  * Server (`ShowPlanXML`), Postgres (JSON array / `cost=` text), SQLite (`|--`

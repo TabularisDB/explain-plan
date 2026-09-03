@@ -2,12 +2,14 @@ import { useState, type ClipboardEvent, type FormEvent } from "react";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
+import "prismjs/components/prism-markup";
 import { AlertCircle, GitBranch, Play, ShieldCheck, Zap } from "lucide-react";
 import type { ExplainPlan } from "@tabularis/explain";
 import {
   ENGINE_OPTIONS,
   parsePlan,
   prettifyJson,
+  prettifyXml,
   type EngineChoice,
 } from "../lib/parse";
 import { TABULARIS } from "../lib/links";
@@ -38,12 +40,16 @@ const HIGHLIGHTS = [
 ] as const;
 
 /**
- * Highlight JSON documents (Postgres FORMAT JSON / MySQL FORMAT=JSON) with
- * Prism; text-format plans are rendered as-is (HTML-escaped).
+ * Highlight JSON documents (Postgres FORMAT JSON / MySQL FORMAT=JSON) and XML
+ * documents (SQL Server SHOWPLAN) with Prism; text-format plans are rendered
+ * as-is (HTML-escaped).
  */
 function highlightPlan(code: string): string {
   if (/^\s*[{[]/.test(code)) {
     return Prism.highlight(code, Prism.languages.json, "json");
+  }
+  if (/^\s*</.test(code)) {
+    return Prism.highlight(code, Prism.languages.markup, "markup");
   }
   return code.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 }
@@ -60,7 +66,8 @@ export function PlanInput({ onPlan }: PlanInputProps) {
   // The paste event bubbles from the editor's inner textarea up to the
   // wrapping <div>, where react-simple-code-editor forwards extra props.
   const handlePaste = (event: ClipboardEvent<HTMLDivElement>) => {
-    const formatted = prettifyJson(event.clipboardData.getData("text"));
+    const text = event.clipboardData.getData("text");
+    const formatted = prettifyJson(text) ?? prettifyXml(text);
     const target = event.target;
     if (formatted === null || !(target instanceof HTMLTextAreaElement)) {
       return;

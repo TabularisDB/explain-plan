@@ -804,7 +804,7 @@ select option {
   color: var(--text-primary);
 }
 
-/* Plan input editor (react-simple-code-editor + Prism JSON highlighting) */
+/* Plan input editor (react-simple-code-editor + Prism JSON/XML highlighting) */
 .plan-editor textarea::placeholder {
   color: var(--text-muted);
 }
@@ -836,4 +836,37 @@ select option {
 .plan-editor .token.punctuation,
 .plan-editor .token.operator {
   color: var(--text-muted);
+}
+
+/* XML (SQL Server SHOWPLAN) */
+.plan-editor .token.tag {
+  color: var(--color-sky-300, #7dd3fc);
+}
+
+.plan-editor .token.tag .token.punctuation {
+  color: var(--text-muted);
+}
+
+.plan-editor .token.attr-name {
+  color: var(--color-violet-300, #c4b5fd);
+}
+
+.plan-editor .token.attr-value,
+.plan-editor .token.attr-value .token.punctuation {
+  color: var(--color-emerald-300, #6ee7b7);
+}
+
+.plan-editor .token.attr-value .token.punctuation.attr-equals {
+  color: var(--text-muted);
+}
+
+.plan-editor .token.prolog,
+.plan-editor .token.comment,
+.plan-editor .token.cdata {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.plan-editor .token.entity {
+  color: var(--color-amber-300, #fcd34d);
 }

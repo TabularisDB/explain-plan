@@ -1,6 +1,6 @@
 import { getExplainParser } from "@tabularis/explain";
 import { describe, expect, it } from "vitest";
-import { parsePlan, prettifyJson } from "./parse";
+import { parsePlan, prettifyJson, prettifyXml } from "./parse";
 import { SAMPLES } from "../samples";
 import SQLSERVER_TRIVIAL_SCAN from "../test/fixtures/sqlserver-trivial-scan.xml?raw";
 
@@ -130,5 +130,49 @@ describe("prettifyJson", () => {
   it("leaves already-formatted JSON alone", () => {
     const formatted = '{\n  "a": 1\n}';
     expect(prettifyJson(formatted)).toBeNull();
+  });
+});
+
+describe("prettifyXml", () => {
+  it("indents nested elements and keeps text-only elements inline", () => {
+    expect(
+      prettifyXml(
+        '<?xml version="1.0"?><A x="1"><B/><C>text</C><D><E y="2"/></D></A>',
+      ),
+    ).toBe(
+      [
+        '<?xml version="1.0"?>',
+        '<A x="1">',
+        "  <B/>",
+        "  <C>text</C>",
+        "  <D>",
+        '    <E y="2"/>',
+        "  </D>",
+        "</A>",
+      ].join("\n"),
+    );
+  });
+
+  it("formats a single-line SHOWPLAN and keeps it parseable", () => {
+    const formatted = prettifyXml(SQLSERVER_TRIVIAL_SCAN);
+    expect(formatted).not.toBeNull();
+    expect(formatted!.split("\n").length).toBeGreaterThan(10);
+    expect(formatted!.replace(/\s/g, "")).toBe(
+      SQLSERVER_TRIVIAL_SCAN.replace(/\s/g, ""),
+    );
+    expect(parsePlan(formatted!, "sqlserver").root.node_type).toBe(
+      parsePlan(SQLSERVER_TRIVIAL_SCAN, "sqlserver").root.node_type,
+    );
+  });
+
+  it("leaves non-XML and unbalanced markup alone", () => {
+    expect(prettifyXml("Seq Scan on users  (cost=0.00..155.00)")).toBeNull();
+    expect(prettifyXml('{"query_block":{"select_id":1}}')).toBeNull();
+    expect(prettifyXml("<A><B></A>")).toBeNull();
+    expect(prettifyXml("<A><B>")).toBeNull();
+  });
+
+  it("leaves already-formatted XML alone", () => {
+    expect(prettifyXml("<A>\n  <B/>\n</A>")).toBeNull();
   });
 });
