@@ -13,6 +13,7 @@ import {
   type EngineChoice,
 } from "../lib/parse";
 import { TABULARIS } from "../lib/links";
+import { ORACLE_PLAN_QUERY } from "../lib/oracle-query";
 import { ShareLinks } from "./ShareLinks";
 import { SAMPLES } from "../samples";
 
@@ -34,7 +35,7 @@ const HIGHLIGHTS = [
   {
     icon: Zap,
     kicker: "Multi-engine",
-    title: "Postgres, MySQL, SQLite & SQL Server",
+    title: "Postgres, MySQL, SQLite, SQL Server & Oracle",
     text: "Text, JSON and SHOWPLAN XML formats are auto-detected, including runtime plans with timings.",
   },
 ] as const;
@@ -111,7 +112,7 @@ export function PlanInput({ onPlan }: PlanInputProps) {
           <div className="mb-8 text-center">
             <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
               <span className="rounded-md border border-default bg-surface-primary/60 px-2.5 py-1 text-xs text-secondary">
-                PostgreSQL · MySQL · SQLite · SQL Server
+                PostgreSQL · MySQL · SQLite · SQL Server · Oracle
               </span>
               <span className="rounded-md border border-success-border bg-success-bg px-2.5 py-1 text-xs text-success-text">
                 100% in-browser
@@ -128,8 +129,8 @@ export function PlanInput({ onPlan }: PlanInputProps) {
               </span>
             </h1>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-secondary">
-              Paste the EXPLAIN output of a PostgreSQL, MySQL/MariaDB, SQLite
-              or SQL Server query and explore it as an interactive graph,
+              Paste the EXPLAIN output of a PostgreSQL, MySQL/MariaDB, SQLite,
+              SQL Server or Oracle query and explore it as an interactive graph,
               diagram, table and statistics. Everything runs in your browser —
               no query is
               executed and nothing is uploaded.
@@ -188,12 +189,33 @@ export function PlanInput({ onPlan }: PlanInputProps) {
                   "PostgreSQL:  EXPLAIN (ANALYZE, BUFFERS) SELECT …   or   EXPLAIN (FORMAT JSON) SELECT …\n" +
                   "MySQL:       EXPLAIN FORMAT=JSON SELECT …   or   EXPLAIN ANALYZE SELECT …\n" +
                   "SQLite:      EXPLAIN QUERY PLAN SELECT …\n" +
-                  "SQL Server:  SHOWPLAN_XML or STATISTICS XML output"
+                  "SQL Server:  SHOWPLAN_XML or STATISTICS XML output\n" +
+                  "Oracle:      PLAN_TABLE rows as JSON — select Oracle for the query"
                 }
                 textareaClassName="focus:outline-none"
                 className="min-h-full"
               />
             </div>
+
+            {engine === "oracle" && (
+              <details className="rounded-lg border border-default bg-surface-primary/40 px-4 py-3 text-xs text-secondary">
+                <summary className="cursor-pointer text-sm text-primary">
+                  How to get an Oracle plan
+                </summary>
+                <p className="mt-2 leading-relaxed">
+                  Oracle has no JSON EXPLAIN output, so run this in SQL*Plus,
+                  SQLcl or SQL Developer (Oracle 12.2+) and paste the single
+                  JSON value it returns. It reads the plan that{" "}
+                  <code>EXPLAIN PLAN FOR</code> just wrote to{" "}
+                  <code>PLAN_TABLE</code>. In SQL*Plus, run{" "}
+                  <code>SET LONG 1000000</code> first so the result is not
+                  truncated.
+                </p>
+                <pre className="mt-2 overflow-x-auto rounded border border-default bg-input/80 p-3 font-mono-theme text-[11px] text-primary">
+                  {ORACLE_PLAN_QUERY}
+                </pre>
+              </details>
+            )}
 
             {error && (
               <div className="flex items-start gap-2 rounded-lg border border-error-border bg-error-bg px-4 py-3 text-sm text-error-text">

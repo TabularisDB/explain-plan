@@ -1,4 +1,5 @@
 import type { EngineChoice } from "./lib/parse";
+import ORACLE_HASH_JOIN_ANALYZED from "./samples/oracle-hash-join-analyzed.json?raw";
 import SQLSERVER_STATISTICS_XML from "./samples/sqlserver-statistics.xml?raw";
 
 export interface SamplePlan {
@@ -92,5 +93,10 @@ export const SAMPLES: SamplePlan[] = [
     engine: "sqlserver",
     label: "SQL Server sample",
     text: SQLSERVER_STATISTICS_XML,
+  },
+  {
+    engine: "oracle",
+    label: "Oracle sample",
+    text: ORACLE_HASH_JOIN_ANALYZED.trim(),
   },
 ];

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { parsePlan, prettifyJson, prettifyXml } from "./parse";
 import { SAMPLES } from "../samples";
 import SQLSERVER_TRIVIAL_SCAN from "../test/fixtures/sqlserver-trivial-scan.xml?raw";
+import ORACLE_PLAN_TABLE_ESTIMATED from "../test/fixtures/oracle-plan-table-estimated.json?raw";
 
 const sample = (engine: string) =>
   SAMPLES.find((candidate) => candidate.engine === engine)!.text;
@@ -16,6 +17,15 @@ describe("SQL Server parser registration", () => {
     });
     expect(parser?.parse).toBeTypeOf("function");
     expect(parser?.sniff?.(sample("sqlserver"))).toBe(true);
+  });
+});
+
+describe("Oracle parser registration", () => {
+  it("registers oracle-plan-json before application parsing starts", () => {
+    const parser = getExplainParser("oracle-plan-json");
+    expect(parser).toMatchObject({ engine: "oracle" });
+    expect(parser?.parse).toBeTypeOf("function");
+    expect(parser?.sniff?.(sample("oracle"))).toBe(true);
   });
 });
 
@@ -87,6 +97,40 @@ describe("parsePlan", () => {
     expect(plan.has_analyze_data).toBe(false);
   });
 
+  it("parses the Oracle analyzed sample with its engine hint", () => {
+    const plan = parsePlan(sample("oracle"), "oracle");
+    expect(plan.driver).toBe("oracle");
+    expect(plan.root.node_type).toBe("SELECT STATEMENT");
+    expect(plan.has_analyze_data).toBe(true);
+    expect(plan.execution_time_ms).toBeCloseTo(0.433);
+
+    const walk = (node: typeof plan.root): string[] => [
+      node.node_type,
+      ...node.children.flatMap(walk),
+    ];
+    expect(walk(plan.root)).toEqual([
+      "SELECT STATEMENT",
+      "SORT GROUP BY NOSORT",
+      "HASH JOIN",
+      "HASH JOIN",
+      "TABLE ACCESS FULL",
+      "TABLE ACCESS FULL",
+      "TABLE ACCESS FULL",
+    ]);
+    const customers = plan.root.children[0].children[0].children[0].children[0];
+    expect(customers.relation).toBe("CUSTOMERS");
+    expect(customers.filter).toBe(`"C"."REGION"='West'`);
+  });
+
+  it("parses the output of the documented PLAN_TABLE query", () => {
+    const plan = parsePlan(ORACLE_PLAN_TABLE_ESTIMATED, "auto");
+    expect(plan.driver).toBe("oracle");
+    expect(plan.root.node_type).toBe("SELECT STATEMENT");
+    expect(plan.root.total_cost).toBe(3);
+    expect(plan.has_analyze_data).toBe(false);
+    expect(plan.execution_time_ms).toBeNull();
+  });
+
   it("auto-detects each sample's engine", () => {
     expect(parsePlan(sample("postgres"), "auto").root.node_type).toBe(
       "Hash Join",
@@ -94,6 +138,7 @@ describe("parsePlan", () => {
     expect(parsePlan(sample("mysql"), "auto").driver).toBe("mysql");
     expect(parsePlan(sample("sqlite"), "auto").driver).toBe("sqlite");
     expect(parsePlan(sample("sqlserver"), "auto").driver).toBe("sqlserver");
+    expect(parsePlan(sample("oracle"), "auto").driver).toBe("oracle");
   });
 
   it("parses Postgres EXPLAIN (FORMAT JSON) output", () => {

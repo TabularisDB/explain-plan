@@ -1,0 +1,44 @@
+version: 2
+updates:
+  # package.json pins exact versions (saveExact in pnpm-workspace.yaml) and
+  # pnpm-lock.yaml records each tarball's sha512 integrity, so every bump
+  # arrives as a reviewable PR instead of drifting through a semver range.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: "increase"
+    cooldown:
+      default-days: 7
+    labels:
+      - "dependencies"
+    groups:
+      tabularis-explain:
+        patterns:
+          - "@tabularis/explain*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+      test-tooling:
+        patterns:
+          - "vitest"
+          - "jsdom"
+          - "@testing-library/*"
+
+  # Workflows must reference actions by full commit SHA (with the tag as a
+  # trailing comment); Dependabot bumps both together.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    labels:
+      - "dependencies"
