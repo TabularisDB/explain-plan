@@ -16,7 +16,7 @@
     "@tabularis/explain": "0.2.0",
     "@tabularis/explain-oracle": "0.1.0",
     "@tabularis/explain-sqlserver": "1.0.0-beta.2",
-    "@xyflow/react": "12.11.2",
+    "@xyflow/react": "12.11.6",
     "clsx": "2.1.1",
     "dagre": "0.8.5",
     "i18next": "25.10.10",
