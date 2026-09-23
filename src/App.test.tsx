@@ -26,6 +26,7 @@ describe("App", () => {
     expect(
       screen.getByRole("option", { name: "SQL Server" }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Oracle" })).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Tabularis" }),
     ).toHaveAttribute("href", "https://tabularis.dev");
@@ -110,5 +111,20 @@ describe("App", () => {
     expect(
       screen.queryByRole("dialog", { name: /tabularis/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("visualizes the Oracle sample and explains how to capture a plan", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Oracle sample" }));
+    expect(screen.getByRole("combobox")).toHaveValue("oracle");
+    expect(screen.getByText("How to get an Oracle plan")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /visualize plan/i }));
+    await user.click(
+      screen.getByRole("button", { name: /continue in browser/i }),
+    );
+
+    expect(container.querySelector(".react-flow")).toBeInTheDocument();
   });
 });

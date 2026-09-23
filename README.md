@@ -3,7 +3,7 @@
 [![Discord](https://img.shields.io/discord/1502944695808950282?color=5865F2&logo=discord&logoColor=white)](https://discord.com/invite/K2hmhfHRSt)
 
 A free online EXPLAIN plan visualizer: paste the EXPLAIN output of
-a **PostgreSQL**, **MySQL/MariaDB**, **SQLite** or **SQL Server** query and
+a **PostgreSQL**, **MySQL/MariaDB**, **SQLite**, **SQL Server** or **Oracle** query and
 explore it as an interactive graph, diagram, table and statistics view — with
 automatic performance findings.
 
@@ -25,9 +25,42 @@ Tabularis dark theme.
 | MySQL / MariaDB | `EXPLAIN FORMAT=JSON`, `EXPLAIN ANALYZE` / `ANALYZE FORMAT=TEXT` trees |
 | SQLite | `EXPLAIN QUERY PLAN` — the sqlite3 shell tree (`|--` / `` `-- ``) or raw `id\|parent\|…\|detail` rows |
 | SQL Server | `SHOWPLAN_XML` estimated plans and `STATISTICS XML` actual plans (`ShowPlanXML` documents) |
+| Oracle | `oracle-plan-json`: `PLAN_TABLE` rows as JSON (see below), or the payload captured by the Tabularis Oracle plugin |
 
 The engine can be selected explicitly or auto-detected from the pasted text.
 SQL Server's `ShowPlanXML` root element makes its format unambiguous.
+
+### Getting an Oracle plan
+
+Oracle has no JSON `EXPLAIN` output, so the app reads the `PLAN_TABLE` rows as
+a JSON document. Run this in SQL*Plus, SQLcl or SQL Developer (Oracle 12.2+;
+in SQL*Plus run `SET LONG 1000000` first) and paste the returned value. The
+same query is shown in the app when Oracle is selected
+([`src/lib/oracle-query.ts`](./src/lib/oracle-query.ts)).
+
+```sql
+EXPLAIN PLAN FOR SELECT …;
+
+SELECT JSON_OBJECT(
+  'version' VALUE 1,
+  'statistics' VALUE 'false' FORMAT JSON,
+  'plan' VALUE JSON_ARRAYAGG(JSON_OBJECT(
+    'id' VALUE id, 'parent_id' VALUE parent_id, 'depth' VALUE depth,
+    'position' VALUE position, 'operation' VALUE operation,
+    'options' VALUE options, 'object_owner' VALUE object_owner,
+    'object_name' VALUE object_name, 'object_alias' VALUE object_alias,
+    'object_type' VALUE object_type, 'optimizer' VALUE optimizer,
+    'cost' VALUE cost, 'cardinality' VALUE cardinality, 'bytes' VALUE bytes,
+    'cpu_cost' VALUE cpu_cost, 'io_cost' VALUE io_cost, 'time' VALUE time,
+    'access_predicates' VALUE access_predicates,
+    'filter_predicates' VALUE filter_predicates,
+    'projection' VALUE projection, 'qblock_name' VALUE qblock_name
+    NULL ON NULL RETURNING CLOB)
+    ORDER BY id RETURNING CLOB)
+  RETURNING CLOB)
+FROM plan_table
+WHERE plan_id = (SELECT MAX(plan_id) FROM plan_table);
+```
 
 ## Stack
 
@@ -35,6 +68,7 @@ SQL Server's `ShowPlanXML` root element makes its format unambiguous.
 - [Tailwind CSS 4](https://tailwindcss.com) with the Tabularis colour tokens
 - [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain) for parsing, analysis and the plan views
 - [`@tabularis/explain-sqlserver`](https://www.npmjs.com/package/@tabularis/explain-sqlserver) for SQL Server SHOWPLAN XML
+- [`@tabularis/explain-oracle`](https://www.npmjs.com/package/@tabularis/explain-oracle) for Oracle execution plans
 - [Vitest](https://vitest.dev) + Testing Library for tests
 
 ## Development

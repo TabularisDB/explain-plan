@@ -14,6 +14,7 @@ export const ENGINE_OPTIONS: Array<{ value: EngineChoice; label: string }> = [
   { value: "mysql", label: "MySQL / MariaDB" },
   { value: "sqlite", label: "SQLite" },
   { value: "sqlserver", label: "SQL Server" },
+  { value: "oracle", label: "Oracle" },
 ];
 
 /**
@@ -117,9 +118,9 @@ export function prettifyXml(text: string): string | null {
 /**
  * Parse a pasted EXPLAIN payload for the chosen engine. With `"auto"` the
  * engines are tried in order of how distinctive their formats are — SQL
- * Server (`ShowPlanXML`), Postgres (JSON array / `cost=` text), SQLite (`|--`
- * tree or `id|parent|…` rows), then MySQL, whose text parser is the most
- * permissive.
+ * Server (`ShowPlanXML`), Oracle (`oracle-plan-json` object of PLAN_TABLE
+ * rows), Postgres (JSON array / `cost=` text), SQLite (`|--` tree or
+ * `id|parent|…` rows), then MySQL, whose text parser is the most permissive.
  */
 export function parsePlan(raw: string, engine: EngineChoice): ExplainPlan {
   const trimmed = raw.trim();
@@ -136,6 +137,7 @@ export function parsePlan(raw: string, engine: EngineChoice): ExplainPlan {
 
   for (const candidate of [
     "sqlserver",
+    "oracle",
     "postgres",
     "sqlite",
     "mysql",

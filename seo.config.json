@@ -1,6 +1,6 @@
 {
-  "title": "Explain Plan — PostgreSQL, MySQL, SQLite & SQL Server viewer",
-  "description": "Free online EXPLAIN plan and SHOWPLAN XML viewer. Paste a PostgreSQL, MySQL, MariaDB, SQLite or SQL Server execution plan and explore its graph, diagram, table and statistics. Nothing leaves your browser.",
+  "title": "Explain Plan — PostgreSQL, MySQL, SQLite, SQL Server & Oracle viewer",
+  "description": "Free online EXPLAIN plan and SHOWPLAN XML viewer. Paste a PostgreSQL, MySQL, MariaDB, SQLite, SQL Server or Oracle execution plan and explore its graph, diagram, table and statistics. Nothing leaves your browser.",
   "keywords": [
     "explain plan",
     "query plan visualizer",
@@ -9,6 +9,7 @@
     "sqlite explain query plan",
     "SQL Server execution plan",
     "SHOWPLAN XML viewer",
+    "Oracle explain plan",
     "sql performance",
     "query optimization",
     "tabularis"
