@@ -1,0 +1,66 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-decoration: none;
+    border: 0.1rem solid transparent;
+    transition:
+        filter 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        background 0.15s ease;
+    white-space: nowrap;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+// -- Variants -----------------------------------------------------------------
+
+.primary {
+    background: var(--color-accent-blue);
+    color: var(--color-text-primary);
+
+    &:hover:not(:disabled) {
+        filter: brightness(1.1);
+    }
+}
+
+.secondary {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+
+    &:hover:not(:disabled) {
+        filter: brightness(1.1);
+        border-color: var(--color-border-hover);
+    }
+}
+
+// -- Sizes ----------------------------------------------------------------------
+
+.sm {
+    font-size: 0.85rem;
+    padding-block: 0.375rem;
+    padding-inline: 0.875rem;
+}
+
+.md {
+    font-size: 0.875rem;
+    padding-block: 0.5rem;
+    padding-inline: 0.9rem;
+}
+
+.lg {
+    font-size: 1.05rem;
+    padding-block: 0.8rem;
+    padding-inline: 1.5rem;
+}

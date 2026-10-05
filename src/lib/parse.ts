@@ -1,20 +1,15 @@
-import {
-  parseExplainFor,
-  parseSqliteEqpRows,
-  type ExplainEngine,
-  type ExplainPlan,
-} from "@tabularis/explain";
-import { parseSqliteEqpText } from "./sqlite-text";
+import {parseExplainFor, parseSqliteEqpRows, type ExplainEngine, type ExplainPlan} from '@tabularis/explain';
+import {parseSqliteEqpText} from './sqlite-text';
 
-export type EngineChoice = ExplainEngine | "auto";
+export type EngineChoice = ExplainEngine | 'auto';
 
-export const ENGINE_OPTIONS: Array<{ value: EngineChoice; label: string }> = [
-  { value: "auto", label: "Auto-detect" },
-  { value: "postgres", label: "PostgreSQL" },
-  { value: "mysql", label: "MySQL / MariaDB" },
-  { value: "sqlite", label: "SQLite" },
-  { value: "sqlserver", label: "SQL Server" },
-  { value: "oracle", label: "Oracle" },
+export const ENGINE_OPTIONS: Array<{value: EngineChoice; label: string}> = [
+    {value: 'auto', label: 'Auto-detect'},
+    {value: 'postgres', label: 'PostgreSQL'},
+    {value: 'mysql', label: 'MySQL / MariaDB'},
+    {value: 'sqlite', label: 'SQLite'},
+    {value: 'sqlserver', label: 'SQL Server'},
+    {value: 'oracle', label: 'Oracle'},
 ];
 
 /**
@@ -24,16 +19,16 @@ export const ENGINE_OPTIONS: Array<{ value: EngineChoice; label: string }> = [
  * can leave the paste untouched.
  */
 export function prettifyJson(text: string): string | null {
-  const trimmed = text.trim();
-  if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) {
-    return null;
-  }
-  try {
-    const formatted = JSON.stringify(JSON.parse(trimmed), null, 2);
-    return formatted === trimmed ? null : formatted;
-  } catch {
-    return null;
-  }
+    const trimmed = text.trim();
+    if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+        return null;
+    }
+    try {
+        const formatted = JSON.stringify(JSON.parse(trimmed), null, 4);
+        return formatted === trimmed ? null : formatted;
+    } catch {
+        return null;
+    }
 }
 
 /**
@@ -42,77 +37,114 @@ export function prettifyJson(text: string): string | null {
  * level; text-only elements stay on one line. Returns null for non-XML text,
  * unbalanced markup, or XML that is already formatted this way.
  */
+const INDENT = '    ';
+const MAX_TAG_LENGTH = 100;
+
+function formatTag(tag: string, indent: string): string {
+    if (indent.length + tag.length <= MAX_TAG_LENGTH) {
+        return indent + tag;
+    }
+
+    const match = tag.match(/^<([^\s/>]+)([\s\S]*?)(\/?)>$/);
+    if (!match) {
+        return indent + tag;
+    }
+
+    const [, name, rawAttrs, selfClosing] = match;
+    const attrs = rawAttrs.match(/[^\s=]+\s*=\s*("[^"]*"|'[^']*')/g);
+    if (!attrs || attrs.length < 2) {
+        return indent + tag;
+    }
+
+    return [
+        `${indent}<${name}`,
+        ...attrs.map((attr) => indent + INDENT + attr.replace(/\s*=\s*/, '=')),
+        `${indent}${selfClosing ? '/>' : '>'}`,
+    ].join('\n');
+}
+
+function toSelfClosing(tag: string): string {
+    return tag.slice(0, -1).trimEnd() + ' />';
+}
+
 export function prettifyXml(text: string): string | null {
-  const trimmed = text.trim();
-  if (!trimmed.startsWith("<")) {
-    return null;
-  }
-
-  const tokens = trimmed.match(
-    /<!\[CDATA\[[\s\S]*?\]\]>|<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<![^>]*>|<[^>]+>|[^<]+/g,
-  );
-  if (!tokens) {
-    return null;
-  }
-
-  const lines: string[] = [];
-  const stack: string[] = [];
-  let depth = 0;
-  const indent = () => "  ".repeat(depth);
-
-  for (let i = 0; i < tokens.length; i++) {
-    const token = tokens[i];
-
-    if (!token.startsWith("<")) {
-      const content = token.trim();
-      if (content !== "") {
-        lines.push(indent() + content);
-      }
-      continue;
-    }
-
-    if (token.startsWith("</")) {
-      const name = token.slice(2, -1).trim();
-      if (stack.pop() !== name) {
+    const trimmed = text.trim();
+    if (!trimmed.startsWith('<')) {
         return null;
-      }
-      depth--;
-      lines.push(indent() + token);
-      continue;
     }
 
-    const isElement = !/^<[!?]/.test(token);
-    const selfClosing = token.endsWith("/>");
-    if (!isElement || selfClosing) {
-      lines.push(indent() + token);
-      continue;
+    const tokens = trimmed.match(/<!\[CDATA\[[\s\S]*?\]\]>|<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<![^>]*>|<[^>]+>|[^<]+/g);
+    if (!tokens) {
+        return null;
     }
 
-    const name = token.slice(1, -1).trim().split(/\s/, 1)[0];
-    const textNext = tokens[i + 1];
-    const closeNext = tokens[i + 2];
-    if (
-      textNext !== undefined &&
-      !textNext.startsWith("<") &&
-      closeNext === `</${name}>`
-    ) {
-      // <Name>text</Name> — keep text-only elements on a single line.
-      lines.push(indent() + token + textNext.trim() + closeNext);
-      i += 2;
-      continue;
+    const lines: string[] = [];
+    const stack: string[] = [];
+    let depth = 0;
+    const indent = () => INDENT.repeat(depth);
+
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+
+        if (!token.startsWith('<')) {
+            const content = token.trim();
+            if (content !== '') {
+                lines.push(indent() + content);
+            }
+            continue;
+        }
+
+        if (token.startsWith('</')) {
+            const name = token.slice(2, -1).trim();
+            if (stack.pop() !== name) {
+                return null;
+            }
+            depth--;
+            lines.push(indent() + token);
+            continue;
+        }
+
+        const isElement = !/^<[!?]/.test(token);
+        if (!isElement) {
+            lines.push(indent() + token);
+            continue;
+        }
+
+        if (token.endsWith('/>')) {
+            lines.push(formatTag(token, indent()));
+            continue;
+        }
+
+        const name = token.slice(1, -1).trim().split(/\s/, 1)[0];
+        const next = tokens[i + 1];
+        const afterNext = tokens[i + 2];
+
+        if (next === `</${name}>`) {
+            lines.push(formatTag(toSelfClosing(token), indent()));
+            i += 1;
+            continue;
+        }
+
+        if (next !== undefined && !next.startsWith('<') && afterNext === `</${name}>`) {
+            const content = next.trim();
+            lines.push(
+                content === '' ? formatTag(toSelfClosing(token), indent()) : indent() + token + content + afterNext,
+            );
+            i += 2;
+            continue;
+        }
+
+        lines.push(formatTag(token, indent()));
+        stack.push(name);
+        depth++;
     }
 
-    lines.push(indent() + token);
-    stack.push(name);
-    depth++;
-  }
+    if (stack.length > 0) {
+        return null;
+    }
 
-  if (stack.length > 0) {
-    return null;
-  }
-
-  const formatted = lines.join("\n");
-  return formatted === trimmed ? null : formatted;
+    const formatted = lines.join('\n');
+    return formatted === trimmed ? null : formatted;
 }
 
 /**
@@ -123,43 +155,33 @@ export function prettifyXml(text: string): string | null {
  * `id|parent|…` rows), then MySQL, whose text parser is the most permissive.
  */
 export function parsePlan(raw: string, engine: EngineChoice): ExplainPlan {
-  const trimmed = raw.trim();
-  if (trimmed === "") {
-    throw new Error("Paste an EXPLAIN output first.");
-  }
-
-  if (engine === "sqlite") {
-    return parseSqliteEqpRows(parseSqliteEqpText(trimmed));
-  }
-  if (engine !== "auto") {
-    return parseExplainFor(trimmed, engine);
-  }
-
-  for (const candidate of [
-    "sqlserver",
-    "oracle",
-    "postgres",
-    "sqlite",
-    "mysql",
-  ] as const) {
-    // The MySQL text parser accepts almost any text, so when sniffing only
-    // hand it input that plausibly is an EXPLAIN ANALYZE tree ("-> " lines)
-    // or a FORMAT=JSON document.
-    if (
-      candidate === "mysql" &&
-      !trimmed.startsWith("{") &&
-      !/^\s*->/m.test(trimmed)
-    ) {
-      continue;
+    const trimmed = raw.trim();
+    if (trimmed === '') {
+        throw new Error('Paste an EXPLAIN output first.');
     }
-    try {
-      return parsePlan(trimmed, candidate);
-    } catch {
-      // Not this engine's format — try the next one.
+
+    if (engine === 'sqlite') {
+        return parseSqliteEqpRows(parseSqliteEqpText(trimmed));
     }
-  }
-  throw new Error(
-    "Could not detect the plan format. Select the database engine explicitly " +
-      "and check that the text is unmodified EXPLAIN output.",
-  );
+    if (engine !== 'auto') {
+        return parseExplainFor(trimmed, engine);
+    }
+
+    for (const candidate of ['sqlserver', 'oracle', 'postgres', 'sqlite', 'mysql'] as const) {
+        // The MySQL text parser accepts almost any text, so when sniffing only
+        // hand it input that plausibly is an EXPLAIN ANALYZE tree ("-> " lines)
+        // or a FORMAT=JSON document.
+        if (candidate === 'mysql' && !trimmed.startsWith('{') && !/^\s*->/m.test(trimmed)) {
+            continue;
+        }
+        try {
+            return parsePlan(trimmed, candidate);
+        } catch {
+            // Not this engine's format — try the next one.
+        }
+    }
+    throw new Error(
+        'Could not detect the plan format. Select the database engine explicitly ' +
+            'and check that the text is unmodified EXPLAIN output.',
+    );
 }

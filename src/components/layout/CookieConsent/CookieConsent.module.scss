@@ -1,0 +1,125 @@
+.cookieModal {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: min(18rem, calc(100% - 2rem));
+    padding: 1.5rem;
+    border: 0.1rem solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+}
+
+.title {
+    margin: 0;
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.description {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.3;
+    text-align: center;
+
+    a {
+        color: inherit;
+        text-decoration: underline;
+
+        &:hover {
+            color: var(--color-text-primary);
+        }
+    }
+}
+
+.preferences {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.cookieRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.cookieLabel {
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+}
+
+.cookieToggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 1.25rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:focus-visible {
+        outline: 0.1rem solid var(--color-accent-teal);
+        outline-offset: 0.125rem;
+    }
+}
+
+.cookieToggleOn {
+    background: var(--color-accent-blue);
+
+    .cookieToggleThumb {
+        transform: translateX(1rem);
+    }
+}
+
+.cookieToggleLocked {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.cookieToggleThumb {
+    position: absolute;
+    top: 0.15rem;
+    left: 0.15rem;
+    width: 0.95rem;
+    height: 0.95rem;
+    border-radius: 50%;
+    background: var(--color-text-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-block: 1rem 0.5rem;
+}
+
+.button {
+    width: 100%;
+}
+
+.linkButton {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+}

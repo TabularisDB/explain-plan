@@ -1,5 +1,5 @@
 {
-  "title": "Explain Plan — PostgreSQL, MySQL, SQLite, SQL Server & Oracle viewer",
+  "title": "Explain Plan | PostgreSQL, MySQL, SQLite, SQL Server & Oracle viewer",
   "description": "Free online EXPLAIN plan and SHOWPLAN XML viewer. Paste a PostgreSQL, MySQL, MariaDB, SQLite, SQL Server or Oracle execution plan and explore its graph, diagram, table and statistics. Nothing leaves your browser.",
   "keywords": [
     "explain plan",

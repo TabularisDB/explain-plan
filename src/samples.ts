@@ -1,11 +1,11 @@
-import type { EngineChoice } from "./lib/parse";
-import ORACLE_HASH_JOIN_ANALYZED from "./samples/oracle-hash-join-analyzed.json?raw";
-import SQLSERVER_STATISTICS_XML from "./samples/sqlserver-statistics.xml?raw";
+import type {EngineChoice} from './lib/parse';
+import ORACLE_HASH_JOIN_ANALYZED from './samples/oracle-hash-join-analyzed.json?raw';
+import SQLSERVER_STATISTICS_XML from './samples/sqlserver-statistics.xml?raw';
 
 export interface SamplePlan {
-  engine: Exclude<EngineChoice, "auto">;
-  label: string;
-  text: string;
+    engine: Exclude<EngineChoice, 'auto'>;
+    label: string;
+    text: string;
 }
 
 const POSTGRES_SAMPLE = `                                                        QUERY PLAN
@@ -27,57 +27,57 @@ const POSTGRES_SAMPLE = `                                                       
 (14 rows)`;
 
 const MYSQL_SAMPLE = JSON.stringify(
-  {
-    query_block: {
-      select_id: 1,
-      cost_info: { query_cost: "846.55" },
-      ordering_operation: {
-        using_filesort: true,
-        nested_loop: [
-          {
-            table: {
-              table_name: "customers",
-              access_type: "ALL",
-              rows_examined_per_scan: 4079,
-              rows_produced_per_join: 407,
-              filtered: "10.00",
-              cost_info: {
-                read_cost: "391.86",
-                eval_cost: "40.79",
-                prefix_cost: "432.65",
-                data_read_per_join: "127K",
-              },
-              used_columns: ["id", "name", "country"],
-              attached_condition: "(`shop`.`customers`.`country` = 'IT')",
+    {
+        query_block: {
+            select_id: 1,
+            cost_info: {query_cost: '846.55'},
+            ordering_operation: {
+                using_filesort: true,
+                nested_loop: [
+                    {
+                        table: {
+                            table_name: 'customers',
+                            access_type: 'ALL',
+                            rows_examined_per_scan: 4079,
+                            rows_produced_per_join: 407,
+                            filtered: '10.00',
+                            cost_info: {
+                                read_cost: '391.86',
+                                eval_cost: '40.79',
+                                prefix_cost: '432.65',
+                                data_read_per_join: '127K',
+                            },
+                            used_columns: ['id', 'name', 'country'],
+                            attached_condition: "(`shop`.`customers`.`country` = 'IT')",
+                        },
+                    },
+                    {
+                        table: {
+                            table_name: 'orders',
+                            access_type: 'ref',
+                            possible_keys: ['idx_orders_customer'],
+                            key: 'idx_orders_customer',
+                            used_key_parts: ['customer_id'],
+                            key_length: '4',
+                            ref: ['shop.customers.id'],
+                            rows_examined_per_scan: 12,
+                            rows_produced_per_join: 4895,
+                            filtered: '100.00',
+                            cost_info: {
+                                read_cost: '489.55',
+                                eval_cost: '48.95',
+                                prefix_cost: '846.55',
+                                data_read_per_join: '1M',
+                            },
+                            used_columns: ['id', 'customer_id', 'total', 'created_at'],
+                        },
+                    },
+                ],
             },
-          },
-          {
-            table: {
-              table_name: "orders",
-              access_type: "ref",
-              possible_keys: ["idx_orders_customer"],
-              key: "idx_orders_customer",
-              used_key_parts: ["customer_id"],
-              key_length: "4",
-              ref: ["shop.customers.id"],
-              rows_examined_per_scan: 12,
-              rows_produced_per_join: 4895,
-              filtered: "100.00",
-              cost_info: {
-                read_cost: "489.55",
-                eval_cost: "48.95",
-                prefix_cost: "846.55",
-                data_read_per_join: "1M",
-              },
-              used_columns: ["id", "customer_id", "total", "created_at"],
-            },
-          },
-        ],
-      },
+        },
     },
-  },
-  null,
-  2,
+    null,
+    2,
 );
 
 const SQLITE_SAMPLE = `QUERY PLAN
@@ -86,17 +86,17 @@ const SQLITE_SAMPLE = `QUERY PLAN
 \`--USE TEMP B-TREE FOR ORDER BY`;
 
 export const SAMPLES: SamplePlan[] = [
-  { engine: "postgres", label: "PostgreSQL sample", text: POSTGRES_SAMPLE },
-  { engine: "mysql", label: "MySQL sample", text: MYSQL_SAMPLE },
-  { engine: "sqlite", label: "SQLite sample", text: SQLITE_SAMPLE },
-  {
-    engine: "sqlserver",
-    label: "SQL Server sample",
-    text: SQLSERVER_STATISTICS_XML,
-  },
-  {
-    engine: "oracle",
-    label: "Oracle sample",
-    text: ORACLE_HASH_JOIN_ANALYZED.trim(),
-  },
+    {engine: 'postgres', label: 'PostgreSQL sample', text: POSTGRES_SAMPLE},
+    {engine: 'mysql', label: 'MySQL sample', text: MYSQL_SAMPLE},
+    {engine: 'sqlite', label: 'SQLite sample', text: SQLITE_SAMPLE},
+    {
+        engine: 'sqlserver',
+        label: 'SQL Server sample',
+        text: SQLSERVER_STATISTICS_XML,
+    },
+    {
+        engine: 'oracle',
+        label: 'Oracle sample',
+        text: ORACLE_HASH_JOIN_ANALYZED.trim(),
+    },
 ];

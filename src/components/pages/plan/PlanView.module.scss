@@ -1,0 +1,16 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 0 1.25rem;
+}
+
+.planView {
+    width: 100%;
+    height: calc(100% - var(--header-height) - 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+}
