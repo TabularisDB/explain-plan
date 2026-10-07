@@ -13,7 +13,7 @@ import {
     type ExplainNode,
     type ExplainPlan,
 } from '@tabularis/explain';
-import {ExplainDiagnosticChips} from '@tabularis/explain/react';
+import {DiagnosticChips} from './DiagnosticChips';
 import {NodeDetails, formatCostRange} from './NodeDetails';
 
 interface TableViewProps {
@@ -33,7 +33,7 @@ interface Column {
 const TH =
     'px-3 py-2 whitespace-nowrap text-[0.65rem] font-medium uppercase tracking-[0.04em] text-secondary shadow-[inset_0_-1px_0_var(--color-border)]';
 const TD = 'px-3 py-2 whitespace-nowrap';
-const NUMBER = 'px-3 py-2 whitespace-nowrap text-right font-mono-theme text-secondary';
+const NUMBER = 'px-3 py-2 whitespace-nowrap text-right font-mono text-secondary';
 
 function collectIds(root: ExplainNode): Set<string> {
     const ids = new Set<string>();
@@ -77,14 +77,14 @@ export function TableView({plan, metrics, diagnostics, selectedId, onSelect}: Ta
     ].filter((column): column is Column => Boolean(column));
 
     return (
-        <section className="block min-h-0 flex-1">
-            <div className="block-heading">
+        <section className="section min-h-0 flex-1">
+            <div className="section-heading">
                 <TableProperties size={15} aria-hidden="true" />
                 <h2 className="title">{t('editor.visualExplain.tableView')}</h2>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-                <div className="flex-1 min-w-0 min-h-0 overflow-auto border-[0.1rem] border-default rounded-theme-sm">
+                <div className="flex-1 min-w-0 min-h-0 overflow-auto border-[0.1rem] border-default rounded-sm">
                     <table className="w-full text-xs">
                         <thead className="sticky top-0 z-10 bg-elevated">
                             <tr>
@@ -114,7 +114,7 @@ export function TableView({plan, metrics, diagnostics, selectedId, onSelect}: Ta
                     </table>
                 </div>
 
-                <aside className="lg:w-[320px] shrink-0 max-h-[45vh] lg:max-h-none overflow-y-auto border-[0.1rem] border-default rounded-theme-sm">
+                <aside className="lg:w-[320px] shrink-0 max-h-[45vh] lg:max-h-none overflow-y-auto border-[0.1rem] border-default rounded-sm">
                     <NodeDetails
                         node={selectedNode}
                         hasAnalyzeData={plan.has_analyze_data}
@@ -161,7 +161,7 @@ function TreeRows(props: TreeRowsProps) {
                 aria-selected={selected}
                 onClick={() => onSelect(node.id)}
             >
-                <td className={clsx(TD, 'font-mono-theme text-[0.65rem] text-muted')}>
+                <td className={clsx(TD, 'font-mono text-[0.65rem] text-muted')}>
                     {nodeMetrics ? `#${nodeMetrics.index}` : ''}
                 </td>
                 <td className={TD}>
@@ -188,12 +188,10 @@ function TreeRows(props: TreeRowsProps) {
                         <span className={clsx('font-medium', selected ? 'text-accent-primary' : 'text-primary')}>
                             {node.node_type}
                         </span>
-                        {nodeDiagnostics.length > 0 && (
-                            <ExplainDiagnosticChips diagnostics={nodeDiagnostics} iconsOnly />
-                        )}
+                        {nodeDiagnostics.length > 0 && <DiagnosticChips diagnostics={nodeDiagnostics} iconsOnly />}
                     </div>
                 </td>
-                <td className={clsx(TD, 'font-mono-theme text-secondary')}>{node.relation ?? ''}</td>
+                <td className={clsx(TD, 'font-mono text-secondary')}>{node.relation ?? ''}</td>
                 <td className={NUMBER}>{formatCostRange(node)}</td>
                 <td className={NUMBER}>{node.plan_rows != null ? formatRows(node.plan_rows) : '-'}</td>
                 {hasAnalyzeData && (

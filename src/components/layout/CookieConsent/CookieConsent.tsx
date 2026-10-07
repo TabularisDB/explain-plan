@@ -8,7 +8,6 @@ import styles from './CookieConsent.module.scss';
 type CookiePrefs = {
     necessary: true;
     measurement: boolean;
-    marketing: boolean;
 };
 
 type MatomoWindow = Window & {
@@ -38,6 +37,7 @@ function initMatomo(cookieConsent: boolean) {
     _paq.push(cookieConsent ? ['setCookieConsentGiven'] : ['disableCookies']);
     _paq.push(['setTrackerUrl', MATOMO_URL + 'matomo.php']);
     _paq.push(['setSiteId', MATOMO_SITE_ID]);
+    _paq.push(['discardHashTag', true]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
 
@@ -56,10 +56,17 @@ function readPrefs(): CookiePrefs | null {
     }
 }
 
+function writePrefs(prefs: CookiePrefs) {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    } catch {
+        return;
+    }
+}
+
 export function CookieConsent() {
     const [visible, setVisible] = useState(false);
     const [measurement, setMeasurement] = useState(false);
-    const [marketing, setMarketing] = useState(false);
     const [showDetailedView, setShowDetailedView] = useState(false);
 
     useEffect(() => {
@@ -67,7 +74,6 @@ export function CookieConsent() {
 
         if (prefs) {
             setMeasurement(prefs.measurement);
-            setMarketing(prefs.marketing);
             initMatomo(prefs.measurement);
         } else {
             initMatomo(false);
@@ -77,10 +83,7 @@ export function CookieConsent() {
         function handleManage() {
             const saved = readPrefs();
             setShowDetailedView(saved !== null);
-            if (saved) {
-                setMeasurement(saved.measurement);
-                setMarketing(saved.marketing);
-            }
+            if (saved) setMeasurement(saved.measurement);
             setVisible(true);
         }
 
@@ -88,11 +91,9 @@ export function CookieConsent() {
         return () => window.removeEventListener('tabularis:manage-cookies', handleManage);
     }, []);
 
-    function save(measurementValue: boolean, marketingValue: boolean) {
-        const prefs: CookiePrefs = {necessary: true, measurement: measurementValue, marketing: marketingValue};
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    function save(measurementValue: boolean) {
+        writePrefs({necessary: true, measurement: measurementValue});
         setMeasurement(measurementValue);
-        setMarketing(marketingValue);
         setVisible(false);
         initMatomo(measurementValue);
     }
@@ -102,7 +103,7 @@ export function CookieConsent() {
     return (
         <div className={styles.cookieModal} role="dialog" aria-labelledby="cookie-title">
             <h3 id="cookie-title" className={styles.title}>
-                {showDetailedView ? 'Customise your preferences' : 'Can we use cookies?'}
+                {showDetailedView ? 'Customize your preferences' : 'Can we use cookies?'}
             </h3>
 
             {showDetailedView ? (
@@ -130,20 +131,6 @@ export function CookieConsent() {
                             <span className={styles.cookieToggleThumb} />
                         </button>
                     </div>
-
-                    <div className={styles.cookieRow}>
-                        <span className={styles.cookieLabel}>Marketing</span>
-                        <button
-                            type="button"
-                            role="switch"
-                            aria-checked={marketing}
-                            aria-label="Marketing cookies"
-                            className={clsx(styles.cookieToggle, marketing && styles.cookieToggleOn)}
-                            onClick={() => setMarketing((value) => !value)}
-                        >
-                            <span className={styles.cookieToggleThumb} />
-                        </button>
-                    </div>
                 </div>
             ) : (
                 <p className={styles.description}>
@@ -157,15 +144,15 @@ export function CookieConsent() {
 
             <div className={styles.actions}>
                 {showDetailedView ? (
-                    <Button className={styles.button} onClick={() => save(measurement, marketing)}>
+                    <Button className={styles.button} onClick={() => save(measurement)}>
                         Save preferences <CheckIcon size={14} />
                     </Button>
                 ) : (
                     <>
-                        <Button className={styles.button} onClick={() => save(true, true)}>
+                        <Button className={styles.button} onClick={() => save(true)}>
                             Yes <CheckIcon size={14} />
                         </Button>
-                        <Button className={styles.button} onClick={() => save(false, false)}>
+                        <Button className={styles.button} onClick={() => save(false)}>
                             No <XIcon size={14} />
                         </Button>
                     </>

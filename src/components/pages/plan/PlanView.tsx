@@ -1,8 +1,6 @@
 import {computeExplainMetrics, ExplainPlan, getPlanDiagnostics} from '@tabularis/explain';
 import {ExplainViewMode} from '@tabularis/explain/react';
 import clsx from 'clsx';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-markup';
 import {useEffect, useMemo, useState} from 'react';
 import {Header} from '../../layout/Header/Header';
 import styles from './PlanView.module.scss';

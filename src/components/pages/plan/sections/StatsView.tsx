@@ -16,7 +16,7 @@ interface Column {
 }
 
 const CELL = 'px-3 py-2 max-md:px-2';
-const NUMBER = clsx(CELL, 'text-right font-mono-theme text-secondary whitespace-nowrap');
+const NUMBER = clsx(CELL, 'text-right font-mono text-secondary whitespace-nowrap');
 const ROW = 'border-b border-default last:border-0 hover:bg-surface-hover transition-colors';
 
 export function StatsView({plan, metrics}: StatsViewProps) {
@@ -37,8 +37,8 @@ export function StatsView({plan, metrics}: StatsViewProps) {
     ].filter((tile): tile is {label: string; value: string} => Boolean(tile));
 
     return (
-        <section className="block min-h-0 min-w-0">
-            <div className="block-heading">
+        <section className="section min-h-0 min-w-0">
+            <div className="section-heading">
                 <PieChart size={15} aria-hidden="true" />
                 <h2 className="title">{t('editor.visualExplain.statsView')}</h2>
             </div>
@@ -48,12 +48,10 @@ export function StatsView({plan, metrics}: StatsViewProps) {
                     {tiles.map(({label, value}) => (
                         <li
                             key={label}
-                            className="flex flex-col gap-1 min-w-0 p-3 bg-elevated border-[0.1rem] border-default rounded-theme-sm"
+                            className="flex flex-col gap-1 min-w-0 p-3 bg-elevated border-[0.1rem] border-default rounded-sm"
                         >
                             <span className="text-[0.65rem] uppercase tracking-[0.04em] text-secondary">{label}</span>
-                            <span className="font-mono-theme text-base font-semibold text-primary truncate">
-                                {value}
-                            </span>
+                            <span className="font-mono text-base font-semibold text-primary truncate">{value}</span>
                         </li>
                     ))}
                 </ul>
@@ -100,7 +98,7 @@ export function StatsView({plan, metrics}: StatsViewProps) {
                             <tbody>
                                 {stats.relations.map((entry) => (
                                     <tr key={entry.relation} className={ROW}>
-                                        <td className={clsx(CELL, 'font-mono-theme text-primary whitespace-nowrap')}>
+                                        <td className={clsx(CELL, 'font-mono text-primary whitespace-nowrap')}>
                                             {entry.relation}
                                         </td>
                                         <td className={NUMBER}>{entry.accessCount}</td>
@@ -134,10 +132,10 @@ export function StatsView({plan, metrics}: StatsViewProps) {
                             <tbody>
                                 {stats.indexes.map((entry) => (
                                     <tr key={entry.indexName} className={ROW}>
-                                        <td className={clsx(CELL, 'font-mono-theme text-primary whitespace-nowrap')}>
+                                        <td className={clsx(CELL, 'font-mono text-primary whitespace-nowrap')}>
                                             {entry.indexName}
                                         </td>
-                                        <td className={clsx(CELL, 'font-mono-theme text-secondary whitespace-nowrap')}>
+                                        <td className={clsx(CELL, 'font-mono text-secondary whitespace-nowrap')}>
                                             {entry.relation ?? '-'}
                                         </td>
                                         <td className={NUMBER}>{entry.scanCount}</td>
@@ -162,7 +160,7 @@ function StatsSection({icon: Icon, title, children}: {icon: LucideIcon; title: s
                 <Icon size={14} className="shrink-0" aria-hidden="true" />
                 {title}
             </h3>
-            <div className="min-w-0 max-w-full overflow-x-auto border-[0.1rem] border-default rounded-theme-sm">
+            <div className="min-w-0 max-w-full overflow-x-auto border-[0.1rem] border-default rounded-sm">
                 {children}
             </div>
         </div>
@@ -202,7 +200,7 @@ function ShareBar({share}: {share: number | null}) {
             <div className="flex-1 h-1.5 min-w-10 overflow-hidden rounded-full bg-surface-tertiary">
                 <div className="h-full rounded-full bg-accent-primary" style={{width: `${percent}%`}} />
             </div>
-            <span className="w-9 shrink-0 text-right font-mono-theme text-[0.7rem] text-secondary">
+            <span className="w-9 shrink-0 text-right font-mono text-[0.7rem] text-secondary">
                 {Math.round(percent)}%
             </span>
         </div>

@@ -1,0 +1,77 @@
+.list {
+    border: 0.1rem solid var(--color-border);
+    background-color: var(--color-bg);
+}
+
+.item {
+    border-bottom: 0.1rem solid var(--color-border);
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    &[open] .icon {
+        transform: rotate(45deg);
+        color: var(--color-accent-teal);
+    }
+}
+
+.question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.125rem 1.5rem;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+    list-style: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &::-webkit-details-marker {
+        display: none;
+    }
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--color-surface) 60%, var(--color-bg));
+    }
+
+    &:focus-visible {
+        outline: 0.125rem solid var(--color-accent-teal);
+        outline-offset: -0.125rem;
+    }
+}
+
+.icon {
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+.answer {
+    margin: 0;
+    padding: 0 1.5rem 1.25rem;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.6;
+
+    a {
+        color: var(--color-accent-teal);
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    code {
+        padding: 0.1em 0.35em;
+        border: 0.1rem solid var(--color-border);
+        border-radius: 0.25rem;
+        background-color: var(--color-surface);
+        color: var(--color-text-primary);
+        font-family: var(--font-mono);
+        font-size: 0.8em;
+    }
+}

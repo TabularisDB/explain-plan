@@ -23,13 +23,13 @@ const FEATURES: {icon: LucideIcon; color: string; text: string}[] = [
 
 export function AiUpsellView() {
     return (
-        <div className="block">
-            <div className="block-heading">
+        <div className="section">
+            <div className="section-heading">
                 <StarsIcon size={15} aria-hidden="true" />
                 <h2 className="title">AI Analysis</h2>
             </div>
 
-            <div className="grid items-center justify-center gap-12 p-4 border-[0.1rem] border-default rounded-theme-sm min-[1100px]:grid-cols-[minmax(0,35rem)_minmax(0,30rem)]">
+            <div className="grid items-center justify-center gap-12 p-4 border-[0.1rem] border-default rounded-sm min-[1100px]:grid-cols-[minmax(0,35rem)_minmax(0,30rem)]">
                 <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-2.5">
                         <img src="/tabularis-logo.svg" alt="" width={32} height={32} className="shrink-0" />

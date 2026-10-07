@@ -78,11 +78,9 @@ export function SummaryBar({plan, viewMode, onViewModeChange, aiEnabled}: Summar
 
             <ul className="flex flex-wrap gap-x-6 gap-y-2 max-md:gap-x-4">
                 {metrics.map(({label, value}) => (
-                    <li
-                        key={label}
-                        className="flex items-center gap-1 text-[0.7rem] text-secondary uppercase tracking-[0.04em]"
-                    >
-                        <strong className="font-mono-theme font-medium text-primary/90">{value}</strong> ({label})
+                    <li key={label} className="flex items-center gap-1 text-[0.7rem] text-secondary">
+                        <strong className="font-mono font-medium text-primary/90">{value}</strong>
+                        <span className="uppercase tracking-[0.04em]">({label})</span>
                     </li>
                 ))}
             </ul>

@@ -1,92 +1,80 @@
-import type {ExplainPlan} from '@tabularis/explain';
 import clsx from 'clsx';
-import {AlertCircleIcon, Check, DatabaseIcon, FileCode, Play, TrashIcon, type LucideIcon} from 'lucide-react';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-markup';
-import {useEffect, useRef, useState, type ClipboardEvent, type FormEvent} from 'react';
+import {AlertCircleIcon, FileCode, FileUp, HelpCircleIcon, Play, TrashIcon, Upload} from 'lucide-react';
+import {
+    useEffect,
+    useState,
+    type ClipboardEvent,
+    type DragEvent,
+    type FormEvent,
+    type KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
+import {useDropzone} from 'react-dropzone';
 import Editor from 'react-simple-code-editor';
-import styles from './PlanForm.module.scss';
-import {prettifyJson, prettifyXml, EngineChoice, parsePlan, ENGINE_OPTIONS} from '../../../../lib/parse';
+import {formatPlan, highlightPlan} from '../../../../lib/highlight';
+import {detectEngine, ENGINE_OPTIONS, parsePlan, type EngineChoice} from '../../../../lib/parse';
+import {MAX_PLAN_FILE_SIZE, PLAN_FILE_ACCEPT, planFileErrorMessage, readPlanFile} from '../../../../lib/plan-file';
 import {SAMPLES} from '../../../../samples';
 import {Button} from '../../../ui/Button/Button';
+import {Dropdown} from '../../../ui/Dropdown/Dropdown';
+import {EngineIcon} from '../../../ui/EngineIcon/EngineIcon';
+import styles from './PlanForm.module.scss';
 
-const PLACEHOLDER =
-    'Paste your EXPLAIN output here…\n\n' +
-    'PostgreSQL:  EXPLAIN (ANALYZE, BUFFERS) SELECT …   or   EXPLAIN (FORMAT JSON) SELECT …\n' +
-    'MySQL:       EXPLAIN FORMAT=JSON SELECT …   or   EXPLAIN ANALYZE SELECT …\n' +
-    'SQLite:      EXPLAIN QUERY PLAN SELECT …\n' +
-    'SQL Server:  SHOWPLAN_XML or STATISTICS XML output\n' +
-    'Oracle:      PLAN_TABLE rows as JSON — select Oracle for the query';
+const PLACEHOLDER = 'Paste your EXPLAIN output here, drop a file, or load a sample…';
+
+const DETECT_DELAY = 300;
+
+const engineLabel = (value: EngineChoice) =>
+    ENGINE_OPTIONS.find((option) => option.value === value)?.label ?? 'Auto-detect';
 
 const SAMPLE_OPTIONS = SAMPLES.map((item) => ({value: item.engine, label: item.label}));
-
-const MENU_MAX_HEIGHT = 16 * 18;
-
-const formatPlan = (text: string) => prettifyJson(text) ?? prettifyXml(text) ?? text;
-
-function highlightPlan(code: string): string {
-    if (/^\s*[{[]/.test(code)) return Prism.highlight(code, Prism.languages.json, 'json');
-    if (/^\s*</.test(code)) return Prism.highlight(code, Prism.languages.markup, 'markup');
-    return code.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-}
-
-type MenuName = 'engine' | 'sample';
-
-interface Pill {
-    name: MenuName;
-    icon: LucideIcon;
-    label: string;
-    heading?: string;
-    options: {value: EngineChoice; label: string}[];
-    selected?: EngineChoice;
-    onSelect: (value: EngineChoice) => void;
-}
 
 interface PlanFormProps {
     engine: EngineChoice;
     onEngineChange: (engine: EngineChoice) => void;
-    onPlan: (plan: ExplainPlan) => void;
+    onPlan: (raw: string, engine: EngineChoice) => void;
 }
+
+const letTextDragThrough = (event: DragEvent<HTMLElement>) => {
+    if (!event.dataTransfer.types.includes('Files')) event.stopPropagation();
+};
 
 export function PlanForm({engine, onEngineChange, onPlan}: PlanFormProps) {
     const [raw, setRaw] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [openMenu, setOpenMenu] = useState<MenuName | null>(null);
-    const [openUp, setOpenUp] = useState(false);
-    const pillsRef = useRef<HTMLDivElement>(null);
+    const [detected, setDetected] = useState<EngineChoice | null>(null);
 
     useEffect(() => {
-        if (!openMenu) return;
-        const close = (event: Event) => {
-            if (
-                event instanceof KeyboardEvent
-                    ? event.key === 'Escape'
-                    : !pillsRef.current?.contains(event.target as Node)
-            ) {
-                setOpenMenu(null);
-            }
-        };
-        document.addEventListener('pointerdown', close);
-        document.addEventListener('keydown', close);
-        return () => {
-            document.removeEventListener('pointerdown', close);
-            document.removeEventListener('keydown', close);
-        };
-    }, [openMenu]);
+        if (engine !== 'auto') return;
+        const timer = setTimeout(() => setDetected(detectEngine(raw)), DETECT_DELAY);
+        return () => clearTimeout(timer);
+    }, [raw, engine]);
 
-    const toggleMenu = (name: MenuName, trigger: HTMLElement) => {
-        if (openMenu === name) return setOpenMenu(null);
-        const {top, bottom} = trigger.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - bottom;
-        setOpenUp(spaceBelow < MENU_MAX_HEIGHT && top > spaceBelow);
-        setOpenMenu(name);
-    };
+    const shownEngine = engine === 'auto' && detected ? detected : engine;
+    const engineButtonLabel = engine === 'auto' && detected ? `Auto · ${engineLabel(detected)}` : engineLabel(engine);
 
     const updateContent = (value: string) => {
         setRaw(value);
         setError(null);
     };
+
+    const {getRootProps, getInputProps, isDragActive, open} = useDropzone({
+        accept: PLAN_FILE_ACCEPT,
+        maxSize: MAX_PLAN_FILE_SIZE,
+        multiple: false,
+        noClick: true,
+        noKeyboard: true,
+        getErrorMessage: planFileErrorMessage,
+        onDropAccepted: async ([file]) => {
+            try {
+                updateContent(formatPlan(await readPlanFile(file)));
+            } catch {
+                setError('This file could not be read.');
+            }
+        },
+        onDropRejected: ([rejection]) => {
+            setError(rejection?.errors[0]?.message ?? 'This file could not be loaded.');
+        },
+    });
 
     const loadSample = (value: EngineChoice) => {
         const picked = SAMPLES.find((item) => item.engine === value);
@@ -97,120 +85,111 @@ export function PlanForm({engine, onEngineChange, onPlan}: PlanFormProps) {
 
     const handlePaste = (event: ClipboardEvent<HTMLDivElement>) => {
         const target = event.target;
-        if (!(target instanceof HTMLTextAreaElement)) return;
+        if (!(target instanceof HTMLTextAreaElement) || event.clipboardData.files.length > 0) return;
         event.preventDefault();
         const formatted = formatPlan(event.clipboardData.getData('text'));
         const {selectionStart, selectionEnd, value} = target;
         updateContent(value.slice(0, selectionStart) + formatted + value.slice(selectionEnd));
     };
 
-    const handleSubmit = (event: FormEvent) => {
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            onPlan(parsePlan(raw, engine));
+            parsePlan(raw, engine);
+            onPlan(raw, engine);
         } catch (err) {
             setError(err instanceof Error ? err.message : String(err));
         }
     };
 
-    const pills: Pill[] = [
-        {
-            name: 'engine',
-            icon: DatabaseIcon,
-            label: ENGINE_OPTIONS.find((option) => option.value === engine)?.label ?? 'Auto-detect',
-            heading: 'Database engine',
-            options: ENGINE_OPTIONS,
-            selected: engine,
-            onSelect: onEngineChange,
-        },
-        {
-            name: 'sample',
-            icon: FileCode,
-            label: 'Load sample',
-            options: SAMPLE_OPTIONS,
-            onSelect: loadSample,
-        },
-    ];
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLFormElement>) => {
+        if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+            event.preventDefault();
+            event.currentTarget.requestSubmit();
+        }
+    };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={clsx('plan-editor', styles.editor)}>
-                <Editor
-                    value={raw}
-                    onValueChange={updateContent}
-                    onPaste={handlePaste}
-                    highlight={highlightPlan}
-                    placeholder={PLACEHOLDER}
-                    padding={0}
-                    spellCheck={false}
-                    textareaClassName={styles.textarea}
-                />
-            </div>
+        <div
+            {...getRootProps({
+                onDragOver: letTextDragThrough,
+                onDrop: letTextDragThrough,
+                className: clsx(styles.form, isDragActive && styles.dragging),
+            })}
+        >
+            <input {...getInputProps()} />
 
-            <footer className={styles.footer}>
-                <div ref={pillsRef} className={styles.pills}>
-                    {pills.map(({name, icon: Icon, label, heading, options, selected, onSelect}) => (
-                        <div key={name} className={styles.pillWrapper}>
-                            <button
-                                type="button"
-                                className={clsx(styles.pill, openMenu === name && styles.pillActive)}
-                                aria-expanded={openMenu === name}
-                                onClick={(event) => toggleMenu(name, event.currentTarget)}
-                            >
-                                <Icon size={15} aria-hidden="true" />
-                                {label}
-                            </button>
-
-                            {openMenu === name && (
-                                <div className={clsx(styles.menu, openUp && styles.menuUp)}>
-                                    {heading && <span className={styles.menuHeading}>{heading}</span>}
-                                    {options.map((option) => (
-                                        <button
-                                            key={option.value}
-                                            type="button"
-                                            className={clsx(
-                                                styles.menuItem,
-                                                option.value === selected && styles.menuItemSelected,
-                                            )}
-                                            onClick={() => {
-                                                onSelect(option.value);
-                                                setOpenMenu(null);
-                                            }}
-                                        >
-                                            {option.label}
-                                            {option.value === selected && <Check size={14} aria-hidden="true" />}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
+            {isDragActive && (
+                <div className={styles.dropOverlay} aria-hidden="true">
+                    <FileUp size={22} />
+                    Drop your EXPLAIN file
                 </div>
-
-                <div className={styles.actions}>
-                    <Button
-                        type="button"
-                        size="sm"
-                        variant="secondary"
-                        aria-label="Clear"
-                        disabled={!raw && !error}
-                        onClick={() => updateContent('')}
-                    >
-                        <TrashIcon size={16} aria-hidden="true" />
-                    </Button>
-                    <Button type="submit" size="sm">
-                        <Play size={16} aria-hidden="true" />
-                        Visualize plan
-                    </Button>
-                </div>
-            </footer>
-
-            {error && (
-                <p className={styles.error} role="alert">
-                    <AlertCircleIcon size={16} />
-                    {error}
-                </p>
             )}
-        </form>
+
+            <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className={styles.formContent}>
+                <div className={clsx('plan-editor', styles.editor)}>
+                    <Editor
+                        value={raw}
+                        onValueChange={updateContent}
+                        onPaste={handlePaste}
+                        highlight={highlightPlan}
+                        placeholder={PLACEHOLDER}
+                        padding={0}
+                        spellCheck={false}
+                        textareaClassName={styles.textarea}
+                    />
+                </div>
+
+                <footer className={styles.footer}>
+                    <div className={styles.tools}>
+                        <Dropdown
+                            icon={<EngineIcon engine={shownEngine} />}
+                            label={engineButtonLabel}
+                            heading="Database engine"
+                            options={ENGINE_OPTIONS}
+                            selected={engine}
+                            onSelect={onEngineChange}
+                            renderOptionIcon={(value) => <EngineIcon engine={value} size={14} />}
+                            triggerClassName={styles.toolButton}
+                        />
+                        <Dropdown
+                            icon={<FileCode size={15} aria-hidden="true" />}
+                            label="Load sample"
+                            options={SAMPLE_OPTIONS}
+                            onSelect={loadSample}
+                            renderOptionIcon={(value) => <EngineIcon engine={value} size={14} />}
+                            triggerClassName={styles.toolButton}
+                        />
+                    </div>
+
+                    <div className={styles.actions}>
+                        <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            aria-label="Clear"
+                            disabled={!raw && !error}
+                            onClick={() => updateContent('')}
+                        >
+                            <TrashIcon size={16} aria-hidden="true" />
+                        </Button>
+                        <Button type="button" onClick={open} size="sm" variant="secondary">
+                            <Upload size={16} aria-hidden="true" />
+                        </Button>
+                        <Button type="submit" size="sm" aria-keyshortcuts="Control+Enter Meta+Enter">
+                            <Play size={16} aria-hidden="true" />
+                            Visualize plan
+                        </Button>
+                    </div>
+                </footer>
+
+                {error && (
+                    <p className={styles.error} role="alert">
+                        <AlertCircleIcon size={16} />
+                        {error}
+                    </p>
+                )}
+            </form>
+        </div>
     );
 }

@@ -27,7 +27,7 @@ function Row({label, children, strong}: {label: string; children: React.ReactNod
     return (
         <div className="flex items-center justify-between gap-3">
             <dt className="text-muted">{label}</dt>
-            <dd className={clsx('m-0 font-mono-theme', strong ? 'font-semibold text-primary' : 'text-secondary')}>
+            <dd className={clsx('m-0 font-mono', strong ? 'font-semibold text-primary' : 'text-secondary')}>
                 {children}
             </dd>
         </div>
@@ -50,7 +50,7 @@ export const PlanNode = memo(({data}: NodeProps<PlanNodeType>) => {
     return (
         <div
             className={clsx(
-                'min-w-[260px] max-w-[300px] overflow-hidden text-xs bg-elevated rounded-theme-sm shadow-xl transition-shadow',
+                'min-w-[260px] max-w-[300px] overflow-hidden text-xs bg-elevated rounded-sm shadow-xl transition-shadow',
                 'border border-strong border-l-4',
                 heat.border,
                 isSelected && 'ring-2 ring-accent-primary',
@@ -59,7 +59,7 @@ export const PlanNode = memo(({data}: NodeProps<PlanNodeType>) => {
             <div className={clsx('flex flex-col gap-0.5 px-3 py-2 border-b border-default', heat.header)}>
                 <div className="flex items-center gap-2">
                     {metrics && (
-                        <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-surface-tertiary font-mono-theme text-[0.65rem] text-secondary">
+                        <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-surface-tertiary font-mono text-[0.65rem] text-secondary">
                             #{metrics.index}
                         </span>
                     )}
@@ -69,7 +69,7 @@ export const PlanNode = memo(({data}: NodeProps<PlanNodeType>) => {
                         {node.node_type}
                     </span>
                 </div>
-                {node.relation && <span className="font-mono-theme text-muted">{node.relation}</span>}
+                {node.relation && <span className="font-mono text-muted">{node.relation}</span>}
             </div>
 
             <dl className="flex flex-col gap-1 m-0 px-3 py-2">
@@ -111,12 +111,12 @@ export const PlanNode = memo(({data}: NodeProps<PlanNodeType>) => {
                 <div className="flex flex-col gap-1 px-3 py-2 border-t border-default">
                     <DiagnosticChips diagnostics={diagnostics} />
                     {node.filter && (
-                        <span className="truncate font-mono-theme text-[0.65rem] text-muted">
+                        <span className="truncate font-mono text-[0.65rem] text-muted">
                             {t('editor.visualExplain.filter')}: {node.filter}
                         </span>
                     )}
                     {node.index_condition && (
-                        <span className="truncate font-mono-theme text-[0.65rem] text-muted">
+                        <span className="truncate font-mono text-[0.65rem] text-muted">
                             {t('editor.visualExplain.indexCondition')}: {node.index_condition}
                         </span>
                     )}

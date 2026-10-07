@@ -7,7 +7,6 @@ import './index.css';
 import './i18n';
 import App from './App';
 import '@fontsource-variable/urbanist';
-import '@fontsource-variable/outfit';
 import '@fontsource-variable/jetbrains-mono';
 import {BrowserRouter} from 'react-router-dom';
 

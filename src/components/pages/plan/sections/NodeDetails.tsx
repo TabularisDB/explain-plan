@@ -129,7 +129,7 @@ function DetailSection({title, entries}: {title: string; entries: Entry[]}) {
                 {entries.map(([label, value]) => (
                     <div key={label} className="flex flex-col gap-1 px-4 py-2.5">
                         <dt className="text-[0.7rem] text-muted">{label}</dt>
-                        <dd className="m-0 font-mono-theme leading-relaxed text-secondary break-words">{value}</dd>
+                        <dd className="m-0 font-mono leading-relaxed text-secondary break-words">{value}</dd>
                     </div>
                 ))}
             </dl>

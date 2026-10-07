@@ -18,14 +18,14 @@ export function GraphView({plan, metrics, diagnostics, selectedId, onSelect}: Gr
     const selectedNode = findExplainNode(plan.root, selectedId);
 
     return (
-        <section className="block">
-            <div className="block-heading">
+        <section className="section">
+            <div className="section-heading">
                 <Network size={15} aria-hidden="true" />
                 <h2 className="title">{t('editor.visualExplain.graphView')}</h2>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-4 h-[500px]">
-                <div className="h-[400px] lg:h-full flex-1 min-w-0 overflow-hidden border-[0.1rem] border-default rounded-theme-sm">
+                <div className="h-[400px] lg:h-full flex-1 min-w-0 overflow-hidden border-[0.1rem] border-default rounded-sm">
                     <Graph
                         plan={plan}
                         metrics={metrics}
@@ -37,7 +37,7 @@ export function GraphView({plan, metrics, diagnostics, selectedId, onSelect}: Gr
 
                 <aside
                     className={clsx(
-                        'lg:w-[320px] shrink-0 max-h-[400px] lg:max-h-none lg:h-full overflow-y-auto border-[0.1rem] border-default rounded-theme-sm',
+                        'lg:w-[320px] shrink-0 max-h-[400px] lg:max-h-none lg:h-full overflow-y-auto border-[0.1rem] border-default rounded-sm',
                         !selectedNode && 'max-lg:hidden',
                     )}
                 >

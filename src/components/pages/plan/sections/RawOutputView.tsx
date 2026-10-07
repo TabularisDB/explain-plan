@@ -12,8 +12,8 @@ export function RawOutputView({plan}: RawOutputProps) {
     const html = useMemo(() => highlightPlan(formatPlan(plan.raw_output ?? '')), [plan.raw_output]);
 
     return (
-        <section className="block">
-            <div className="block-heading">
+        <section className="section">
+            <div className="section-heading">
                 <FileText size={15} aria-hidden="true" />
                 <h2 className="title">
                     Raw output (<span className="capitalize">{plan.driver}</span>)
@@ -23,8 +23,8 @@ export function RawOutputView({plan}: RawOutputProps) {
                 className={clsx(
                     'plan-editor',
                     'w-full min-w-0 max-w-full overflow-x-auto',
-                    'p-4 font-mono-theme text-[0.8rem] leading-[1.6] text-secondary',
-                    'border-[0.1rem] border-default rounded-theme-sm',
+                    'p-4 font-mono text-[0.8rem] leading-[1.6] text-secondary',
+                    'border-[0.1rem] border-default rounded-sm',
                 )}
                 dangerouslySetInnerHTML={{__html: html}}
             />

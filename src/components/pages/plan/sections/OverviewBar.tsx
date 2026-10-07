@@ -137,8 +137,8 @@ export function OverviewBar({plan, metrics, onSelectNode}: OverviewProps) {
     }
 
     return (
-        <section className="block">
-            <div className="block-heading">
+        <section className="section">
+            <div className="section-heading">
                 <TargetIcon size={15} aria-hidden="true" />
                 <h2 className="title">{t('editor.visualExplain.overview')}</h2>
                 <span className="text-[0.7rem] uppercase text-secondary">
@@ -171,7 +171,7 @@ export function OverviewBar({plan, metrics, onSelectNode}: OverviewProps) {
                                         type="button"
                                         className={clsx(
                                             'flex flex-col gap-1 w-full h-full p-3 text-left text-primary',
-                                            'border-[0.1rem] rounded-theme-sm cursor-pointer transition-colors outline-none',
+                                            'border-[0.1rem] rounded-sm cursor-pointer transition-colors outline-none',
                                             TONES[tone].card,
                                         )}
                                         onClick={() => onSelectNode(nodeId)}
@@ -194,7 +194,7 @@ export function OverviewBar({plan, metrics, onSelectNode}: OverviewProps) {
                     )}
 
                     {legend.length > 0 && (
-                        <div className="flex flex-col gap-1 p-3 border-[0.1rem] border-[gray]/30 bg-[gray]/8 rounded-theme-sm">
+                        <div className="flex flex-col gap-1 p-3 border-[0.1rem] border-[gray]/30 bg-[gray]/8 rounded-sm">
                             <span className="inline-flex items-center gap-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.04em] text-secondary">
                                 <BookOpenText size={14} aria-hidden="true" />
                                 {t('editor.visualExplain.driverNotes')}

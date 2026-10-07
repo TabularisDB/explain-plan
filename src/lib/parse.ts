@@ -147,6 +147,25 @@ export function prettifyXml(text: string): string | null {
     return formatted === trimmed ? null : formatted;
 }
 
+const AUTO_ENGINES = ['sqlserver', 'oracle', 'postgres', 'sqlite', 'mysql'] as const;
+
+function sniffPlan(trimmed: string): {engine: ExplainEngine; plan: ExplainPlan} | null {
+    for (const candidate of AUTO_ENGINES) {
+        if (candidate === 'mysql' && !trimmed.startsWith('{') && !/^\s*->/m.test(trimmed)) continue;
+        try {
+            return {engine: candidate, plan: parsePlan(trimmed, candidate)};
+        } catch {
+            continue;
+        }
+    }
+    return null;
+}
+
+export function detectEngine(raw: string): ExplainEngine | null {
+    const trimmed = raw.trim();
+    return trimmed ? (sniffPlan(trimmed)?.engine ?? null) : null;
+}
+
 /**
  * Parse a pasted EXPLAIN payload for the chosen engine. With `"auto"` the
  * engines are tried in order of how distinctive their formats are — SQL

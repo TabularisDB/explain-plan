@@ -10,6 +10,8 @@
 .bgGrid {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100dvh;
     z-index: 0;
     pointer-events: none;
     background-image: radial-gradient(rgba(148, 163, 184, 0.1) 1.5px, transparent 1.5px);
@@ -78,118 +80,4 @@
     font-size: 1rem;
     font-weight: 300;
     line-height: 1.4;
-}
-
-.help {
-    z-index: 1;
-    width: 100%;
-    max-width: 900px;
-    margin: 1rem auto 0;
-    color: var(--color-text-secondary);
-    font-size: 0.8rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    summary {
-        color: var(--color-text-primary);
-        cursor: pointer;
-        font-size: 0.9rem;
-    }
-
-    p {
-        font-size: 0.85rem;
-        line-height: 1.4;
-        font-weight: 300;
-        padding: 0 0.5rem;
-    }
-
-    pre {
-        padding: 0.75rem;
-        margin: 0.8rem 0.5rem 0;
-        overflow-x: auto;
-        border: 0.1rem solid var(--color-border);
-        font-family: var(--font-mono);
-        border-radius: var(--radius-sm);
-        font-size: 0.7rem;
-        background-color: var(--color-bg);
-    }
-}
-
-.highlights {
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 900px;
-    margin: 8rem auto 0;
-}
-
-.highlightsHeading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    text-align: center;
-}
-
-.highlightsTitle {
-    color: var(--color-text-primary);
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 5vw, 2rem);
-    font-weight: 500;
-}
-
-.highlightsDescription {
-    max-width: 620px;
-    color: var(--color-text-secondary);
-    font-weight: 300;
-    line-height: 1.5;
-}
-
-.highlightsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: 0.1rem solid var(--color-border);
-    border-left: 0.1rem solid var(--color-border);
-}
-
-.highlight {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1.5rem;
-    border-right: 0.1rem solid var(--color-border);
-    border-bottom: 0.1rem solid var(--color-border);
-    background-color: var(--color-bg);
-}
-
-.highlightKicker {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    color: var(--color-accent-teal);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-
-.highlightTitle {
-    color: var(--color-text-primary);
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-.highlightText {
-    margin: 0;
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-    font-weight: 300;
-    line-height: 1.5;
 }

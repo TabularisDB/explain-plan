@@ -80,7 +80,7 @@ export function DiagnosticChips({diagnostics, iconsOnly = false, className}: Dia
                     >
                         <Icon size={10} className="shrink-0" aria-hidden="true" />
                         {!iconsOnly && <span className="font-medium">{label}</span>}
-                        {diagnostic.value && <span className="font-mono-theme opacity-90">{diagnostic.value}</span>}
+                        {diagnostic.value && <span className="font-mono opacity-90">{diagnostic.value}</span>}
                     </span>
                 );
             })}
@@ -109,7 +109,7 @@ export function DiagnosticList({diagnostics}: {diagnostics: ExplainDiagnostic[]}
                                     {t(diagnostic.labelKey)}
                                 </span>
                                 {diagnostic.value && (
-                                    <span className="font-mono-theme text-[0.7rem] text-secondary">
+                                    <span className="font-mono text-[0.7rem] text-secondary">
                                         {diagnostic.value}
                                     </span>
                                 )}

@@ -68,8 +68,8 @@ export function DiagramView({plan, metrics, diagnostics, selectedId, onSelect}: 
     const selectedNode = findExplainNode(plan.root, selectedId);
 
     return (
-        <section className="block min-h-0 flex-1">
-            <div className="block-heading">
+        <section className="section min-h-0 flex-1">
+            <div className="section-heading">
                 <BarChart3 size={15} aria-hidden="true" />
                 <h2 className="title">{t('editor.visualExplain.diagramView')}</h2>
 
@@ -102,7 +102,7 @@ export function DiagramView({plan, metrics, diagnostics, selectedId, onSelect}: 
             </div>
 
             <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-                <div className="flex-1 min-w-0 min-h-0 overflow-auto border-[0.1rem] border-default rounded-theme-sm">
+                <div className="flex-1 min-w-0 min-h-0 overflow-auto border-[0.1rem] border-default rounded-sm">
                     {rows.length === 0 || metricKind == null ? (
                         <p className="m-0 p-4 text-xs text-secondary">{t('editor.visualExplain.noMetricData')}</p>
                     ) : (
@@ -125,7 +125,7 @@ export function DiagramView({plan, metrics, diagnostics, selectedId, onSelect}: 
                                                 selected ? 'bg-accent-primary/10' : 'hover:bg-surface-hover',
                                             )}
                                         >
-                                            <td className="w-10 px-3 py-2 align-top font-mono-theme text-[0.65rem] text-muted">
+                                            <td className="w-10 px-3 py-2 align-top font-mono text-[0.65rem] text-muted">
                                                 #{nodeMetrics.index}
                                             </td>
                                             <td className="px-1 py-2 align-top">
@@ -142,7 +142,7 @@ export function DiagramView({plan, metrics, diagnostics, selectedId, onSelect}: 
                                                         {node.node_type}
                                                     </span>
                                                     {node.relation && (
-                                                        <span className="truncate font-mono-theme text-[0.7rem] text-muted">
+                                                        <span className="truncate font-mono text-[0.7rem] text-muted">
                                                             {node.relation}
                                                         </span>
                                                     )}
@@ -164,7 +164,7 @@ export function DiagramView({plan, metrics, diagnostics, selectedId, onSelect}: 
                                                     />
                                                 </div>
                                             </td>
-                                            <td className="w-24 px-3 py-2 align-middle text-right whitespace-nowrap font-mono-theme text-secondary">
+                                            <td className="w-24 px-3 py-2 align-middle text-right whitespace-nowrap font-mono text-secondary">
                                                 {value != null ? formatMetricValue(value, metricKind) : '-'}
                                             </td>
                                         </tr>
@@ -175,7 +175,7 @@ export function DiagramView({plan, metrics, diagnostics, selectedId, onSelect}: 
                     )}
                 </div>
 
-                <aside className="lg:w-[320px] shrink-0 max-h-[45vh] lg:max-h-none overflow-y-auto border-[0.1rem] border-default rounded-theme-sm">
+                <aside className="lg:w-[320px] shrink-0 max-h-[45vh] lg:max-h-none overflow-y-auto border-[0.1rem] border-default rounded-sm">
                     <NodeDetails
                         node={selectedNode}
                         hasAnalyzeData={plan.has_analyze_data}

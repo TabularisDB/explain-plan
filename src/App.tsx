@@ -1,20 +1,26 @@
-import type {ExplainPlan} from '@tabularis/explain';
-import {useState} from 'react';
-import {Navigate, Route, Routes, useNavigate} from 'react-router-dom';
+import {Suspense, useMemo, useState} from 'react';
+import {Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+import {CookieConsent} from './components/layout/CookieConsent/CookieConsent';
+import {Footer} from './components/layout/Footer/Footer';
 import {HomeView} from './components/pages/home/HomeView';
 import {PlanView} from './components/pages/plan/PlanView';
 import {isPromoDismissed, TabularisPromoModal} from './components/ui/TabularisPromoModal/TabularisPromoModal';
-import {CookieConsent} from './components/layout/CookieConsent/CookieConsent';
-import {Footer} from './components/layout/Footer/Footer';
+import type {EngineChoice} from './lib/parse';
+import {encodePlan, planFromHash} from './lib/share';
+
+function PlanRoute() {
+    const {hash} = useLocation();
+    const plan = useMemo(() => planFromHash(hash), [hash]);
+    if (!plan) return <Navigate to="/" replace />;
+    return <PlanView plan={plan} />;
+}
 
 export default function App() {
     const navigate = useNavigate();
-    const [plan, setPlan] = useState<ExplainPlan | null>(null);
     const [showPromo, setShowPromo] = useState(false);
 
-    const handlePlan = (parsed: ExplainPlan) => {
-        setPlan(parsed);
-        navigate('/plan');
+    const handlePlan = (raw: string, engine: EngineChoice) => {
+        navigate(`/plan#p=${encodePlan(raw, engine)}`);
         if (!isPromoDismissed()) setShowPromo(true);
     };
 
@@ -23,7 +29,14 @@ export default function App() {
             <main className="container">
                 <Routes>
                     <Route path="/" element={<HomeView onPlan={handlePlan} />} />
-                    <Route path="/plan" element={plan ? <PlanView plan={plan} /> : <Navigate to="/" replace />} />
+                    <Route
+                        path="/plan"
+                        element={
+                            <Suspense fallback={null}>
+                                <PlanRoute />
+                            </Suspense>
+                        }
+                    />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
 

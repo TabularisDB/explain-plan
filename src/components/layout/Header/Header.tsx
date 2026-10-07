@@ -1,4 +1,5 @@
-import {DownloadIcon, RotateCcwIcon} from 'lucide-react';
+import {Check, Copy, DownloadIcon, RotateCcwIcon} from 'lucide-react';
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {TABULARIS} from '../../../lib/links';
 import {Button} from '../../ui/Button/Button';
@@ -9,6 +10,23 @@ interface HeaderProps {
 }
 
 export function Header({isHomePage = true}: HeaderProps) {
+    const [copied, setCopied] = useState(false);
+
+    useEffect(() => {
+        if (!copied) return;
+        const timer = setTimeout(() => setCopied(false), 1500);
+        return () => clearTimeout(timer);
+    }, [copied]);
+
+    const copyLink = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            setCopied(true);
+        } catch {
+            setCopied(false);
+        }
+    };
+
     return (
         <header className={styles.header}>
             <Link to="/" className={styles.logo}>
@@ -17,12 +35,27 @@ export function Header({isHomePage = true}: HeaderProps) {
             </Link>
             <nav className={styles.links}>
                 {!isHomePage && (
-                    <Button href="/" variant="secondary" size="sm" className={styles.button} title="New plan">
-                        <RotateCcwIcon size={16} aria-hidden="true" />
-                        <span className={styles.buttonLabel}>New plan</span>
-                    </Button>
+                    <>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            className={styles.button}
+                            title="Copy a link to this plan"
+                            onClick={copyLink}
+                        >
+                            {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+                            <span className={styles.buttonLabel} aria-live="polite">
+                                {copied ? 'Copied' : 'Copy link'}
+                            </span>
+                        </Button>
+                        <Button href="/" variant="secondary" size="sm" className={styles.button} title="New plan">
+                            <RotateCcwIcon size={16} aria-hidden="true" />
+                            <span className={styles.buttonLabel}>New plan</span>
+                        </Button>
+                    </>
                 )}
-                <Button href={TABULARIS.site} size="sm" className={styles.button} title="Get Tabularis">
+                <Button href={TABULARIS.download} size="sm" className={styles.button} title="Get Tabularis">
                     <DownloadIcon size={16} aria-hidden="true" />
                     <span className={styles.buttonLabel}>Get Tabularis</span>
                 </Button>
