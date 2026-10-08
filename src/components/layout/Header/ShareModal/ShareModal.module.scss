@@ -1,0 +1,48 @@
+.shareFacts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 0.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    list-style: none;
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    svg {
+        flex-shrink: 0;
+        margin-top: 0.2rem;
+        color: var(--color-accent-teal);
+    }
+}
+
+.shareButton {
+    align-self: flex-end;
+}
+
+.shareSpinner {
+    animation: shareSpin 0.8s linear infinite;
+}
+
+.shareError {
+    margin: 0;
+    color: var(--color-accent-error);
+    font-size: 0.8rem;
+}
+
+@keyframes shareSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .shareSpinner {
+        animation: none;
+    }
+}

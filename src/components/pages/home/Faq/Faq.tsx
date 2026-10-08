@@ -45,8 +45,8 @@ const QUESTIONS: Question[] = [
         question: 'How do I share a plan with my team?',
         answer: (
             <>
-                Once the plan is displayed, click Share at the top of the page. A short link is copied to your
-                clipboard, and anyone who opens it sees the same views, without an account. Links work for 30 days.
+                Once the plan is displayed, click Share at the top of the page, then Copy link. Anyone who opens the
+                link sees the same views, without an account. The link stays available for 30 days.
             </>
         ),
     },
