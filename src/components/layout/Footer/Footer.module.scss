@@ -123,6 +123,7 @@
     text-decoration: none;
     transition: color 0.2s ease;
     font-weight: 300;
+    width: fit-content;
 
     &:hover {
         color: var(--color-text-primary);

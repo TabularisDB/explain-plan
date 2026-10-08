@@ -5,14 +5,14 @@ import {Footer} from './components/layout/Footer/Footer';
 import {HomeView} from './components/pages/home/HomeView';
 import {PlanPage} from './components/pages/plan/PlanPage';
 import {isPromoDismissed, TabularisPromoModal} from './components/ui/TabularisPromoModal/TabularisPromoModal';
-import type {EngineChoice} from './lib/engines/engines';
+import type {Engine} from './lib/engines/engines';
 import {storeLocalPlan} from './lib/share/share';
 
 export default function App() {
     const navigate = useNavigate();
     const [showPromo, setShowPromo] = useState(false);
 
-    const handlePlan = (raw: string, engine: EngineChoice) => {
+    const handlePlan = (raw: string, engine: Engine) => {
         storeLocalPlan(raw, engine);
         navigate('/plan');
         if (!isPromoDismissed()) setShowPromo(true);

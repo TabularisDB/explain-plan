@@ -11,7 +11,7 @@ import {
 import {useDropzone} from 'react-dropzone';
 import Editor from 'react-simple-code-editor';
 import {formatPlan, highlightPlan} from '../../../../lib/format/format';
-import {ENGINE_OPTIONS, type EngineChoice} from '../../../../lib/engines/engines';
+import {Engine, ENGINE_OPTIONS, type EngineChoice} from '../../../../lib/engines/engines';
 import {detectEngine, parsePlan} from '../../../../lib/parse/parse';
 import {
     MAX_PLAN_FILE_SIZE,
@@ -37,7 +37,7 @@ const SAMPLE_OPTIONS = SAMPLES.map((item) => ({value: item.engine, label: item.l
 interface PlanFormProps {
     engine: EngineChoice;
     onEngineChange: (engine: EngineChoice) => void;
-    onPlan: (raw: string, engine: EngineChoice) => void;
+    onPlan: (raw: string, engine: Engine) => void;
 }
 
 const letTextDragThrough = (event: DragEvent<HTMLElement>) => {
@@ -101,8 +101,9 @@ export function PlanForm({engine, onEngineChange, onPlan}: PlanFormProps) {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            parsePlan(raw, engine);
-            onPlan(raw, engine);
+            const resolved = engine === 'auto' ? detectEngine(raw) : engine;
+            parsePlan(raw, resolved ?? 'auto');
+            if (resolved) onPlan(raw, resolved);
         } catch (err) {
             setError(err instanceof Error ? err.message : String(err));
         }

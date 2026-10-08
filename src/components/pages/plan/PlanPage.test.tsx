@@ -40,7 +40,7 @@ describe('PlanPage', () => {
 
     it('shows the local plan and copies a short link that opens it', async () => {
         const user = userEvent.setup();
-        storeLocalPlan(SAMPLES[0].text, 'auto');
+        storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
         renderAt('/plan');
 
         expect(await screen.findByRole('tab', {name: 'Graph'})).toBeInTheDocument();

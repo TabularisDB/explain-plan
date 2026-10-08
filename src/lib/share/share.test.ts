@@ -26,7 +26,7 @@ describe('share', () => {
 
     it('opens a locally stored plan for every sample', async () => {
         for (const {engine, text} of SAMPLES) {
-            storeLocalPlan(text, 'auto');
+            storeLocalPlan(text, engine);
             const result = await loadPlan('');
             expect(result.status).toBe('ok');
             if (result.status === 'ok') expect(result.plan.driver).toBe(engine);
@@ -35,7 +35,7 @@ describe('share', () => {
 
     it('creates a short link that opens the same plan', async () => {
         for (const {engine, text} of SAMPLES) {
-            storeLocalPlan(text, 'auto');
+            storeLocalPlan(text, engine);
             const link = await createShortLink();
             expect(link).toMatch(/\/plan#s=[\w-]{10},[\w-]{22}$/);
             const result = await loadPlan(linkHash(link));
@@ -45,7 +45,7 @@ describe('share', () => {
     });
 
     it('never sends the plan or the key to the server', async () => {
-        storeLocalPlan(SAMPLES[0].text, 'auto');
+        storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
         const link = await createShortLink();
         const [body] = [...store.values()];
         const sent = new TextDecoder().decode(body as Uint8Array);
@@ -57,7 +57,7 @@ describe('share', () => {
         vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
             throw new DOMException('QuotaExceededError');
         });
-        storeLocalPlan(SAMPLES[0].text, 'auto');
+        storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
         sessionStorage.clear();
         expect((await loadPlan('')).status).toBe('ok');
         vi.restoreAllMocks();
@@ -68,7 +68,7 @@ describe('share', () => {
     });
 
     it('reports a link with the wrong key or a missing part', async () => {
-        storeLocalPlan(SAMPLES[0].text, 'auto');
+        storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
         const link = await createShortLink();
         expect((await loadPlan(linkHash(link).replace(/,.*/, ',AAAAAAAAAAAAAAAAAAAAAA'))).status).toBe('invalid');
         expect((await loadPlan('#s=plan000000')).status).toBe('invalid');

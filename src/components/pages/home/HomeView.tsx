@@ -1,6 +1,6 @@
 import {Database, Globe, LockOpen, type LucideIcon} from 'lucide-react';
 import {useState} from 'react';
-import type {EngineChoice} from '../../../lib/engines/engines';
+import type {Engine, EngineChoice} from '../../../lib/engines/engines';
 import {Header} from '../../layout/Header/Header';
 import styles from './HomeView.module.scss';
 import {PlanForm} from './PlanForm/PlanForm';
@@ -20,7 +20,7 @@ const BADGES: Badge[] = [
 ];
 
 interface HomeViewProps {
-    onPlan: (raw: string, engine: EngineChoice) => void;
+    onPlan: (raw: string, engine: Engine) => void;
 }
 
 export function HomeView({onPlan}: HomeViewProps) {

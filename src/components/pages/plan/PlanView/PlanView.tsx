@@ -28,7 +28,7 @@ export function PlanView({plan}: PlanViewProps) {
             <SummaryBar plan={plan} viewMode={viewMode} onViewModeChange={setViewMode} aiEnabled />
             <OverviewBar plan={plan} metrics={metrics} onSelectNode={setSelectedNodeId} />
 
-            <div className={styles.dynamicView}>
+            <div>
                 {viewMode === 'ai' ? (
                     <AiUpsellView />
                 ) : viewMode === 'raw' ? (

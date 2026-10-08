@@ -1,9 +1,9 @@
 import type {ExplainPlan} from '@tabularis/explain';
 import * as pako from 'pako';
-import type {EngineChoice} from '../engines/engines';
+import type {Engine} from '../engines/engines';
 import {compactPlan, formatPlan} from '../format/format';
 import {SHARE_WORKER_URL} from '../links/links';
-import {detectEngine, isEngine, parsePlan} from '../parse/parse';
+import {isEngine, parsePlan} from '../parse/parse';
 
 const PAYLOAD_VERSION = 1;
 const IV_LENGTH = 12;
@@ -13,7 +13,7 @@ const SESSION_KEY = 'explain-plan:current';
 interface Payload {
     v: number;
     raw: string;
-    engine: EngineChoice;
+    engine: Engine;
 }
 
 export type PlanResult = {status: 'ok'; plan: ExplainPlan} | {status: 'empty' | 'invalid' | 'missing' | 'failed'};
@@ -33,26 +33,22 @@ function fromBase64Url(text: string): Uint8Array<ArrayBuffer> {
     return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
 
-function packPlan(raw: string, engine: EngineChoice): Uint8Array<ArrayBuffer> {
-    const payload: Payload = {
-        v: PAYLOAD_VERSION,
-        raw: compactPlan(raw),
-        engine: engine === 'auto' ? (detectEngine(raw) ?? 'auto') : engine,
-    };
+function packPlan(raw: string, engine: Engine): Uint8Array<ArrayBuffer> {
+    const payload: Payload = {v: PAYLOAD_VERSION, raw: compactPlan(raw), engine};
     return new Uint8Array(pako.deflateRaw(JSON.stringify(payload), {level: 9}));
 }
 
 function unpackPlan(bytes: Uint8Array): ExplainPlan | null {
     try {
         const payload = JSON.parse(pako.inflateRaw(bytes, {toText: true})) as Payload;
-        if (payload.v !== PAYLOAD_VERSION || !(payload.engine === 'auto' || isEngine(payload.engine))) return null;
+        if (payload.v !== PAYLOAD_VERSION || !isEngine(payload.engine)) return null;
         return parsePlan(formatPlan(payload.raw), payload.engine);
     } catch {
         return null;
     }
 }
 
-export function storeLocalPlan(raw: string, engine: EngineChoice) {
+export function storeLocalPlan(raw: string, engine: Engine) {
     const payload = packPlan(raw, engine);
     try {
         sessionStorage.setItem(SESSION_KEY, toBase64Url(payload));
