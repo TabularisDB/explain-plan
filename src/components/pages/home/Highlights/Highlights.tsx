@@ -30,7 +30,7 @@ const HIGHLIGHTS: Highlight[] = [
     {
         icon: Link2,
         kicker: 'Sharing',
-        title: 'Share a plan with a short link',
+        title: 'Share a plan with a link',
         text: 'The plan is encrypted in your browser before it is stored, and the key exists only in the link, so we cannot read it. Links work for 30 days.',
     },
 ];

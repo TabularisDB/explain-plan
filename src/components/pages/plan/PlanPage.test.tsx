@@ -38,7 +38,7 @@ describe('PlanPage', () => {
         vi.unstubAllGlobals();
     });
 
-    it('explains the short link, then creates and copies it', async () => {
+    it('explains the sharing link, then creates and copies it', async () => {
         const user = userEvent.setup();
         storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
         renderAt('/plan');
@@ -51,17 +51,18 @@ describe('PlanPage', () => {
         expect(dialog).toHaveTextContent(/30 days/i);
         expect(store.size).toBe(0);
 
-        await user.click(within(dialog).getByRole('button', {name: /create and copy link/i}));
-        expect(await within(dialog).findByText('Copied')).toBeInTheDocument();
+        await user.click(within(dialog).getByRole('button', {name: 'Copy link'}));
+        expect(await within(dialog).findByRole('button', {name: 'Copied'})).toHaveFocus();
 
         const link = await navigator.clipboard.readText();
         expect(link).toMatch(/\/plan#s=plan000001,[\w-]{22}$/);
-        expect(within(dialog).getByRole('textbox', {name: 'Short link'})).toHaveValue(link);
 
         await user.keyboard('{Escape}');
         expect(screen.queryByRole('dialog', {name: 'Share this plan'})).not.toBeInTheDocument();
+        await navigator.clipboard.writeText('');
         await user.click(screen.getByRole('button', {name: /share/i}));
-        expect(screen.getByRole('textbox', {name: 'Short link'})).toHaveValue(link);
+        await user.click(screen.getByRole('button', {name: 'Copy link'}));
+        expect(await navigator.clipboard.readText()).toBe(link);
         expect(store.size).toBe(1);
 
         cleanup();
@@ -70,18 +71,20 @@ describe('PlanPage', () => {
         expect(await screen.findByRole('tab', {name: 'Graph'})).toBeInTheDocument();
     });
 
-    it('reuses the current short link instead of storing the plan again', async () => {
+    it('reuses the current sharing link instead of storing the plan again', async () => {
         const user = userEvent.setup();
         storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
         renderAt('/plan');
         await user.click(await screen.findByRole('button', {name: /share/i}));
-        await user.click(screen.getByRole('button', {name: /create and copy link/i}));
+        await user.click(screen.getByRole('button', {name: 'Copy link'}));
         const link = await navigator.clipboard.readText();
 
         cleanup();
+        await navigator.clipboard.writeText('');
         renderAt(`/plan${link.slice(link.indexOf('#'))}`);
         await user.click(await screen.findByRole('button', {name: /share/i}));
-        expect(screen.getByRole('textbox', {name: 'Short link'})).toHaveValue(link);
+        await user.click(screen.getByRole('button', {name: 'Copy link'}));
+        expect(await navigator.clipboard.readText()).toBe(link);
         expect(store.size).toBe(1);
     });
 
@@ -92,17 +95,17 @@ describe('PlanPage', () => {
         vi.stubGlobal('fetch', async () => new Response('Too many requests', {status: 429}));
 
         await user.click(await screen.findByRole('button', {name: /share/i}));
-        await user.click(screen.getByRole('button', {name: /create and copy link/i}));
-        expect(await screen.findByRole('alert')).toHaveTextContent(/could not be created/i);
+        await user.click(screen.getByRole('button', {name: 'Copy link'}));
+        expect(await screen.findByRole('alert')).toHaveTextContent(/could not be copied/i);
     });
 
-    it('explains that a short link has expired', async () => {
+    it('explains that a sharing link has expired', async () => {
         renderAt('/plan#s=plan999999,AAAAAAAAAAAAAAAAAAAAAA');
         expect(await screen.findByRole('heading', {name: /expired or does not exist/i})).toBeInTheDocument();
         expect(screen.queryByRole('button', {name: /share/i})).not.toBeInTheDocument();
     });
 
-    it('explains that a short link is damaged', async () => {
+    it('explains that a sharing link is damaged', async () => {
         renderAt('/plan#s=plan000001');
         expect(await screen.findByRole('heading', {name: /incomplete or damaged/i})).toBeInTheDocument();
     });

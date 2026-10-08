@@ -1,6 +1,6 @@
 import {Check, Clock, Copy, Link2, LoaderCircle, Lock, RotateCw, Users, type LucideIcon} from 'lucide-react';
 import {useEffect, useState} from 'react';
-import {createShortLink} from '../../../../lib/share/share';
+import {createShareLink} from '../../../../lib/share/share';
 import {Button} from '../../../ui/Button/Button';
 import {Modal} from '../../../ui/Modal/Modal';
 import styles from './ShareModal.module.scss';
@@ -12,7 +12,10 @@ const FACTS = [
         icon: Lock,
         text: 'The plan is encrypted in your browser before it is sent. The key exists only in the link, so we cannot read it.',
     },
-    {icon: Clock, text: 'The link works for 30 days. After that, the encrypted plan is deleted.'},
+    {
+        icon: Clock,
+        text: 'The link stays available for 30 days after it was last opened. After that, the encrypted plan is deleted.',
+    },
     {icon: Users, text: 'Anyone with the link can open the plan, without an account.'},
 ];
 
@@ -58,7 +61,7 @@ export function ShareModal({link, onLinkCreated, onClose}: ShareModalProps) {
         if (status === 'creating') return;
         if (!link) setStatus('creating');
 
-        const pending = link ? Promise.resolve(link) : createShortLink();
+        const pending = link ? Promise.resolve(link) : createShareLink();
         const copied = copyToClipboard(pending).then(
             () => true,
             () => false,

@@ -67,7 +67,7 @@ function localPayload(): Uint8Array<ArrayBuffer> | null {
     }
 }
 
-export async function createShortLink(): Promise<string> {
+export async function createShareLink(): Promise<string> {
     const payload = localPayload();
     if (!payload) throw new Error('No plan to share');
 
@@ -90,7 +90,7 @@ export async function createShortLink(): Promise<string> {
     return `${window.location.origin}/plan#s=${id},${toBase64Url(rawKey)}`;
 }
 
-async function loadShortLink(id: string, key: string): Promise<PlanResult> {
+async function loadShareLink(id: string, key: string): Promise<PlanResult> {
     let response: Response;
     try {
         response = await fetch(`${SHARE_API}/api/share/${encodeURIComponent(id)}`);
@@ -127,5 +127,5 @@ export async function loadPlan(hash: string): Promise<PlanResult> {
 
     const [id, key] = shared.split(',');
     if (!id || !key) return {status: 'invalid'};
-    return loadShortLink(id, key);
+    return loadShareLink(id, key);
 }

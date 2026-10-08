@@ -24,7 +24,7 @@ A free online EXPLAIN plan visualizer. Paste the EXPLAIN output of a **PostgreSQ
 
 - **Four views:** an interactive graph, a compact diagram, a sortable table and summary statistics.
 - **Automatic findings:** hotspots, bad row estimates, disk sorts, large sequential scans and cache misses are flagged on each node.
-- **Encrypted short links:** the plan is encrypted in the browser before it is stored, and the key exists only in the link, so the server cannot read it. Links expire after 30 days.
+- **Encrypted sharing links:** the plan is encrypted in the browser before it is stored, and the key exists only in the link, so the server cannot read it. Links expire 30 days after they were last opened.
 - **Auto-detection:** the engine and format are detected from the pasted text, or you can pick them by hand.
 
 > [!NOTE]
@@ -80,7 +80,7 @@ WHERE plan_id = (SELECT MAX(plan_id) FROM plan_table);
 - [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain) for parsing, analysis and the plan views
 - [`@tabularis/explain-sqlserver`](https://www.npmjs.com/package/@tabularis/explain-sqlserver) for SQL Server SHOWPLAN XML
 - [`@tabularis/explain-oracle`](https://www.npmjs.com/package/@tabularis/explain-oracle) for Oracle execution plans
-- [Cloudflare Workers](https://developers.cloudflare.com/workers/) and [R2](https://developers.cloudflare.com/r2/) for the short links
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/) and [R2](https://developers.cloudflare.com/r2/) for the sharing links
 - [Vitest](https://vitest.dev) + Testing Library for tests
 
 ## Development
@@ -111,9 +111,9 @@ vercel deploy
 
 (Framework preset: **Vite**, build command `pnpm build`, output directory `dist`.)
 
-## Short links
+## Sharing links
 
-Short links are served by a small Cloudflare Worker in [`worker/`](./worker), deployed at `share.tabularis.dev`. The browser compresses and encrypts the plan with AES-GCM, sends only the ciphertext, and keeps the key in the part of the link after `#`, which browsers never send to a server. The Worker stores the ciphertext in an R2 bucket, where a lifecycle rule deletes it after 30 days.
+Sharing links are served by a small Cloudflare Worker in [`worker/`](./worker), deployed at `share.tabularis.dev`. The browser compresses and encrypts the plan with AES-GCM, sends only the ciphertext, and keeps the key in the part of the link after `#`, which browsers never send to a server. The Worker stores the ciphertext in an R2 bucket, where a lifecycle rule deletes it 30 days after its last write. Opening a link rewrites a blob that is more than a day old, so links expire 30 days after they were last opened.
 
 ```bash
 cd worker

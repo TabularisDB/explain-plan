@@ -1,6 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {SAMPLES} from '../../samples';
-import {createShortLink, loadPlan, storeLocalPlan} from './share';
+import {createShareLink, loadPlan, storeLocalPlan} from './share';
 
 const linkHash = (link: string) => link.slice(link.indexOf('#'));
 
@@ -33,10 +33,10 @@ describe('share', () => {
         }
     });
 
-    it('creates a short link that opens the same plan', async () => {
+    it('creates a sharing link that opens the same plan', async () => {
         for (const {engine, text} of SAMPLES) {
             storeLocalPlan(text, engine);
-            const link = await createShortLink();
+            const link = await createShareLink();
             expect(link).toMatch(/\/plan#s=[\w-]{10},[\w-]{22}$/);
             const result = await loadPlan(linkHash(link));
             expect(result.status).toBe('ok');
@@ -46,7 +46,7 @@ describe('share', () => {
 
     it('never sends the plan or the key to the server', async () => {
         storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
-        const link = await createShortLink();
+        const link = await createShareLink();
         const [body] = [...store.values()];
         const sent = new TextDecoder().decode(body as Uint8Array);
         expect(sent).not.toContain('Hash Join');
@@ -69,7 +69,7 @@ describe('share', () => {
 
     it('reports a link with the wrong key or a missing part', async () => {
         storeLocalPlan(SAMPLES[0].text, SAMPLES[0].engine);
-        const link = await createShortLink();
+        const link = await createShareLink();
         expect((await loadPlan(linkHash(link).replace(/,.*/, ',AAAAAAAAAAAAAAAAAAAAAA'))).status).toBe('invalid');
         expect((await loadPlan('#s=plan000000')).status).toBe('invalid');
     });

@@ -15,7 +15,7 @@ const QUESTIONS: Question[] = [
             <>
                 No. The plan is parsed in your browser and stays there while you work on it. Only if you click Share is
                 it sent, and it is encrypted in your browser first. The key exists only in the link, so we cannot read
-                shared plans. They are deleted after 30 days.
+                shared plans. They are deleted 30 days after they were last opened.
             </>
         ),
     },
@@ -46,7 +46,8 @@ const QUESTIONS: Question[] = [
         answer: (
             <>
                 Once the plan is displayed, click Share at the top of the page, then Copy link. Anyone who opens the
-                link sees the same views, without an account. The link stays available for 30 days.
+                link sees the same views, without an account. The link stays available for 30 days after it was last
+                opened.
             </>
         ),
     },
