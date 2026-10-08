@@ -1,6 +1,6 @@
 import {Database, Globe, LockOpen, type LucideIcon} from 'lucide-react';
 import {useState} from 'react';
-import type {EngineChoice} from '../../../lib/parse';
+import type {EngineChoice} from '../../../lib/engines/engines';
 import {Header} from '../../layout/Header/Header';
 import styles from './HomeView.module.scss';
 import {PlanForm} from './PlanForm/PlanForm';

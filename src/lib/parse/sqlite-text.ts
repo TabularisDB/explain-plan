@@ -1,21 +1,5 @@
 import type {SqliteEqpRow} from '@tabularis/explain';
 
-/**
- * Turn pasted SQLite `EXPLAIN QUERY PLAN` output into the `(id, parent,
- * detail)` rows that `@tabularis/explain` consumes. Two shapes are accepted:
- *
- * The tree the sqlite3 shell prints by default (or with `.eqp on`):
- *
- *     QUERY PLAN
- *     |--SCAN customers
- *     `--SEARCH orders USING INDEX idx_orders_customer (customer_id=?)
- *
- * And raw pipe-separated rows, either `id|parent|notused|detail` (the
- * classic four-column form) or `id|parent|detail`:
- *
- *     3|0|0|SCAN customers
- *     8|0|0|SEARCH orders USING INDEX idx_orders_customer (customer_id=?)
- */
 export function parseSqliteEqpText(raw: string): SqliteEqpRow[] {
     const lines = raw
         .split('\n')
@@ -53,13 +37,10 @@ function parsePipeRow(line: string): SqliteEqpRow {
     };
 }
 
-// Depth is encoded in three-character prefix chunks: "|  " or "   " for
-// pass-through levels, then "|--" or "`--" in front of the detail itself.
 const TREE_LINE = /^(?:\|  |   )*(?:\|--|`--)(.+)$/;
 
 function parseTreeLines(lines: string[]): SqliteEqpRow[] {
     const rows: SqliteEqpRow[] = [];
-    // Node id at each depth, so a child at depth d hangs off idAtDepth[d - 1].
     const idAtDepth: number[] = [];
     let nextId = 1;
 

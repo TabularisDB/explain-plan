@@ -1,6 +1,6 @@
 import {CircleHelp, Plus} from 'lucide-react';
 import type {ReactNode} from 'react';
-import {TABULARIS} from '../../../../lib/links';
+import {TABULARIS} from '../../../../lib/links/links';
 import styles from './Faq.module.scss';
 
 interface Question {
@@ -13,8 +13,9 @@ const QUESTIONS: Question[] = [
         question: 'Is my query or data sent anywhere?',
         answer: (
             <>
-                No. The plan is parsed in your browser and never uploaded. When you share a plan, it is stored after the
-                # of the link, a part of the URL that browsers never send to the server.
+                No. The plan is parsed in your browser and stays there while you work on it. Only if you click Share is
+                it sent, and it is encrypted in your browser first. The key exists only in the link, so we cannot read
+                shared plans. They are deleted after 30 days.
             </>
         ),
     },
@@ -22,9 +23,10 @@ const QUESTIONS: Question[] = [
         question: 'How is it different from other plan viewers?',
         answer: (
             <>
-                Most online viewers store your plan on their server to give you a link, and the ones that stay in your
-                browser only read PostgreSQL. Here the plan never leaves your browser, the link carries the plan itself,
-                and five engines are supported.
+                Most online viewers store your plan on their server in readable form to give you a link, and the ones
+                that stay in your browser only read PostgreSQL. Here the plan stays in your browser until you share it,
+                a shared plan is encrypted so that only people with the link can read it, and five engines are
+                supported.
             </>
         ),
     },
@@ -43,8 +45,8 @@ const QUESTIONS: Question[] = [
         question: 'How do I share a plan with my team?',
         answer: (
             <>
-                Once the plan is displayed, click Copy link at the top of the page. The whole plan is compressed into
-                the link, so anyone who opens it sees the same views, without an account.
+                Once the plan is displayed, click Share at the top of the page. A short link is copied to your
+                clipboard, and anyone who opens it sees the same views, without an account. Links work for 30 days.
             </>
         ),
     },

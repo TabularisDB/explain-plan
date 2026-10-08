@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {ArrowRight, CheckIcon, XIcon} from 'lucide-react';
-import {TABULARIS} from '../../../lib/links';
+import {TABULARIS} from '../../../lib/links/links';
 import {Button} from '../../ui/Button/Button';
 import styles from './CookieConsent.module.scss';
 

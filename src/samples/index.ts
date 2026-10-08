@@ -1,4 +1,4 @@
-import type {EngineChoice} from '../lib/parse';
+import type {Engine} from '../lib/engines/engines';
 import MYSQL_SAMPLE from './mysql-filesort-join.json?raw';
 import ORACLE_SAMPLE from './oracle-hash-join-analyzed.json?raw';
 import POSTGRES_SAMPLE from './postgres-hash-join.txt?raw';
@@ -6,7 +6,7 @@ import SQLITE_SAMPLE from './sqlite-temp-btree.txt?raw';
 import SQLSERVER_SAMPLE from './sqlserver-statistics.xml?raw';
 
 export interface SamplePlan {
-    engine: Exclude<EngineChoice, 'auto'>;
+    engine: Engine;
     label: string;
     text: string;
 }

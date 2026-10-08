@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Database, Download, Sparkles, X, Zap, type LucideIcon} from 'lucide-react';
-import {TABULARIS} from '../../../lib/links';
+import {TABULARIS} from '../../../lib/links/links';
 import {Button} from '../../ui/Button/Button';
 import {VideoPreview} from '../VideoPreview/VideoPreview';
 import styles from './TabularisPromoModal.module.scss';
@@ -44,9 +44,7 @@ export function TabularisPromoModal({onClose}: TabularisPromoModalProps) {
         if (dontShowAgain) {
             try {
                 localStorage.setItem(DISMISS_KEY, '1');
-            } catch {
-                // Private mode: the modal will show again next time.
-            }
+            } catch {}
         }
         onClose();
     };

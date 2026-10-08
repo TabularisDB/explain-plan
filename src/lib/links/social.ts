@@ -1,9 +1,7 @@
-/** Canonical URL and share copy for this app (mirrors seo.config.json). */
 const SHARE_URL = 'https://explain.tabularis.dev';
 const SHARE_TEXT =
-    'Visualize PostgreSQL, MySQL, SQLite, SQL Server and Oracle EXPLAIN plans as interactive graphs. Free, and nothing leaves your browser.';
+    'Visualize PostgreSQL, MySQL, SQLite, SQL Server and Oracle EXPLAIN plans as interactive graphs. Free, plans stay in your browser, and shared links are encrypted.';
 
-/** Share-intent URLs for the same social networks used on tabularis.dev. */
 export function buildSocialShareUrls() {
     const encodedUrl = encodeURIComponent(SHARE_URL);
 

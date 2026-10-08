@@ -1,6 +1,6 @@
 import {DatabaseIcon} from 'lucide-react';
 import styles from './EngineIcon.module.scss';
-import {EngineChoice} from '../../../lib/parse';
+import type {EngineChoice} from '../../../lib/engines/engines';
 
 interface EngineIconProps {
     engine: EngineChoice;

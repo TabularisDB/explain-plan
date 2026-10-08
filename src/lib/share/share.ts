@@ -1,11 +1,13 @@
 import type {ExplainPlan} from '@tabularis/explain';
 import * as pako from 'pako';
-import {formatPlan} from './highlight';
-import {detectEngine, parsePlan, type EngineChoice} from './parse';
+import type {EngineChoice} from '../engines/engines';
+import {compactPlan, formatPlan} from '../format/format';
+import {SHARE_WORKER_URL} from '../links/links';
+import {detectEngine, isEngine, parsePlan} from '../parse/parse';
 
 const PAYLOAD_VERSION = 1;
 const IV_LENGTH = 12;
-const SHARE_API = import.meta.env.DEV ? '' : 'https://share.tabularis.dev';
+const SHARE_API = import.meta.env.DEV ? '' : SHARE_WORKER_URL;
 const SESSION_KEY = 'explain-plan:current';
 
 interface Payload {
@@ -16,7 +18,7 @@ interface Payload {
 
 export type PlanResult = {status: 'ok'; plan: ExplainPlan} | {status: 'empty' | 'invalid' | 'missing' | 'failed'};
 
-let currentPayload: Uint8Array<ArrayBuffer> | null = null;
+let fallbackPayload: Uint8Array<ArrayBuffer> | null = null;
 
 function toBase64Url(bytes: Uint8Array): string {
     let binary = '';
@@ -31,19 +33,6 @@ function fromBase64Url(text: string): Uint8Array<ArrayBuffer> {
     return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
 
-function compactPlan(raw: string): string {
-    const trimmed = raw.trim();
-    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-        try {
-            return JSON.stringify(JSON.parse(trimmed));
-        } catch {
-            return raw;
-        }
-    }
-    if (trimmed.startsWith('<')) return trimmed.replace(/>\s+</g, '><');
-    return raw;
-}
-
 function packPlan(raw: string, engine: EngineChoice): Uint8Array<ArrayBuffer> {
     const payload: Payload = {
         v: PAYLOAD_VERSION,
@@ -56,7 +45,7 @@ function packPlan(raw: string, engine: EngineChoice): Uint8Array<ArrayBuffer> {
 function unpackPlan(bytes: Uint8Array): ExplainPlan | null {
     try {
         const payload = JSON.parse(pako.inflateRaw(bytes, {toText: true})) as Payload;
-        if (payload.v !== PAYLOAD_VERSION) return null;
+        if (payload.v !== PAYLOAD_VERSION || !(payload.engine === 'auto' || isEngine(payload.engine))) return null;
         return parsePlan(formatPlan(payload.raw), payload.engine);
     } catch {
         return null;
@@ -64,21 +53,21 @@ function unpackPlan(bytes: Uint8Array): ExplainPlan | null {
 }
 
 export function storeLocalPlan(raw: string, engine: EngineChoice) {
-    currentPayload = packPlan(raw, engine);
+    const payload = packPlan(raw, engine);
     try {
-        sessionStorage.setItem(SESSION_KEY, toBase64Url(currentPayload));
+        sessionStorage.setItem(SESSION_KEY, toBase64Url(payload));
+        fallbackPayload = null;
     } catch {
-        return;
+        fallbackPayload = payload;
     }
 }
 
 function localPayload(): Uint8Array<ArrayBuffer> | null {
-    if (currentPayload) return currentPayload;
     try {
         const stored = sessionStorage.getItem(SESSION_KEY);
-        return stored ? fromBase64Url(stored) : null;
+        return stored ? fromBase64Url(stored) : fallbackPayload;
     } catch {
-        return null;
+        return fallbackPayload;
     }
 }
 

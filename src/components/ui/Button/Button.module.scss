@@ -22,8 +22,6 @@
     }
 }
 
-// -- Variants -----------------------------------------------------------------
-
 .primary {
     background: var(--color-accent-blue);
     color: var(--color-text-primary);
@@ -44,8 +42,6 @@
         border-color: var(--color-border-hover);
     }
 }
-
-// -- Sizes ----------------------------------------------------------------------
 
 .sm {
     font-size: 0.85rem;

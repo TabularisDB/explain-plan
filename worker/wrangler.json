@@ -2,6 +2,7 @@
     "name": "explain-share",
     "main": "src/index.ts",
     "compatibility_date": "2026-10-01",
+    "account_id": "92c2b80d9a4ac530ca93a1bd84800d03",
     "workers_dev": false,
     "routes": [{"pattern": "share.tabularis.dev", "custom_domain": true}],
     "r2_buckets": [{"binding": "PLANS", "bucket_name": "explain-shared-plans"}],

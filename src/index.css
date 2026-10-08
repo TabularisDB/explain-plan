@@ -123,8 +123,6 @@ body {
     color: #2dd4bf;
 }
 
-/* HOME VIEW */
-
 .home-section {
     position: relative;
     z-index: 1;
@@ -179,7 +177,6 @@ body {
     line-height: 1.5;
 }
 
-/* PLAN VIEW */
 .section {
     display: flex;
     flex-direction: column;

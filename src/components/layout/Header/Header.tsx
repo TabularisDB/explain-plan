@@ -1,8 +1,8 @@
 import {Check, DownloadIcon, Link2, LoaderCircle, RotateCcwIcon, TriangleAlert} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 import {Link, useLocation} from 'react-router-dom';
-import {TABULARIS} from '../../../lib/links';
-import {createShortLink} from '../../../lib/share';
+import {TABULARIS} from '../../../lib/links/links';
+import {createShortLink} from '../../../lib/share/share';
 import {Button} from '../../ui/Button/Button';
 import styles from './Header.module.scss';
 
@@ -42,6 +42,10 @@ export function Header({isHomePage = true, shareable = false}: HeaderProps) {
     const shortLink = useRef<Promise<string> | null>(null);
 
     useEffect(() => {
+        shortLink.current = null;
+    }, [hash]);
+
+    useEffect(() => {
         if (status !== 'copied' && status !== 'failed') return;
         const timer = setTimeout(() => setStatus('idle'), 2000);
         return () => clearTimeout(timer);
@@ -69,7 +73,7 @@ export function Header({isHomePage = true, shareable = false}: HeaderProps) {
     return (
         <header className={styles.header}>
             <Link to="/" className={styles.logo}>
-                <img src="/tabularis-logo.svg" alt="" width={24} height={24} />
+                <img src="/tabularis-logo.svg" alt="" width={32} height={32} />
                 <span>Explain Plan</span>
             </Link>
             <nav className={styles.links}>

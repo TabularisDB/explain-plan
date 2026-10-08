@@ -10,9 +10,15 @@ import {
 } from 'react';
 import {useDropzone} from 'react-dropzone';
 import Editor from 'react-simple-code-editor';
-import {formatPlan, highlightPlan} from '../../../../lib/highlight';
-import {detectEngine, ENGINE_OPTIONS, parsePlan, type EngineChoice} from '../../../../lib/parse';
-import {MAX_PLAN_FILE_SIZE, PLAN_FILE_ACCEPT, planFileErrorMessage, readPlanFile} from '../../../../lib/plan-file';
+import {formatPlan, highlightPlan} from '../../../../lib/format/format';
+import {ENGINE_OPTIONS, type EngineChoice} from '../../../../lib/engines/engines';
+import {detectEngine, parsePlan} from '../../../../lib/parse/parse';
+import {
+    MAX_PLAN_FILE_SIZE,
+    PLAN_FILE_ACCEPT,
+    planFileErrorMessage,
+    readPlanFile,
+} from '../../../../lib/plan-file/plan-file';
 import {SAMPLES} from '../../../../samples';
 import {Button} from '../../../ui/Button/Button';
 import {Dropdown} from '../../../ui/Dropdown/Dropdown';

@@ -18,5 +18,6 @@ jobs:
                   node-version: 24
                   cache: pnpm
             - run: pnpm install --frozen-lockfile
-            - run: pnpm test
+            - run: pnpm test:coverage
             - run: pnpm build
+            - run: pnpm --filter explain-share typecheck

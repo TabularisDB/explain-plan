@@ -1,8 +1,5 @@
 import '@testing-library/jest-dom/vitest';
-import '@tabularis/explain-oracle';
-import '@tabularis/explain-sqlserver';
 
-// jsdom lacks the observers and media APIs @xyflow/react touches.
 class ResizeObserverStub {
     observe() {}
     unobserve() {}
@@ -32,3 +29,5 @@ if (typeof HTMLMediaElement !== 'undefined') {
     HTMLMediaElement.prototype.pause = () => {};
     HTMLMediaElement.prototype.load = () => {};
 }
+
+window.scrollTo = () => {};

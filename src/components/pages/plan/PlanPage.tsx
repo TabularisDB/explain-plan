@@ -1,6 +1,6 @@
 import {lazy, Suspense, useEffect, useState} from 'react';
 import {Navigate, useLocation} from 'react-router-dom';
-import {loadPlan, type PlanResult} from '../../../lib/share';
+import {loadPlan, type PlanResult} from '../../../lib/share/share';
 import {Header} from '../../layout/Header/Header';
 import styles from './PlanPage.module.scss';
 import {PlanLoading} from './PlanLoading/PlanLoading';

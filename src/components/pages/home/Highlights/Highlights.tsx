@@ -30,8 +30,8 @@ const HIGHLIGHTS: Highlight[] = [
     {
         icon: Link2,
         kicker: 'Sharing',
-        title: 'Share a plan with a link',
-        text: 'The plan is compressed into the link itself, after the #, a part browsers never send to a server. Anyone who opens it sees the same views.',
+        title: 'Share a plan with a short link',
+        text: 'The plan is encrypted in your browser before it is stored, and the key exists only in the link, so we cannot read it. Links work for 30 days.',
     },
 ];
 
@@ -47,8 +47,8 @@ export function Highlights() {
                     Read a plan faster, then share it
                 </h2>
                 <p className="home-section-description">
-                    Slow nodes, bad estimates and common issues are highlighted on the graph, and the whole plan fits in
-                    a link that never touches a server.
+                    Slow nodes, bad estimates and common issues are highlighted on the graph, and an encrypted short
+                    link lets your team see the same thing.
                 </p>
             </div>
 

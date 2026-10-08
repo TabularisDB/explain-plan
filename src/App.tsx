@@ -5,8 +5,8 @@ import {Footer} from './components/layout/Footer/Footer';
 import {HomeView} from './components/pages/home/HomeView';
 import {PlanPage} from './components/pages/plan/PlanPage';
 import {isPromoDismissed, TabularisPromoModal} from './components/ui/TabularisPromoModal/TabularisPromoModal';
-import type {EngineChoice} from './lib/parse';
-import {storeLocalPlan} from './lib/share';
+import type {EngineChoice} from './lib/engines/engines';
+import {storeLocalPlan} from './lib/share/share';
 
 export default function App() {
     const navigate = useNavigate();

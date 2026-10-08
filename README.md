@@ -24,11 +24,11 @@ A free online EXPLAIN plan visualizer. Paste the EXPLAIN output of a **PostgreSQ
 
 - **Four views:** an interactive graph, a compact diagram, a sortable table and summary statistics.
 - **Automatic findings:** hotspots, bad row estimates, disk sorts, large sequential scans and cache misses are flagged on each node.
-- **Shareable links:** the plan is compressed into the part of the URL after `#`, so anyone with the link sees the same views.
+- **Encrypted short links:** the plan is encrypted in the browser before it is stored, and the key exists only in the link, so the server cannot read it. Links expire after 30 days.
 - **Auto-detection:** the engine and format are detected from the pasted text, or you can pick them by hand.
 
 > [!NOTE]
-> Everything runs in your browser. No query is ever executed and nothing is uploaded: the part of a link after `#` is never sent to the server.
+> Plans are parsed in your browser and no query is ever executed. Nothing is sent anywhere until you click Share, and a shared plan is encrypted before it leaves your browser.
 
 Built on [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain), the engine behind the [Visual EXPLAIN](https://tabularis.dev/solutions/visual-explain) feature of [Tabularis](https://tabularis.dev), the open-source database client.
 
@@ -46,7 +46,7 @@ The app shows the command to run for each engine under the editor.
 
 ### Getting an Oracle plan
 
-Oracle has no JSON `EXPLAIN` output, so the app reads the `PLAN_TABLE` rows as a JSON document. Run this in SQL*Plus, SQLcl or SQL Developer (Oracle 12.2+) and paste the returned value. In SQL*Plus, run `SET LONG 1000000` first so the result is not truncated. The query lives in [`src/lib/oracle-query.ts`](./src/lib/oracle-query.ts).
+Oracle has no JSON `EXPLAIN` output, so the app reads the `PLAN_TABLE` rows as a JSON document. Run this in SQL*Plus, SQLcl or SQL Developer (Oracle 12.2+) and paste the returned value. In SQL*Plus, run `SET LONG 1000000` first so the result is not truncated. The query lives in [`oracle-query.ts`](./src/components/pages/home/PlanGuide/oracle-query.ts).
 
 ```sql
 EXPLAIN PLAN FOR SELECT …;
@@ -80,17 +80,19 @@ WHERE plan_id = (SELECT MAX(plan_id) FROM plan_table);
 - [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain) for parsing, analysis and the plan views
 - [`@tabularis/explain-sqlserver`](https://www.npmjs.com/package/@tabularis/explain-sqlserver) for SQL Server SHOWPLAN XML
 - [`@tabularis/explain-oracle`](https://www.npmjs.com/package/@tabularis/explain-oracle) for Oracle execution plans
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/) and [R2](https://developers.cloudflare.com/r2/) for the short links
 - [Vitest](https://vitest.dev) + Testing Library for tests
 
 ## Development
 
 ```bash
 pnpm install
-pnpm dev        # local dev server
-pnpm test       # run the test suite
-pnpm typecheck  # TypeScript only
-pnpm build      # typecheck + production build into dist/
-pnpm preview    # serve the production build locally
+pnpm dev            # local dev server
+pnpm test           # run the test suite
+pnpm test:coverage  # run the tests with a coverage report in coverage/
+pnpm typecheck      # TypeScript only
+pnpm build          # typecheck + production build into dist/
+pnpm preview        # serve the production build locally
 ```
 
 ## Customizable SEO
@@ -108,6 +110,17 @@ vercel deploy
 ```
 
 (Framework preset: **Vite**, build command `pnpm build`, output directory `dist`.)
+
+## Short links
+
+Short links are served by a small Cloudflare Worker in [`worker/`](./worker), deployed at `share.tabularis.dev`. The browser compresses and encrypts the plan with AES-GCM, sends only the ciphertext, and keeps the key in the part of the link after `#`, which browsers never send to a server. The Worker stores the ciphertext in an R2 bucket, where a lifecycle rule deletes it after 30 days.
+
+```bash
+cd worker
+pnpm wrangler deploy
+```
+
+In development, Vite proxies `/api` to the deployed Worker, so `pnpm dev` works without running it locally.
 
 ## Community
 

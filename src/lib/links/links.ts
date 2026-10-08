@@ -1,4 +1,3 @@
-/** Every outbound Tabularis link, in one place. */
 export const TABULARIS = {
     site: 'https://tabularis.dev',
     download: 'https://tabularis.dev/download',
@@ -12,3 +11,5 @@ export const TABULARIS = {
     videoOverview: 'https://tabularis.dev/videos/overview.mp4',
     videoOverviewPoster: 'https://tabularis.dev/videos/overview-hero.webp',
 } as const;
+
+export const SHARE_WORKER_URL = 'https://share.tabularis.dev';

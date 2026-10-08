@@ -1,15 +1,12 @@
 import clsx from 'clsx';
 import {Check, Copy, Info, Terminal} from 'lucide-react';
 import {useEffect, useState} from 'react';
-import {ORACLE_PLAN_QUERY} from '../../../../lib/oracle-query';
-import type {EngineChoice} from '../../../../lib/parse';
+import {ENGINE_LABELS, type Engine, type EngineChoice} from '../../../../lib/engines/engines';
+import {ORACLE_PLAN_QUERY} from './oracle-query';
 import styles from './PlanGuide.module.scss';
 
-type GuideEngine = Exclude<EngineChoice, 'auto'>;
-
 interface Guide {
-    engine: GuideEngine;
-    label: string;
+    engine: Engine;
     text: string;
     command: string;
 }
@@ -17,31 +14,26 @@ interface Guide {
 const GUIDES: Guide[] = [
     {
         engine: 'postgres',
-        label: 'PostgreSQL',
         text: 'ANALYZE runs the query to get real timings, so wrap writes in BEGIN … ROLLBACK. Plain EXPLAIN text works too.',
         command: 'EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)\nSELECT …;',
     },
     {
         engine: 'mysql',
-        label: 'MySQL / MariaDB',
         text: 'FORMAT=JSON gives the planner estimates. On MySQL 8.0.18+, EXPLAIN ANALYZE runs the query and adds real timings.',
         command: 'EXPLAIN FORMAT=JSON\nSELECT …;',
     },
     {
         engine: 'sqlite',
-        label: 'SQLite',
         text: 'Paste the tree printed by the sqlite3 shell as it is, or the raw id|parent|notused|detail rows.',
         command: 'EXPLAIN QUERY PLAN\nSELECT …;',
     },
     {
         engine: 'sqlserver',
-        label: 'SQL Server',
         text: 'SHOWPLAN_XML returns the estimated plan without running the query. Use SET STATISTICS XML ON instead to get the actual plan with real row counts.',
         command: 'SET SHOWPLAN_XML ON;\nGO\nSELECT …;\nGO\nSET SHOWPLAN_XML OFF;\nGO',
     },
     {
         engine: 'oracle',
-        label: 'Oracle',
         text: 'Oracle has no JSON EXPLAIN, so run this in SQL*Plus, SQLcl or SQL Developer (12.2+). In SQL*Plus, run SET LONG 1000000 first.',
         command: ORACLE_PLAN_QUERY,
     },
@@ -52,7 +44,7 @@ interface PlanGuideProps {
 }
 
 export function PlanGuide({engine}: PlanGuideProps) {
-    const [active, setActive] = useState<GuideEngine>('postgres');
+    const [active, setActive] = useState<Engine>('postgres');
     const [copied, setCopied] = useState(false);
     const guide = GUIDES.find((item) => item.engine === active) ?? GUIDES[0];
 
@@ -107,7 +99,7 @@ export function PlanGuide({engine}: PlanGuideProps) {
                             }}
                         >
                             <img src={`/img/engines/${item.engine}.svg`} alt="" />
-                            {item.label}
+                            {ENGINE_LABELS[item.engine]}
                         </button>
                     ))}
                 </div>

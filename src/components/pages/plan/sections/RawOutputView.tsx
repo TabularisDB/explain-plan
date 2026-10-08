@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {FileText} from 'lucide-react';
 import clsx from 'clsx';
 import {ExplainPlan} from '@tabularis/explain';
-import {formatPlan, highlightPlan} from '../../../../lib/highlight';
+import {formatPlan, highlightPlan} from '../../../../lib/format/format';
 
 interface RawOutputProps {
     plan: ExplainPlan;

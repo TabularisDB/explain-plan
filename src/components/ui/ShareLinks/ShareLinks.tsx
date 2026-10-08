@@ -1,6 +1,6 @@
 import type {ComponentType} from 'react';
 import {BlueskyIcon, LinkedInIcon, RedditIcon, XBrandIcon} from '../Icons';
-import {buildSocialShareUrls} from '../../../lib/social';
+import {buildSocialShareUrls} from '../../../lib/links/social';
 
 interface IconProps {
     size?: number;

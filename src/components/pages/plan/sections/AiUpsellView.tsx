@@ -1,6 +1,6 @@
 import {ArrowRight, Database, Download, Sparkles, StarsIcon, Zap, type LucideIcon} from 'lucide-react';
 import {VideoPreview} from '../../../ui/VideoPreview/VideoPreview';
-import {TABULARIS} from '../../../../lib/links';
+import {TABULARIS} from '../../../../lib/links/links';
 import {Button} from '../../../ui/Button/Button';
 
 const FEATURES: {icon: LucideIcon; color: string; text: string}[] = [

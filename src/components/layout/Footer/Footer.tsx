@@ -1,4 +1,4 @@
-import {TABULARIS} from '../../../lib/links';
+import {TABULARIS} from '../../../lib/links/links';
 import {ShareLinks} from '../../ui/ShareLinks/ShareLinks';
 import styles from './Footer.module.scss';
 

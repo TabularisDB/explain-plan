@@ -1,10 +1,3 @@
-/**
- * SQL that turns the latest `EXPLAIN PLAN FOR …` rows in PLAN_TABLE into the
- * `oracle-plan-json` document read by `@tabularis/explain-oracle` (the same
- * payload the Tabularis Oracle plugin captures). Needs Oracle 12.2+ for the
- * SQL/JSON functions; `NULL ON NULL` keeps every column key, which the
- * parser's format sniffer relies on.
- */
 export const ORACLE_PLAN_QUERY = `EXPLAIN PLAN FOR SELECT …;
 
 SELECT JSON_OBJECT(
