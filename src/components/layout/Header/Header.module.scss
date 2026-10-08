@@ -1,0 +1,58 @@
+.header {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: var(--header-height);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+
+    img {
+        flex-shrink: 0;
+    }
+}
+
+.links {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+    .button {
+        gap: 0;
+        padding-inline: 0.5rem;
+    }
+
+    .buttonLabel {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}
+
+.buttonSpinner {
+    animation: buttonSpin 0.8s linear infinite;
+}
+
+@keyframes buttonSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}

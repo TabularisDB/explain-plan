@@ -1,0 +1,17 @@
+                                                        QUERY PLAN
+---------------------------------------------------------------------------------------------------------------------------
+ Hash Join  (cost=230.47..713.98 rows=101 width=488) (actual time=3.049..7.328 rows=100 loops=1)
+   Hash Cond: (t.tenthous = s.tenthous)
+   Buffers: shared hit=345
+   ->  Seq Scan on tenk1 t  (cost=0.00..445.00 rows=10000 width=244) (actual time=0.012..2.501 rows=10000 loops=1)
+         Buffers: shared hit=245
+   ->  Hash  (cost=229.20..229.20 rows=101 width=244) (actual time=2.985..2.986 rows=100 loops=1)
+         Buckets: 1024  Batches: 1  Memory Usage: 35kB
+         ->  Bitmap Heap Scan on onek s  (cost=5.07..229.20 rows=101 width=244) (actual time=0.100..2.930 rows=100 loops=1)
+               Recheck Cond: (unique1 < 100)
+               Heap Blocks: exact=90
+               ->  Bitmap Index Scan on onek_unique1  (cost=0.00..5.04 rows=101 width=0) (actual time=0.043..0.043 rows=100 loops=1)
+                     Index Cond: (unique1 < 100)
+ Planning Time: 0.485 ms
+ Execution Time: 7.481 ms
+(14 rows)

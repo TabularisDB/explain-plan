@@ -1,0 +1,53 @@
+.planLoading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    min-height: calc(100dvh - var(--header-height));
+    padding-bottom: var(--header-height);
+    opacity: 0;
+    animation: planLoadingAppear 0.3s ease 0.2s forwards;
+}
+
+.planLoadingLogo {
+    width: 4rem;
+    aspect-ratio: 24 / 27;
+    background-color: var(--color-text-primary);
+    mask: url('/tabularis-logo.svg') center / contain no-repeat;
+    animation: planLoadingPulse 1s ease-in-out infinite alternate;
+}
+
+.planLoadingText {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+}
+
+@keyframes planLoadingAppear {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes planLoadingPulse {
+    from {
+        opacity: 0.2;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .planLoading {
+        animation: none;
+        opacity: 1;
+    }
+
+    .planLoadingLogo {
+        animation: none;
+        opacity: 0.6;
+    }
+}

@@ -1,7 +1,11 @@
+packages:
+    - worker
 allowBuilds:
-  esbuild: false
+    esbuild: false
+    '@parcel/watcher': false
+    workerd: true
 minimumReleaseAgeExclude:
-  - '@tabularis/explain@0.2.0'
-  - '@tabularis/explain-sqlserver@1.0.0-beta.2'
-  - '@tabularis/explain-oracle@0.1.0'
+    - '@tabularis/explain@0.2.0'
+    - '@tabularis/explain-sqlserver@1.0.0-beta.2'
+    - '@tabularis/explain-oracle@0.1.0'
 saveExact: true
