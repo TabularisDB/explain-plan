@@ -46,13 +46,3 @@
         white-space: nowrap;
     }
 }
-
-.buttonSpinner {
-    animation: buttonSpin 0.8s linear infinite;
-}
-
-@keyframes buttonSpin {
-    to {
-        transform: rotate(360deg);
-    }
-}

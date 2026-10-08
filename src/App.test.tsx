@@ -125,6 +125,27 @@ describe('App', () => {
         expect(screen.queryByRole('dialog', {name: /copy-paste/i})).not.toBeInTheDocument();
     });
 
+    it('keeps the promo open when the demo video is closed with Escape', async () => {
+        const user = userEvent.setup();
+        renderApp();
+
+        await loadSample(user, 'SQLite sample');
+        await visualize(user);
+        const dialog = await screen.findByRole('dialog', {name: /copy-paste/i});
+
+        await user.tab();
+        expect(within(dialog).getByRole('button', {name: 'Close'})).toHaveFocus();
+
+        const preview = within(dialog).getByRole('button', {name: /watch the tabularis/i});
+        preview.focus();
+        await user.keyboard('{Enter}');
+        expect(screen.getByRole('dialog', {name: /watch the tabularis/i})).toBeInTheDocument();
+        await user.keyboard('{Escape}');
+
+        expect(screen.queryByRole('dialog', {name: /watch the tabularis/i})).not.toBeInTheDocument();
+        expect(screen.getByRole('dialog', {name: /copy-paste/i})).toBeInTheDocument();
+    });
+
     it('visualizes the Oracle sample and explains how to capture a plan', async () => {
         const user = userEvent.setup();
         const {container} = renderApp();

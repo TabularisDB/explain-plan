@@ -9,7 +9,7 @@ const MESSAGES = {
     },
     missing: {
         title: 'This shared plan has expired or does not exist',
-        text: 'Shared links are kept for 30 days. Ask the person who shared it for a new link.',
+        text: 'Shared links expire 30 days after they were last opened. Ask the person who shared it for a new link.',
     },
     failed: {
         title: 'This shared plan could not be loaded',

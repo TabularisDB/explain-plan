@@ -13,6 +13,7 @@ const MAX_SIZE = 1024 * 1024;
 const ID_LENGTH = 10;
 const ID_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 const ID_PATTERN = /^[A-Za-z0-9_-]{10}$/;
+const RENEW_AFTER_MS = 24 * 60 * 60 * 1000;
 
 function createId(): string {
     const bytes = crypto.getRandomValues(new Uint8Array(ID_LENGTH));
@@ -46,24 +47,30 @@ async function createShare(request: Request, env: Env): Promise<Response> {
     return respond(env, JSON.stringify({id}), 201, {'Content-Type': 'application/json'});
 }
 
-async function getShare(id: string, env: Env): Promise<Response> {
+async function getShare(id: string, env: Env, ctx: ExecutionContext): Promise<Response> {
     const object = await env.PLANS.get(id);
     if (!object) return respond(env, 'Not found', 404);
-    return respond(env, object.body, 200, {
+
+    const body = await object.arrayBuffer();
+    if (Date.now() - object.uploaded.getTime() > RENEW_AFTER_MS) {
+        ctx.waitUntil(env.PLANS.put(id, body.slice(0), {httpMetadata: {contentType: 'application/octet-stream'}}));
+    }
+
+    return respond(env, body, 200, {
         'Content-Type': 'application/octet-stream',
         'Cache-Control': 'no-store',
     });
 }
 
 export default {
-    async fetch(request, env): Promise<Response> {
+    async fetch(request, env, ctx): Promise<Response> {
         if (request.method === 'OPTIONS') return respond(env, null, 204);
 
         const {pathname} = new URL(request.url);
         if (pathname === '/api/share' && request.method === 'POST') return createShare(request, env);
 
         const id = pathname.match(/^\/api\/share\/([^/]+)$/)?.[1];
-        if (id && request.method === 'GET' && ID_PATTERN.test(id)) return getShare(id, env);
+        if (id && request.method === 'GET' && ID_PATTERN.test(id)) return getShare(id, env, ctx);
 
         return respond(env, 'Not found', 404);
     },
