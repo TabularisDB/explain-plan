@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -6 34 39" fill="url(#paint0_linear_49_6654)">
+<style>
+path{transform-box:view-box}
+@keyframes p0{0%,0.000%{transform:translate(4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+6.000%{opacity:1}
+16.667%,68.333%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+83.333%,100%{transform:translate(0,-3px);opacity:0}}
+.p0{animation:p0 3.0s infinite}
+@keyframes p1{0%,2.333%{transform:translate(-4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+8.333%{opacity:1}
+19.000%,69.500%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+84.500%,100%{transform:translate(0,-3px);opacity:0}}
+.p1{animation:p1 3.0s infinite}
+@keyframes p2{0%,4.667%{transform:translate(4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+10.667%{opacity:1}
+21.333%,70.667%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+85.667%,100%{transform:translate(0,-3px);opacity:0}}
+.p2{animation:p2 3.0s infinite}
+@keyframes p3{0%,7.000%{transform:translate(4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+13.000%{opacity:1}
+23.667%,71.833%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+86.833%,100%{transform:translate(0,-3px);opacity:0}}
+.p3{animation:p3 3.0s infinite}
+@keyframes p4{0%,9.333%{transform:translate(4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+15.333%{opacity:1}
+26.000%,73.000%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+88.000%,100%{transform:translate(0,-3px);opacity:0}}
+.p4{animation:p4 3.0s infinite}
+@keyframes p5{0%,11.667%{transform:translate(-4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+17.667%{opacity:1}
+28.333%,74.167%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+89.167%,100%{transform:translate(0,-3px);opacity:0}}
+.p5{animation:p5 3.0s infinite}
+@keyframes p6{0%,14.000%{transform:translate(4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+20.000%{opacity:1}
+30.667%,75.333%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+90.333%,100%{transform:translate(0,-3px);opacity:0}}
+.p6{animation:p6 3.0s infinite}
+@keyframes p7{0%,16.333%{transform:translate(0px,-5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+22.333%{opacity:1}
+33.000%,76.500%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+91.500%,100%{transform:translate(0,-3px);opacity:0}}
+.p7{animation:p7 3.0s infinite}
+@keyframes p8{0%,18.667%{transform:translate(4.3px,2.5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+24.667%{opacity:1}
+35.333%,77.667%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+92.667%,100%{transform:translate(0,-3px);opacity:0}}
+.p8{animation:p8 3.0s infinite}
+@keyframes p9{0%,21.000%{transform:translate(0px,-5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+27.000%{opacity:1}
+37.667%,78.833%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+93.833%,100%{transform:translate(0,-3px);opacity:0}}
+.p9{animation:p9 3.0s infinite}
+@keyframes p10{0%,23.333%{transform:translate(0px,-5px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.25,1.15)}
+29.333%{opacity:1}
+40.000%,80.000%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.5,0,.75,0)}
+95.000%,100%{transform:translate(0,-3px);opacity:0}}
+.p10{animation:p10 3.0s infinite}
+@media (prefers-reduced-motion:reduce){path{animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+<defs>
+        <linearGradient
+            id="paint0_linear_49_6654"
+            x1="21.1621"
+            y1="-0.0913917"
+            x2="0.000348704"
+            y2="28.2617"
+            gradientUnits="userSpaceOnUse"
+        >
+            <stop offset="0.264434" stop-color="#376AEC" />
+            <stop offset="0.802885" stop-color="#3EE3CE" />
+        </linearGradient>
+    </defs>
+<path class="p0" d="M17.3115 23.8037L12.0068 26.5264V21.291L17.3115 18.6387V23.8037Z"/>
+<path class="p1" d="M11.1689 21.291V26.5264L5.86328 23.2461V18.499L11.1689 21.291Z"/>
+<path class="p2" d="M11.1689 20.3838L6.42188 17.8008L11.1689 15.4277V20.3838Z"/>
+<path class="p3" d="M17.3115 17.6611L12.0068 20.3135V15.1484L17.3115 12.4951V17.6611Z"/>
+<path class="p4" d="M11.1689 14.5898L6.00293 17.1025V11.9365L11.1689 9.35449V14.5898Z"/>
+<path class="p5" d="M5.23535 11.8672V17.1729L0 14.3105V9.0752L5.23535 11.8672Z"/>
+<path class="p6" d="M17.2422 11.5186L12.0068 14.1006V9.00488L17.2422 6.42188V11.5186Z"/>
+<path class="p7" d="M10.6797 8.65625L5.6543 11.1689L0.62793 8.44629L5.6543 5.93359L10.6797 8.65625Z"/>
+<path class="p8" d="M23.1758 8.58594L17.9404 11.0996V6.14258L23.1758 3.49023V8.58594Z"/>
+<path class="p9" d="M16.5439 5.79395L11.5879 8.30664L6.49121 5.51465L11.4482 3.00195L16.5439 5.79395Z"/>
+<path class="p10" d="M22.4775 2.79199L17.5215 5.375L12.4258 2.58301L17.4512 0L22.4775 2.79199Z"/>
+</svg>

@@ -1,4 +1,3 @@
-/* eslint-disable css-modules/no-unused-class */
 import clsx from 'clsx';
 import type {ReactNode, ButtonHTMLAttributes, AnchorHTMLAttributes} from 'react';
 import styles from './Button.module.scss';

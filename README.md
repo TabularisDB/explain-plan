@@ -113,3 +113,7 @@ vercel deploy
 
 > [!TIP]
 > [Join our Discord server](https://discord.com/invite/K2hmhfHRSt) to talk with the maintainers, share feedback, and get help from the community.
+
+## License
+
+Released under the [Apache License 2.0](./LICENSE).

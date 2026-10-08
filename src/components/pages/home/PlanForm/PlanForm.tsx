@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import {AlertCircleIcon, FileCode, FileUp, HelpCircleIcon, Play, TrashIcon, Upload} from 'lucide-react';
+import {AlertCircleIcon, FileCode, FileUp, Play, TrashIcon, Upload} from 'lucide-react';
 import {
     useEffect,
     useState,
@@ -168,12 +168,20 @@ export function PlanForm({engine, onEngineChange, onPlan}: PlanFormProps) {
                             size="sm"
                             variant="secondary"
                             aria-label="Clear"
+                            title="Clear"
                             disabled={!raw && !error}
                             onClick={() => updateContent('')}
                         >
                             <TrashIcon size={16} aria-hidden="true" />
                         </Button>
-                        <Button type="button" onClick={open} size="sm" variant="secondary">
+                        <Button
+                            type="button"
+                            onClick={open}
+                            size="sm"
+                            variant="secondary"
+                            aria-label="Upload a file"
+                            title="Upload a file"
+                        >
                             <Upload size={16} aria-hidden="true" />
                         </Button>
                         <Button type="submit" size="sm" aria-keyshortcuts="Control+Enter Meta+Enter">

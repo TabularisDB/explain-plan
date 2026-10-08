@@ -72,7 +72,7 @@ export function DiagnosticChips({diagnostics, iconsOnly = false, className}: Dia
                 return (
                     <span
                         key={diagnostic.kind}
-                        title={`${label}${diagnostic.value ? ` (${diagnostic.value})` : ''} — ${t(diagnostic.descriptionKey)}`}
+                        title={`${label}${diagnostic.value ? ` (${diagnostic.value})` : ''}: ${t(diagnostic.descriptionKey)}`}
                         className={clsx(
                             'inline-flex items-center gap-1 px-1.5 py-0.5 border rounded-full text-[0.65rem] leading-none',
                             SEVERITY[diagnostic.severity].chip,
@@ -109,9 +109,7 @@ export function DiagnosticList({diagnostics}: {diagnostics: ExplainDiagnostic[]}
                                     {t(diagnostic.labelKey)}
                                 </span>
                                 {diagnostic.value && (
-                                    <span className="font-mono text-[0.7rem] text-secondary">
-                                        {diagnostic.value}
-                                    </span>
+                                    <span className="font-mono text-[0.7rem] text-secondary">{diagnostic.value}</span>
                                 )}
                             </div>
                             <p className="m-0 text-[0.7rem] leading-relaxed text-muted">

@@ -1,71 +1,146 @@
-import * as pako from 'pako';
-import {encode, decode} from '@msgpack/msgpack';
 import type {ExplainPlan} from '@tabularis/explain';
-import {parsePlan, type EngineChoice} from './parse';
+import * as pako from 'pako';
+import {formatPlan} from './highlight';
+import {detectEngine, parsePlan, type EngineChoice} from './parse';
 
-// On utilise des clés ultra-courtes ('r' et 'e') pour gagner chaque octet possible
-interface CompressedPlan {
-    r: string;
-    e: EngineChoice;
+const PAYLOAD_VERSION = 1;
+const IV_LENGTH = 12;
+const SHARE_API = import.meta.env.DEV ? '' : 'https://share.tabularis.dev';
+const SESSION_KEY = 'explain-plan:current';
+
+interface Payload {
+    v: number;
+    raw: string;
+    engine: EngineChoice;
 }
 
-export function encodePlan(raw: string, engine: EngineChoice): string {
-    const payload: CompressedPlan = {r: raw, e: engine};
+export type PlanResult = {status: 'ok'; plan: ExplainPlan} | {status: 'empty' | 'invalid' | 'missing' | 'failed'};
 
-    // 1. Encodage MessagePack (binaire, beaucoup plus compact que JSON.stringify)
-    const msgPackBuffer = encode(payload);
+let currentPayload: Uint8Array<ArrayBuffer> | null = null;
 
-    // 2. Compression Deflate maximale (level 9) sans en-tête zlib (deflateRaw)
-    const compressedUint8 = pako.deflateRaw(msgPackBuffer, {level: 9});
-
-    // 3. Conversion Base64 URL Safe avec boucle (évite le crash Call Stack sur les gros plans)
-    let binaryString = '';
-    for (let i = 0; i < compressedUint8.length; i++) {
-        binaryString += String.fromCharCode(compressedUint8[i]);
+function toBase64Url(bytes: Uint8Array): string {
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+        binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
     }
-
-    const base64UrlSafe = btoa(binaryString).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-    return base64UrlSafe;
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function decompressFromEncodedURIComponent(encoded: string): Uint8Array | null {
-    if (!encoded) return null;
+function fromBase64Url(text: string): Uint8Array<ArrayBuffer> {
+    const binary = atob(text.replace(/-/g, '+').replace(/_/g, '/'));
+    return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+}
+
+function compactPlan(raw: string): string {
+    const trimmed = raw.trim();
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+        try {
+            return JSON.stringify(JSON.parse(trimmed));
+        } catch {
+            return raw;
+        }
+    }
+    if (trimmed.startsWith('<')) return trimmed.replace(/>\s+</g, '><');
+    return raw;
+}
+
+function packPlan(raw: string, engine: EngineChoice): Uint8Array<ArrayBuffer> {
+    const payload: Payload = {
+        v: PAYLOAD_VERSION,
+        raw: compactPlan(raw),
+        engine: engine === 'auto' ? (detectEngine(raw) ?? 'auto') : engine,
+    };
+    return new Uint8Array(pako.deflateRaw(JSON.stringify(payload), {level: 9}));
+}
+
+function unpackPlan(bytes: Uint8Array): ExplainPlan | null {
     try {
-        let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
-        while (base64.length % 4) {
-            base64 += '=';
-        }
-
-        const binaryString = atob(base64);
-        const uint8Array = new Uint8Array(binaryString.length);
-
-        for (let i = 0; i < binaryString.length; i++) {
-            uint8Array[i] = binaryString.charCodeAt(i);
-        }
-
-        // Décompression inverse obligatoire (inflateRaw)
-        return pako.inflateRaw(uint8Array);
-    } catch (error) {
-        console.error("Erreur lors de la décompression du composant d'URL", error);
+        const payload = JSON.parse(pako.inflateRaw(bytes, {toText: true})) as Payload;
+        if (payload.v !== PAYLOAD_VERSION) return null;
+        return parsePlan(formatPlan(payload.raw), payload.engine);
+    } catch {
         return null;
     }
 }
 
-export function planFromHash(hash: string): ExplainPlan | null {
-    const data = new URLSearchParams(hash.replace(/^#/, '')).get('p');
-    if (!data) return null;
-
+export function storeLocalPlan(raw: string, engine: EngineChoice) {
+    currentPayload = packPlan(raw, engine);
     try {
-        const decompressedBuffer = decompressFromEncodedURIComponent(data);
-        if (!decompressedBuffer) return null;
+        sessionStorage.setItem(SESSION_KEY, toBase64Url(currentPayload));
+    } catch {
+        return;
+    }
+}
 
-        // 4. Décodage MessagePack pour retrouver notre objet
-        const {r: raw, e: engine} = decode(decompressedBuffer) as CompressedPlan;
-
-        return parsePlan(raw, engine ?? 'auto');
-    } catch (error) {
-        console.error('Erreur de parsing du plan', error);
+function localPayload(): Uint8Array<ArrayBuffer> | null {
+    if (currentPayload) return currentPayload;
+    try {
+        const stored = sessionStorage.getItem(SESSION_KEY);
+        return stored ? fromBase64Url(stored) : null;
+    } catch {
         return null;
     }
+}
+
+export async function createShortLink(): Promise<string> {
+    const payload = localPayload();
+    if (!payload) throw new Error('No plan to share');
+
+    const key = await crypto.subtle.generateKey({name: 'AES-GCM', length: 128}, true, ['encrypt']);
+    const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
+    const ciphertext = new Uint8Array(await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, payload));
+    const body = new Uint8Array(IV_LENGTH + ciphertext.length);
+    body.set(iv);
+    body.set(ciphertext, IV_LENGTH);
+
+    const response = await fetch(`${SHARE_API}/api/share`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/octet-stream'},
+        body,
+    });
+    if (!response.ok) throw new Error(`Share request failed with status ${response.status}`);
+
+    const {id} = (await response.json()) as {id: string};
+    const rawKey = new Uint8Array(await crypto.subtle.exportKey('raw', key));
+    return `${window.location.origin}/plan#s=${id},${toBase64Url(rawKey)}`;
+}
+
+async function loadShortLink(id: string, key: string): Promise<PlanResult> {
+    let response: Response;
+    try {
+        response = await fetch(`${SHARE_API}/api/share/${encodeURIComponent(id)}`);
+    } catch {
+        return {status: 'failed'};
+    }
+    if (response.status === 404) return {status: 'missing'};
+    if (!response.ok) return {status: 'failed'};
+
+    try {
+        const body = new Uint8Array(await response.arrayBuffer());
+        const cryptoKey = await crypto.subtle.importKey('raw', fromBase64Url(key), 'AES-GCM', false, ['decrypt']);
+        const payload = new Uint8Array(
+            await crypto.subtle.decrypt(
+                {name: 'AES-GCM', iv: body.subarray(0, IV_LENGTH)},
+                cryptoKey,
+                body.subarray(IV_LENGTH),
+            ),
+        );
+        const plan = unpackPlan(payload);
+        return plan ? {status: 'ok', plan} : {status: 'invalid'};
+    } catch {
+        return {status: 'invalid'};
+    }
+}
+
+export async function loadPlan(hash: string): Promise<PlanResult> {
+    const shared = new URLSearchParams(hash.replace(/^#/, '')).get('s');
+    if (shared === null) {
+        const payload = localPayload();
+        const plan = payload && unpackPlan(payload);
+        return plan ? {status: 'ok', plan} : {status: 'empty'};
+    }
+
+    const [id, key] = shared.split(',');
+    if (!id || !key) return {status: 'invalid'};
+    return loadShortLink(id, key);
 }

@@ -9,7 +9,13 @@ interface RawOutputProps {
 }
 
 export function RawOutputView({plan}: RawOutputProps) {
-    const html = useMemo(() => highlightPlan(formatPlan(plan.raw_output ?? '')), [plan.raw_output]);
+    const html = useMemo(
+        () =>
+            plan.raw_output
+                ? highlightPlan(formatPlan(plan.raw_output))
+                : 'The original text of this plan is not available.',
+        [plan.raw_output],
+    );
 
     return (
         <section className="section">

@@ -39,8 +39,8 @@ export function AiUpsellView() {
                     </div>
 
                     <p className="m-0 text-sm leading-[1.6] text-secondary">
-                        Download the free Tabularis desktop app to unlock this and more — everything this site does,
-                        plus what a paste-in tool can't:
+                        Download the free Tabularis desktop app to get it. It does everything this site does, plus what
+                        a paste-in tool can't:
                     </p>
 
                     <ul className="flex flex-col gap-2 m-0 p-0 list-none text-sm text-secondary">

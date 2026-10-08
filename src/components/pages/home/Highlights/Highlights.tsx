@@ -1,4 +1,4 @@
-import {Flame, ListChecks, ScanSearch, TrendingUp, type LucideIcon} from 'lucide-react';
+import {Flame, Link2, ListChecks, ScanSearch, TrendingUp, type LucideIcon} from 'lucide-react';
 import styles from './Highlights.module.scss';
 
 interface Highlight {
@@ -27,6 +27,12 @@ const HIGHLIGHTS: Highlight[] = [
         title: 'Know what to fix first',
         text: 'Disk sorts, large sequential scans, filtered-out rows and cache misses are flagged on each node.',
     },
+    {
+        icon: Link2,
+        kicker: 'Sharing',
+        title: 'Share a plan with a link',
+        text: 'The plan is compressed into the link itself, after the #, a part browsers never send to a server. Anyone who opens it sees the same views.',
+    },
 ];
 
 export function Highlights() {
@@ -35,14 +41,14 @@ export function Highlights() {
             <div className="home-section-header">
                 <span className="home-section-eyebrow">
                     <ScanSearch aria-hidden="true" />
-                    Analysis
+                    Highlights
                 </span>
                 <h2 id="highlights-title" className="home-section-title">
-                    Where the time goes, and what to fix first
+                    Read a plan faster, then share it
                 </h2>
                 <p className="home-section-description">
-                    Every plan is analyzed for you: slow nodes, bad estimates and common performance issues are
-                    highlighted right on the graph.
+                    Slow nodes, bad estimates and common issues are highlighted on the graph, and the whole plan fits in
+                    a link that never touches a server.
                 </p>
             </div>
 

@@ -13,8 +13,18 @@ const QUESTIONS: Question[] = [
         question: 'Is my query or data sent anywhere?',
         answer: (
             <>
-                No. The plan is parsed in your browser and nothing is uploaded. When you share a plan, it is stored
-                after the # of the link, a part of the URL that browsers never send to the server.
+                No. The plan is parsed in your browser and never uploaded. When you share a plan, it is stored after the
+                # of the link, a part of the URL that browsers never send to the server.
+            </>
+        ),
+    },
+    {
+        question: 'How is it different from other plan viewers?',
+        answer: (
+            <>
+                Most online viewers store your plan on their server to give you a link, and the ones that stay in your
+                browser only read PostgreSQL. Here the plan never leaves your browser, the link carries the plan itself,
+                and five engines are supported.
             </>
         ),
     },
@@ -25,7 +35,7 @@ const QUESTIONS: Question[] = [
                 Most of the time the output was cut or copied with its table borders. Copy the raw value, not the result
                 grid of your client. In psql, run your query with <code>psql -XqAt</code> to get clean output. In
                 SQL*Plus, run <code>SET LONG 1000000</code> first. You can also pick the engine by hand instead of
-                auto-detect.
+                relying on auto-detection.
             </>
         ),
     },
@@ -33,8 +43,8 @@ const QUESTIONS: Question[] = [
         question: 'How do I share a plan with my team?',
         answer: (
             <>
-                Once the plan is displayed, copy the page link. The whole plan is inside it, so anyone who opens it sees
-                the same views, without an account.
+                Once the plan is displayed, click Copy link at the top of the page. The whole plan is compressed into
+                the link, so anyone who opens it sees the same views, without an account.
             </>
         ),
     },
@@ -43,8 +53,8 @@ const QUESTIONS: Question[] = [
         answer: (
             <>
                 EXPLAIN shows the plan the database intends to use, with estimated costs and row counts. EXPLAIN ANALYZE
-                actually runs the query and adds what really happened: real timings and real row counts. Use it with
-                care on queries that change data.
+                actually runs the query and adds what really happened: real timings and real row counts. On queries that
+                change data, run it inside a transaction and roll it back.
             </>
         ),
     },
@@ -64,7 +74,7 @@ const QUESTIONS: Question[] = [
             <>
                 Yes. This is the{' '}
                 <a href={TABULARIS.visualExplain} target="_blank" rel="noopener noreferrer">
-                    Visual Explain
+                    Visual EXPLAIN
                 </a>{' '}
                 feature of Tabularis, a free and open-source database client. In the app, you get the plan straight from
                 your query, without copy and paste.{' '}
