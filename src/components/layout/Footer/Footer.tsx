@@ -79,7 +79,7 @@ export function Footer() {
                         Debba
                     </a>
                     . Site built by{' '}
-                    <a href="https://github.com/wajrock" target="_blank" rel="noopener noreferrer">
+                    <a href="https://wajrock.me" target="_blank" rel="noopener noreferrer">
                         Thibaud Wajrock
                     </a>
                     .
