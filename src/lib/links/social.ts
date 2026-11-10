@@ -1,6 +1,6 @@
 const SHARE_URL = 'https://explain.tabularis.dev';
 const SHARE_TEXT =
-    'Visualize PostgreSQL, MySQL, SQLite, SQL Server and Oracle EXPLAIN plans as interactive graphs. Free, plans stay in your browser, and shared links are encrypted.';
+    'Visualize PostgreSQL, MySQL, SQLite, SQL Server, Oracle and Db2 EXPLAIN plans as interactive graphs. Free, plans stay in your browser, and shared links are encrypted.';
 
 export function buildSocialShareUrls() {
     const encodedUrl = encodeURIComponent(SHARE_URL);

@@ -1,0 +1,32 @@
+SQL_ID  58c24n0vv7790, child number 0
+-------------------------------------
+SELECT c.region, COUNT(*) AS orders, SUM(i.quantity * i.unit_price) AS 
+revenue FROM shop.customers c JOIN shop.orders o ON o.customer_id = 
+c.id JOIN shop.order_items i ON i.order_id = o.id WHERE c.region = 
+'West' GROUP BY c.region
+ 
+Plan hash value: 1221550534
+ 
+----------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation            | Name        | Starts | E-Rows |E-Bytes| Cost (%CPU)| A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT     |             |      1 |        |       |     9 (100)|      1 |00:00:00.01 |      21 |       |       |          |
+|   1 |  SORT GROUP BY NOSORT|             |      1 |      8 |   720 |     9   (0)|      1 |00:00:00.01 |      21 |       |       |          |
+|*  2 |   HASH JOIN          |             |      1 |      8 |   720 |     9   (0)|      8 |00:00:00.01 |      21 |  2546K|  2546K| 1188K (0)|
+|*  3 |    HASH JOIN         |             |      1 |      4 |   204 |     6   (0)|      4 |00:00:00.01 |      14 |  2546K|  2546K| 1188K (0)|
+|*  4 |     TABLE ACCESS FULL| CUSTOMERS   |      1 |      4 |   100 |     3   (0)|      4 |00:00:00.01 |       7 |       |       |          |
+|   5 |     TABLE ACCESS FULL| ORDERS      |      1 |     10 |   260 |     3   (0)|     10 |00:00:00.01 |       7 |       |       |          |
+|   6 |    TABLE ACCESS FULL | ORDER_ITEMS |      1 |     20 |   780 |     3   (0)|     20 |00:00:00.01 |       7 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   2 - access("I"."ORDER_ID"="O"."ID")
+   3 - access("O"."CUSTOMER_ID"="C"."ID")
+   4 - filter("C"."REGION"='West')
+ 
+Note
+-----
+   - dynamic statistics used: dynamic sampling (level=2)
+ 

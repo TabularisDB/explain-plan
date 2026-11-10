@@ -1,0 +1,479 @@
+DB2 Universal Database Version 12.1, 5622-044 (c) Copyright IBM Corp. 1991, 2024
+Licensed Material - Program Property of IBM
+IBM Db2 Explain Table Format Tool
+
+
+
+******************** EXPLAIN INSTANCE ********************
+
+DB2_VERSION:       12.01.5
+FORMATTED ON DB:   TESTDB
+SOURCE_NAME:       SQLC2Q32
+SOURCE_SCHEMA:     NULLID  
+SOURCE_VERSION:      
+EXPLAIN_TIME:      2026-11-10-08.14.14.112699
+EXPLAIN_REQUESTER: DB2INST1
+
+Database Context:
+----------------
+	Parallelism:          None
+	CPU Speed:            9.446887e-08
+	Comm Speed:           100
+	Buffer Pool size:     5000
+	Sort Heap size:       256
+	Database Heap size:   4842
+	Lock List size:       13978
+	Maximum Lock List:    98
+	Average Applications: 1
+	Locks Available:      438350
+
+Package Context:
+---------------
+	SQL Type:           Dynamic
+	Optimization Level: 5
+	Blocking:           Block All Cursors
+	Isolation Level:    Cursor Stability
+
+
+
+---------------- STATEMENT 1  SECTION 203 ----------------
+	QUERYNO:       1
+	QUERYTAG:      T3JOIN              
+	Statement Type:   Select
+	Updatable:        No
+	Deletable:        No
+	Query Degree:     1
+
+Original Statement:
+------------------
+SELECT 
+  e.last_name,
+  d.dept_name 
+FROM 
+  TEST_SCHEMA.EMPLOYEES e 
+  LEFT JOIN TEST_SCHEMA.DEPARTMENTS d 
+  ON e.dept_id=d.dept_id 
+WHERE 
+  e.emp_id > 1
+
+
+Optimized Statement:
+-------------------
+SELECT 
+  Q4.LAST_NAME AS "LAST_NAME",
+  Q4.DEPT_NAME AS "DEPT_NAME" 
+FROM 
+  (SELECT 
+     Q3.DEPT_NAME,
+     Q2.LAST_NAME 
+   FROM 
+     (SELECT 
+        Q1.LAST_NAME,
+        Q1.DEPT_ID 
+      FROM 
+        TEST_SCHEMA.EMPLOYEES AS Q1 
+      WHERE 
+        (1 < Q1.EMP_ID)
+     ) AS Q2 
+     LEFT OUTER JOIN TEST_SCHEMA.DEPARTMENTS AS Q3 
+     ON (Q2.DEPT_ID = Q3.DEPT_ID)
+  ) AS Q4
+
+Access Plan:
+-----------
+	Total Cost: 		13.542
+	Query Degree:		1
+
+	Assisted by the AI Query Optimizer
+
+
+                  Rows 
+                 RETURN
+                 (   1)
+                  Cost 
+                   I/O 
+                   |
+                    5 
+                HSJOIN<^
+                (   2)
+                 13.542 
+                    2 
+           /-------+-------\
+          4                   5 
+       TBSCAN              TBSCAN
+       (   3)              (   4)
+       6.77059             6.77117 
+          1                   1 
+         |                   |
+          4                   6 
+ TABLE: TEST_SCHEMA  TABLE: TEST_SCHEMA
+     DEPARTMENTS          EMPLOYEES
+         Q3                  Q1
+
+
+Operator Symbols :
+------------------
+
+   Symbol      Description
+   ---------   ------------------------------------------
+   >JOIN     : Left outer join
+    JOIN<    : Right outer join
+   >JOIN<    : Full outer join
+   xJOIN     : Left antijoin
+    JOINx    : Right antijoin
+   ^JOIN     : Left early out
+    JOIN^    : Right early out
+
+
+Extended Diagnostic Information:
+--------------------------------
+
+No extended Diagnostic Information for this statement.
+
+
+Plan Details:
+-------------
+
+
+	1) RETURN: (Return Result)
+		Cumulative Total Cost: 		13.542
+		Cumulative CPU Cost: 		126805
+		Cumulative I/O Cost: 		2
+		Cumulative Re-Total Cost: 	13.542
+		Cumulative Re-CPU Cost: 	126805
+		Cumulative Re-I/O Cost: 	2
+		Cumulative First Row Cost: 	13.542
+		Estimated Bufferpool Buffers: 	1
+
+		Arguments:
+		---------
+		BLDLEVEL: (Build level)
+			DB2 v12.1.5.0 : special_85816
+		CPUCACHE: (Per-thread CPU cache size)
+			1048576
+		HEAPUSE : (Maximum Statement Heap Usage)
+			112 Pages
+		PLANID  : (Access plan identifier)
+			7d239806fe633a08
+		PREPTIME: (Statement prepare time)
+			         6 milliseconds
+		SEMEVID : (Semantic environment identifier)
+			0000000000000001
+		STMTHEAP: (Statement heap size)
+			8192
+		STMTID  : (Normalized statement identifier)
+			c85674968182a57b
+		TENANTID: (Compiled In Tenant ID)
+			0
+		TENANTNM: (Compiled In Tenant Name)
+			SYSTEM
+
+		Input Streams:
+		-------------
+			5) From Operator #2
+
+				Estimated number of rows: 	5
+				Number of columns: 		2
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q5.DEPT_NAME+Q5.LAST_NAME
+
+
+	2) HSJOIN: (Hash Join)
+		Cumulative Total Cost: 		13.542
+		Cumulative CPU Cost: 		126805
+		Cumulative I/O Cost: 		2
+		Cumulative Re-Total Cost: 	13.542
+		Cumulative Re-CPU Cost: 	126805
+		Cumulative Re-I/O Cost: 	2
+		Cumulative First Row Cost: 	13.542
+		Estimated Bufferpool Buffers: 	1
+
+		Arguments:
+		---------
+		BITFLTR : (Hash Join Bit Filter used)
+			FALSE
+		EARLYOUT: (Early Out flag)
+			RIGHT
+		HASHCODE: (Hash Code Size)
+			24 BIT
+		HASHTBSZ: (Number of hash table entries)
+			4
+		OUTERJN : (Outer Join type)
+			RIGHT
+		TEMPSIZE: (Temporary Table Page Size)
+			4096
+		TUPBLKSZ: (Tuple Block Size (bytes))
+			4000
+
+		Predicates:
+		----------
+		2) Predicate used in Join, 
+			Comparison Operator: 		Equal (=)
+			Subquery Input Required: 	No
+			Filter Factor: 			0.25
+
+			Predicate Text:
+			--------------
+			(Q2.DEPT_ID = Q3.DEPT_ID)
+
+
+
+		Input Streams:
+		-------------
+			2) From Operator #3
+
+				Estimated number of rows: 	4
+				Number of columns: 		2
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q3.DEPT_NAME+Q3.DEPT_ID
+
+			4) From Operator #4
+
+				Estimated number of rows: 	5
+				Number of columns: 		2
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q2.LAST_NAME+Q2.DEPT_ID
+
+
+		Output Streams:
+		--------------
+			5) To Operator #1
+
+				Estimated number of rows: 	5
+				Number of columns: 		2
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q5.DEPT_NAME+Q5.LAST_NAME
+
+
+	3) TBSCAN: (Table Scan)
+		Cumulative Total Cost: 		6.77059
+		Cumulative CPU Cost: 		59203
+		Cumulative I/O Cost: 		1
+		Cumulative Re-Total Cost: 	0.000813377
+		Cumulative Re-CPU Cost: 	8610
+		Cumulative Re-I/O Cost: 	0
+		Cumulative First Row Cost: 	6.76994
+		Estimated Bufferpool Buffers: 	1
+
+		Arguments:
+		---------
+		CUR_COMM: (Currently Committed)
+			TRUE
+		JN INPUT: (Join input leg)
+			OUTER
+		LCKAVOID: (Lock Avoidance)
+			TRUE
+		MAXPAGES: (Maximum pages for prefetch)
+			ALL
+		PREFETCH: (Type of Prefetch)
+			NONE                
+		ROWLOCK : (Row Lock intent)
+			SHARE (CS/RS)
+		SCANDIR : (Scan Direction)
+			FORWARD
+		SKIP_INS: (Skip Inserted Rows)
+			TRUE
+		SPEED   : (Assumed speed of scan, in sharing structures)
+			FAST
+		TABLOCK : (Table Lock intent)
+			INTENT SHARE
+		TBISOLVL: (Table access Isolation Level)
+			CURSOR STABILITY
+		THROTTLE: (Scan may be throttled, for scan sharing)
+			TRUE
+		VISIBLE : (May be included in scan sharing structures)
+			TRUE
+		WRAPPING: (Scan may start anywhere and wrap)
+			TRUE
+
+		Input Streams:
+		-------------
+			1) From Object TEST_SCHEMA.DEPARTMENTS
+
+				Estimated number of rows: 	4
+				Number of columns: 		3
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q3.$RID$+Q3.DEPT_NAME+Q3.DEPT_ID
+
+
+		Output Streams:
+		--------------
+			2) To Operator #2
+
+				Estimated number of rows: 	4
+				Number of columns: 		2
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q3.DEPT_NAME+Q3.DEPT_ID
+
+
+	4) TBSCAN: (Table Scan)
+		Cumulative Total Cost: 		6.77117
+		Cumulative CPU Cost: 		65317
+		Cumulative I/O Cost: 		1
+		Cumulative Re-Total Cost: 	0.00139096
+		Cumulative Re-CPU Cost: 	14724
+		Cumulative Re-I/O Cost: 	0
+		Cumulative First Row Cost: 	6.77002
+		Estimated Bufferpool Buffers: 	1
+
+		Arguments:
+		---------
+		CUR_COMM: (Currently Committed)
+			TRUE
+		JN INPUT: (Join input leg)
+			INNER
+		LCKAVOID: (Lock Avoidance)
+			TRUE
+		MAXPAGES: (Maximum pages for prefetch)
+			ALL
+		PREFETCH: (Type of Prefetch)
+			NONE                
+		ROWLOCK : (Row Lock intent)
+			SHARE (CS/RS)
+		SCANDIR : (Scan Direction)
+			FORWARD
+		SKIP_INS: (Skip Inserted Rows)
+			TRUE
+		SPEED   : (Assumed speed of scan, in sharing structures)
+			FAST
+		TABLOCK : (Table Lock intent)
+			INTENT SHARE
+		TBISOLVL: (Table access Isolation Level)
+			CURSOR STABILITY
+		THROTTLE: (Scan may be throttled, for scan sharing)
+			TRUE
+		VISIBLE : (May be included in scan sharing structures)
+			TRUE
+		WRAPPING: (Scan may start anywhere and wrap)
+			TRUE
+
+		Predicates:
+		----------
+		3) Sargable Predicate, 
+			Comparison Operator: 		Less Than (<)
+			Subquery Input Required: 	No
+			Filter Factor: 			0.833333
+
+			Predicate Text:
+			--------------
+			(1 < Q1.EMP_ID)
+
+
+
+		Table Cardinality Model Predicates:
+		-----------------------------------
+		Model: 	SYSIBM.SQL261110051202179638
+		Predicates:
+			3) (1 < Q1.EMP_ID)
+
+		Input Streams:
+		-------------
+			3) From Object TEST_SCHEMA.EMPLOYEES
+
+				Estimated number of rows: 	6
+				Number of columns: 		4
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q1.$RID$+Q1.DEPT_ID+Q1.LAST_NAME+Q1.EMP_ID
+
+
+		Output Streams:
+		--------------
+			4) To Operator #2
+
+				Estimated number of rows: 	5
+				Number of columns: 		2
+				Subquery predicate ID: 		Not Applicable
+
+				Column Names:
+				------------
+				+Q2.LAST_NAME+Q2.DEPT_ID
+
+
+Objects Used in Access Plan:
+---------------------------
+
+	Schema:   TEST_SCHEMA
+	Name:     DEPARTMENTS
+	Type:     Table
+			Time of creation: 		2026-11-10-05.07.54.597160
+			Last statistics update: 	2026-11-10-06.06.53.398182
+			Number of columns: 		5
+			Number of rows: 		4
+			Width of rows: 			49
+			Number of buffer pool pages: 	1
+			Number of data partitions: 	1
+			Distinct row values: 		No
+			Tablespace name: 		USERSPACE1
+			Tablespace overhead: 		6.725000
+			Tablespace transfer rate: 	0.040000
+			Source for statistics: 		Single Node
+			Prefetch page count: 		32
+			Container extent page count: 	32
+			Table overflow record count: 	0
+			Table Active Blocks: 		-1
+			Average Row Compression Ratio: 	0
+			Percentage Rows Compressed: 	0
+			Average Compressed Row Size: 	0
+			Model Schema: 			SYSIBM
+			Model Name: 			SQL261110051653161107
+			Columns in model:
+				BUDGET
+				CREATED_AT
+				DEPT_ID
+				DEPT_NAME
+				LOCATION
+
+	Schema:   TEST_SCHEMA
+	Name:     EMPLOYEES
+	Type:     Table
+			Time of creation: 		2026-11-10-05.07.54.736377
+			Last statistics update: 	2026-11-10-06.06.54.836583
+			Number of columns: 		9
+			Number of rows: 		6
+			Width of rows: 			417
+			Number of buffer pool pages: 	1
+			Number of data partitions: 	1
+			Distinct row values: 		No
+			Tablespace name: 		USERSPACE1
+			Tablespace overhead: 		6.725000
+			Tablespace transfer rate: 	0.040000
+			Source for statistics: 		Single Node
+			Prefetch page count: 		32
+			Container extent page count: 	32
+			Table overflow record count: 	0
+			Table Active Blocks: 		-1
+			Average Row Compression Ratio: 	0
+			Percentage Rows Compressed: 	0
+			Average Compressed Row Size: 	0
+			Model Schema: 			SYSIBM
+			Model Name: 			SQL261110051202179638
+			Columns in model:
+				DEPT_ID
+				EMAIL
+				EMP_ID
+				FIRST_NAME
+				HIRE_DATE
+				LAST_NAME
+				SALARY
+

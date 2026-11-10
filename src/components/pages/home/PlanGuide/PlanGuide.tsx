@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 import {Check, Copy, Info, Terminal} from 'lucide-react';
 import {useEffect, useState} from 'react';
-import {ENGINE_LABELS, type Engine, type EngineChoice} from '../../../../lib/engines/engines';
-import {ORACLE_PLAN_QUERY} from './oracle-query';
+import {ENGINE_LABELS, engineIconPath, type Engine, type EngineChoice} from '../../../../lib/engines/engines';
 import styles from './PlanGuide.module.scss';
 
 interface Guide {
@@ -33,9 +32,14 @@ const GUIDES: Guide[] = [
         command: 'SET SHOWPLAN_XML ON;\nGO\nSELECT …;\nGO\nSET SHOWPLAN_XML OFF;\nGO',
     },
     {
+        engine: 'db2',
+        text: 'Connect to Db2, run EXPLAIN for your query, then format its explain-table rows with db2exfmt and paste the report. Explain tables and db2exfmt must be available.',
+        command: 'db2 connect to DATABASE\ndb2 "EXPLAIN PLAN FOR SELECT …"\ndb2exfmt -d DATABASE -1 -o plan.txt',
+    },
+    {
         engine: 'oracle',
-        text: 'Oracle has no JSON EXPLAIN, so run this in SQL*Plus, SQLcl or SQL Developer (12.2+). In SQL*Plus, run SET LONG 1000000 first.',
-        command: ORACLE_PLAN_QUERY,
+        text: 'Run in SQL*Plus, SQLcl or SQL Developer and paste the resulting DBMS_XPLAN report. For runtime statistics use DISPLAY_CURSOR with ALLSTATS LAST.',
+        command: "EXPLAIN PLAN FOR SELECT …;\nSELECT * FROM TABLE(DBMS_XPLAN.DISPLAY());",
     },
 ];
 
@@ -98,7 +102,7 @@ export function PlanGuide({engine}: PlanGuideProps) {
                                 setCopied(false);
                             }}
                         >
-                            <img src={`/img/engines/${item.engine}.svg`} alt="" />
+                            <img src={engineIconPath(item.engine)} alt="" />
                             {ENGINE_LABELS[item.engine]}
                         </button>
                     ))}

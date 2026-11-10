@@ -2,7 +2,7 @@
     "name": "explain-plan",
     "private": true,
     "version": "0.1.0",
-    "description": "Paste a PostgreSQL, MySQL/MariaDB, SQLite, SQL Server or Oracle EXPLAIN output and visualise the query plan.",
+    "description": "Paste a PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, Oracle or Db2 EXPLAIN output and visualise the query plan.",
     "type": "module",
     "license": "Apache-2.0",
     "scripts": {
@@ -19,7 +19,8 @@
         "@fontsource-variable/jetbrains-mono": "5.3.0",
         "@fontsource-variable/urbanist": "5.3.0",
         "@tabularis/explain": "0.2.0",
-        "@tabularis/explain-oracle": "0.1.0",
+        "@tabularis/explain-db2": "0.1.1",
+        "@tabularis/explain-oracle": "0.1.2",
         "@tabularis/explain-sqlserver": "1.0.0-beta.2",
         "@xyflow/react": "12.11.2",
         "clsx": "2.1.1",

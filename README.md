@@ -6,7 +6,7 @@
 
 # Tabularis Explain
 
-A free online EXPLAIN plan visualizer. Paste the EXPLAIN output of a **PostgreSQL**, **MySQL/MariaDB**, **SQLite**, **SQL Server** or **Oracle** query and explore it as an interactive graph, diagram, table and statistics view, with automatic performance findings.
+A free online EXPLAIN plan visualizer. Paste the EXPLAIN output of a **PostgreSQL**, **MySQL/MariaDB**, **SQLite**, **SQL Server**, **Oracle** or **Db2** query and explore it as an interactive graph, diagram, table and statistics view, with automatic performance findings.
 
 <p align="center">
   <b><a href="https://explain.tabularis.dev">Try it online</a></b> ·
@@ -40,13 +40,14 @@ Built on [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain
 | MySQL / MariaDB | `EXPLAIN FORMAT=JSON`, `EXPLAIN ANALYZE` / `ANALYZE FORMAT=TEXT` trees                                            |
 | SQLite          | `EXPLAIN QUERY PLAN`: the sqlite3 shell tree (`\|--` / `` `-- ``) or raw `id\|parent\|…\|detail` rows             |
 | SQL Server      | `SHOWPLAN_XML` estimated plans and `STATISTICS XML` actual plans (`ShowPlanXML` documents)                        |
-| Oracle          | `oracle-plan-json`: `PLAN_TABLE` rows as JSON (see below), or the payload captured by the Tabularis Oracle plugin |
+| Db2             | `db2exfmt` single-statement reports, or JSON payloads captured by the Tabularis Db2 plugin |
+| Oracle          | `DBMS_XPLAN.DISPLAY` / `DISPLAY_CURSOR` reports, `PLAN_TABLE` rows as JSON, or the Tabularis Oracle plugin payload |
 
 The app shows the command to run for each engine under the editor.
 
 ### Getting an Oracle plan
 
-Oracle has no JSON `EXPLAIN` output, so the app reads the `PLAN_TABLE` rows as a JSON document. Run this in SQL*Plus, SQLcl or SQL Developer (Oracle 12.2+) and paste the returned value. In SQL*Plus, run `SET LONG 1000000` first so the result is not truncated. The query lives in [`oracle-query.ts`](./src/components/pages/home/PlanGuide/oracle-query.ts).
+Paste a `DBMS_XPLAN.DISPLAY` or `DISPLAY_CURSOR` report. Alternatively, the app reads `PLAN_TABLE` rows as a JSON document. Run this in SQL*Plus, SQLcl or SQL Developer (Oracle 12.2+) and paste the returned value. In SQL*Plus, run `SET LONG 1000000` first so the result is not truncated. The query lives in [`oracle-query.ts`](./src/components/pages/home/PlanGuide/oracle-query.ts).
 
 ```sql
 EXPLAIN PLAN FOR SELECT …;
@@ -79,6 +80,7 @@ WHERE plan_id = (SELECT MAX(plan_id) FROM plan_table);
 - [Tailwind CSS 4](https://tailwindcss.com) and CSS Modules, with the Tabularis design tokens
 - [`@tabularis/explain`](https://www.npmjs.com/package/@tabularis/explain) for parsing, analysis and the plan views
 - [`@tabularis/explain-sqlserver`](https://www.npmjs.com/package/@tabularis/explain-sqlserver) for SQL Server SHOWPLAN XML
+- [`@tabularis/explain-db2`](https://www.npmjs.com/package/@tabularis/explain-db2) for Db2 explain-table payloads
 - [`@tabularis/explain-oracle`](https://www.npmjs.com/package/@tabularis/explain-oracle) for Oracle execution plans
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/) and [R2](https://developers.cloudflare.com/r2/) for the sharing links
 - [Vitest](https://vitest.dev) + Testing Library for tests

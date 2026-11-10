@@ -1,6 +1,7 @@
 import {getExplainParser} from '@tabularis/explain';
 import {describe, expect, it} from 'vitest';
 import {SAMPLES} from '../../samples';
+import ORACLE_TEXT from '../../test/fixtures/oracle-dbms-xplan.txt?raw';
 import ORACLE_PLAN_TABLE_ESTIMATED from '../../test/fixtures/oracle-plan-table-estimated.json?raw';
 import SQLSERVER_TRIVIAL_SCAN from '../../test/fixtures/sqlserver-trivial-scan.xml?raw';
 import {detectEngine, parsePlan} from './parse';
@@ -25,6 +26,14 @@ describe('Oracle parser registration', () => {
         expect(parser).toMatchObject({engine: 'oracle'});
         expect(parser?.parse).toBeTypeOf('function');
         expect(parser?.sniff?.(sample('oracle'))).toBe(true);
+    });
+});
+
+describe('Db2 parser registration', () => {
+    it('registers and auto-detects the Db2 payload', () => {
+        expect(getExplainParser('db2-explain-tables-json')).toMatchObject({engine: 'db2'});
+        expect(parsePlan(sample('db2'), 'auto').driver).toBe('db2');
+        expect(parsePlan(sample('db2'), 'db2').root.children.length).toBeGreaterThan(0);
     });
 });
 
@@ -113,6 +122,13 @@ describe('parsePlan', () => {
         const customers = plan.root.children[0].children[0].children[0].children[0];
         expect(customers.relation).toBe('CUSTOMERS');
         expect(customers.filter).toBe(`"C"."REGION"='West'`);
+    });
+
+    it('auto-detects a captured DBMS_XPLAN report', () => {
+        const plan = parsePlan(ORACLE_TEXT, 'auto');
+        expect(plan.driver).toBe('oracle');
+        expect(plan.root.node_type).toBe('SELECT STATEMENT');
+        expect(plan.root.children[0].node_type).toContain('SORT');
     });
 
     it('parses the output of the documented PLAN_TABLE query', () => {

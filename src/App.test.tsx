@@ -39,7 +39,7 @@ describe('App', () => {
         expect(screen.getByRole('heading', {level: 1, name: /understand any explain plan/i})).toBeInTheDocument();
 
         await user.click(screen.getByRole('button', {name: /auto-detect/i}));
-        for (const name of ['PostgreSQL', 'MySQL / MariaDB', 'SQLite', 'SQL Server', 'Oracle']) {
+        for (const name of ['PostgreSQL', 'MySQL / MariaDB', 'SQLite', 'SQL Server', 'Oracle', 'Db2']) {
             expect(screen.getByRole('button', {name})).toBeInTheDocument();
         }
 
@@ -152,7 +152,7 @@ describe('App', () => {
 
         await loadSample(user, 'Oracle sample');
         expect(screen.getByRole('tab', {name: 'Oracle'})).toHaveAttribute('aria-selected', 'true');
-        expect(screen.getAllByText(/SET LONG 1000000/)).not.toHaveLength(0);
+        expect(screen.getAllByText(/DBMS_XPLAN/)).not.toHaveLength(0);
         await visualize(user);
         await closePromo(user);
 

@@ -1,6 +1,6 @@
 import {DatabaseIcon} from 'lucide-react';
 import styles from './EngineIcon.module.scss';
-import type {EngineChoice} from '../../../lib/engines/engines';
+import {engineIconPath, type EngineChoice} from '../../../lib/engines/engines';
 
 interface EngineIconProps {
     engine: EngineChoice;
@@ -9,5 +9,5 @@ interface EngineIconProps {
 
 export function EngineIcon({engine, size = 15}: EngineIconProps) {
     if (engine === 'auto') return <DatabaseIcon size={size} aria-hidden="true" />;
-    return <img src={`/img/engines/${engine}.svg`} alt="" width={size} height={size} className={styles.engineIcon} />;
+    return <img src={engineIconPath(engine)} alt="" width={size} height={size} className={styles.engineIcon} />;
 }

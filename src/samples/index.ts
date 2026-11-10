@@ -1,4 +1,5 @@
 import type {Engine} from '../lib/engines/engines';
+import DB2_SAMPLE from './db2-exfmt.txt?raw';
 import MYSQL_SAMPLE from './mysql-filesort-join.json?raw';
 import ORACLE_SAMPLE from './oracle-hash-join-analyzed.json?raw';
 import POSTGRES_SAMPLE from './postgres-hash-join.txt?raw';
@@ -16,5 +17,6 @@ export const SAMPLES: SamplePlan[] = [
     {engine: 'mysql', label: 'MySQL sample', text: MYSQL_SAMPLE.trim()},
     {engine: 'sqlite', label: 'SQLite sample', text: SQLITE_SAMPLE.trim()},
     {engine: 'sqlserver', label: 'SQL Server sample', text: SQLSERVER_SAMPLE.trim()},
+    {engine: 'db2', label: 'Db2 sample', text: DB2_SAMPLE.trim()},
     {engine: 'oracle', label: 'Oracle sample', text: ORACLE_SAMPLE.trim()},
 ];

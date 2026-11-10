@@ -1,10 +1,11 @@
+import '@tabularis/explain-db2';
 import '@tabularis/explain-oracle';
 import '@tabularis/explain-sqlserver';
 import {parseExplainFor, parseSqliteEqpRows, type ExplainPlan} from '@tabularis/explain';
 import {ENGINES, type Engine, type EngineChoice} from '../engines/engines';
 import {parseSqliteEqpText} from './sqlite-text';
 
-const AUTO_ORDER: Engine[] = ['sqlserver', 'oracle', 'postgres', 'sqlite', 'mysql'];
+const AUTO_ORDER: Engine[] = ['sqlserver', 'db2', 'oracle', 'postgres', 'sqlite', 'mysql'];
 
 const looksLikeMysql = (text: string) => text.startsWith('{') || /^\s*->/m.test(text);
 
