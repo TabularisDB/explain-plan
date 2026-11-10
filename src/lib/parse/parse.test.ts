@@ -1,7 +1,8 @@
 import {getExplainParser} from '@tabularis/explain';
 import {describe, expect, it} from 'vitest';
 import {SAMPLES} from '../../samples';
-import ORACLE_TEXT from '../../test/fixtures/oracle-dbms-xplan.txt?raw';
+import ORACLE_TEXT from '../../samples/oracle-dbms-xplan.txt?raw';
+import ORACLE_JSON from '../../samples/oracle-hash-join-analyzed.json?raw';
 import ORACLE_PLAN_TABLE_ESTIMATED from '../../test/fixtures/oracle-plan-table-estimated.json?raw';
 import SQLSERVER_TRIVIAL_SCAN from '../../test/fixtures/sqlserver-trivial-scan.xml?raw';
 import {detectEngine, parsePlan} from './parse';
@@ -103,7 +104,7 @@ describe('parsePlan', () => {
     });
 
     it('parses the Oracle analyzed sample with its engine hint', () => {
-        const plan = parsePlan(sample('oracle'), 'oracle');
+        const plan = parsePlan(ORACLE_JSON, 'oracle');
         expect(plan.driver).toBe('oracle');
         expect(plan.root.node_type).toBe('SELECT STATEMENT');
         expect(plan.has_analyze_data).toBe(true);

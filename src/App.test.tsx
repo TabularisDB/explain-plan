@@ -151,6 +151,7 @@ describe('App', () => {
         const {container} = renderApp();
 
         await loadSample(user, 'Oracle sample');
+        expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toContain('Plan hash value:');
         expect(screen.getByRole('tab', {name: 'Oracle'})).toHaveAttribute('aria-selected', 'true');
         expect(screen.getAllByText(/DBMS_XPLAN/)).not.toHaveLength(0);
         await visualize(user);

@@ -1,7 +1,7 @@
 import type {Engine} from '../lib/engines/engines';
 import DB2_SAMPLE from './db2-exfmt.txt?raw';
 import MYSQL_SAMPLE from './mysql-filesort-join.json?raw';
-import ORACLE_SAMPLE from './oracle-hash-join-analyzed.json?raw';
+import ORACLE_SAMPLE from './oracle-dbms-xplan.txt?raw';
 import POSTGRES_SAMPLE from './postgres-hash-join.txt?raw';
 import SQLITE_SAMPLE from './sqlite-temp-btree.txt?raw';
 import SQLSERVER_SAMPLE from './sqlserver-statistics.xml?raw';
