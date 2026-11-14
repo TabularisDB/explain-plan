@@ -5,11 +5,20 @@ updates:
     # arrives as a reviewable PR instead of drifting through a semver range.
     - package-ecosystem: 'npm'
       directory: '/'
+      # Daily so a released @tabularis/explain* fix reaches the site within a
+      # day. The cooldown still holds third-party packages back for 7 days.
       schedule:
-          interval: 'weekly'
+          interval: 'daily'
       versioning-strategy: 'increase'
+      # The default limit is 5. Once 5 PRs are open Dependabot stops opening
+      # new ones (including the tabularis-explain group). That is how the
+      # site fell behind in October 2026.
+      open-pull-requests-limit: 15
       cooldown:
           default-days: 7
+          # Our own packages, published by our own CI: no waiting period.
+          exclude:
+              - '@tabularis/*'
       labels:
           - 'dependencies'
       groups:
