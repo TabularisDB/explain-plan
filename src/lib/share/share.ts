@@ -38,11 +38,11 @@ function packPlan(raw: string, engine: Engine): Uint8Array<ArrayBuffer> {
     return new Uint8Array(pako.deflateRaw(JSON.stringify(payload), {level: 9}));
 }
 
-function unpackPlan(bytes: Uint8Array): ExplainPlan | null {
+async function unpackPlan(bytes: Uint8Array): Promise<ExplainPlan | null> {
     try {
         const payload = JSON.parse(pako.inflateRaw(bytes, {toText: true})) as Payload;
         if (payload.v !== PAYLOAD_VERSION || !isEngine(payload.engine)) return null;
-        return parsePlan(formatPlan(payload.raw), payload.engine);
+        return await parsePlan(formatPlan(payload.raw), payload.engine);
     } catch {
         return null;
     }
@@ -110,7 +110,7 @@ async function loadShareLink(id: string, key: string): Promise<PlanResult> {
                 body.subarray(IV_LENGTH),
             ),
         );
-        const plan = unpackPlan(payload);
+        const plan = await unpackPlan(payload);
         return plan ? {status: 'ok', plan} : {status: 'invalid'};
     } catch {
         return {status: 'invalid'};
@@ -121,7 +121,7 @@ export async function loadPlan(hash: string): Promise<PlanResult> {
     const shared = new URLSearchParams(hash.replace(/^#/, '')).get('s');
     if (shared === null) {
         const payload = localPayload();
-        const plan = payload && unpackPlan(payload);
+        const plan = payload && (await unpackPlan(payload));
         return plan ? {status: 'ok', plan} : {status: 'empty'};
     }
 

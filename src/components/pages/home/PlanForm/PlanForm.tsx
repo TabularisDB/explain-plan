@@ -51,8 +51,17 @@ export function PlanForm({engine, onEngineChange, onPlan}: PlanFormProps) {
 
     useEffect(() => {
         if (engine !== 'auto') return;
-        const timer = setTimeout(() => setDetected(detectEngine(raw)), DETECT_DELAY);
-        return () => clearTimeout(timer);
+        // Drop the result if the text changed while detection was running.
+        let stale = false;
+        const timer = setTimeout(() => {
+            void detectEngine(raw).then((found) => {
+                if (!stale) setDetected(found);
+            });
+        }, DETECT_DELAY);
+        return () => {
+            stale = true;
+            clearTimeout(timer);
+        };
     }, [raw, engine]);
 
     const shownEngine = engine === 'auto' && detected ? detected : engine;
@@ -98,11 +107,11 @@ export function PlanForm({engine, onEngineChange, onPlan}: PlanFormProps) {
         updateContent(value.slice(0, selectionStart) + formatted + value.slice(selectionEnd));
     };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            const resolved = engine === 'auto' ? detectEngine(raw) : engine;
-            parsePlan(raw, resolved ?? 'auto');
+            const resolved = engine === 'auto' ? await detectEngine(raw) : engine;
+            await parsePlan(raw, resolved ?? 'auto');
             if (resolved) onPlan(raw, resolved);
         } catch (err) {
             setError(err instanceof Error ? err.message : String(err));
@@ -133,7 +142,11 @@ export function PlanForm({engine, onEngineChange, onPlan}: PlanFormProps) {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className={styles.formContent}>
+            <form
+                onSubmit={(event) => void handleSubmit(event)}
+                onKeyDown={handleKeyDown}
+                className={styles.formContent}
+            >
                 <div className={clsx('plan-editor', styles.editor)}>
                     <Editor
                         value={raw}

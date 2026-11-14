@@ -11,7 +11,7 @@ describe('PlanView SQL Server plans', () => {
 
     it('renders an estimated-only plan without timing empty states', async () => {
         const user = userEvent.setup();
-        const plan = parsePlan(SQLSERVER_TRIVIAL_SCAN, 'sqlserver');
+        const plan = await parsePlan(SQLSERVER_TRIVIAL_SCAN, 'sqlserver');
         render(<PlanView plan={plan} />);
 
         expect(screen.queryByText('Execution:')).not.toBeInTheDocument();
