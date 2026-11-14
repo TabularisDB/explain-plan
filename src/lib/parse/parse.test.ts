@@ -22,25 +22,25 @@ describe('SQL Server parser registration', () => {
 });
 
 describe('Oracle parser registration', () => {
-    it('registers oracle-plan-json before application parsing starts', () => {
+    it('registers oracle-plan-json before application parsing starts', async () => {
         const parser = getExplainParser('oracle-plan-json');
         expect(parser).toMatchObject({engine: 'oracle'});
         expect(parser?.parse).toBeTypeOf('function');
-        expect(parser?.sniff?.(sample('oracle'))).toBe(true);
+        expect(await parser?.sniff?.(sample('oracle'))).toBe(true);
     });
 });
 
 describe('Db2 parser registration', () => {
-    it('registers and auto-detects the Db2 payload', () => {
+    it('registers and auto-detects the Db2 payload', async () => {
         expect(getExplainParser('db2-explain-tables-json')).toMatchObject({engine: 'db2'});
-        expect(parsePlan(sample('db2'), 'auto').driver).toBe('db2');
-        expect(parsePlan(sample('db2'), 'db2').root.children.length).toBeGreaterThan(0);
+        expect((await parsePlan(sample('db2'), 'auto')).driver).toBe('db2');
+        expect((await parsePlan(sample('db2'), 'db2')).root.children.length).toBeGreaterThan(0);
     });
 });
 
 describe('parsePlan', () => {
-    it('parses the PostgreSQL sample with its engine hint', () => {
-        const plan = parsePlan(sample('postgres'), 'postgres');
+    it('parses the PostgreSQL sample with its engine hint', async () => {
+        const plan = await parsePlan(sample('postgres'), 'postgres');
         expect(plan.root.node_type).toBe('Hash Join');
         expect(plan.has_analyze_data).toBe(true);
         expect(plan.planning_time_ms).toBeCloseTo(0.485);
@@ -48,8 +48,8 @@ describe('parsePlan', () => {
         expect(plan.root.children.length).toBeGreaterThan(0);
     });
 
-    it('parses the MySQL sample with its engine hint', () => {
-        const plan = parsePlan(sample('mysql'), 'mysql');
+    it('parses the MySQL sample with its engine hint', async () => {
+        const plan = await parsePlan(sample('mysql'), 'mysql');
         expect(plan.driver).toBe('mysql');
         expect(plan.root.children.length).toBeGreaterThan(0);
         const flat = JSON.stringify(plan.root);
@@ -57,16 +57,16 @@ describe('parsePlan', () => {
         expect(flat).toContain('orders');
     });
 
-    it('parses the SQLite sample with its engine hint', () => {
-        const plan = parsePlan(sample('sqlite'), 'sqlite');
+    it('parses the SQLite sample with its engine hint', async () => {
+        const plan = await parsePlan(sample('sqlite'), 'sqlite');
         expect(plan.driver).toBe('sqlite');
         const details = plan.root.children.map((child) => child.node_type);
         expect(details).toContain('Scan');
         expect(details).toContain('Search');
     });
 
-    it('parses the SQL Server STATISTICS XML sample with its engine hint', () => {
-        const plan = parsePlan(sample('sqlserver'), 'sqlserver');
+    it('parses the SQL Server STATISTICS XML sample with its engine hint', async () => {
+        const plan = await parsePlan(sample('sqlserver'), 'sqlserver');
         expect(plan.driver).toBe('sqlserver');
         expect(plan.root.node_type).toBe('Top');
         expect(plan.root.actual_rows).toBe(50);
@@ -94,8 +94,8 @@ describe('parsePlan', () => {
         expect(orders.actual_rows).toBe(2137);
     });
 
-    it('keeps estimated-only SQL Server plans free of invented timings', () => {
-        const plan = parsePlan(SQLSERVER_TRIVIAL_SCAN, 'sqlserver');
+    it('keeps estimated-only SQL Server plans free of invented timings', async () => {
+        const plan = await parsePlan(SQLSERVER_TRIVIAL_SCAN, 'sqlserver');
         expect(plan.root.node_type).toBe('Table Scan');
         expect(plan.root.actual_rows).toBeNull();
         expect(plan.root.actual_time_ms).toBeNull();
@@ -103,8 +103,8 @@ describe('parsePlan', () => {
         expect(plan.has_analyze_data).toBe(false);
     });
 
-    it('parses the Oracle analyzed sample with its engine hint', () => {
-        const plan = parsePlan(ORACLE_JSON, 'oracle');
+    it('parses the Oracle analyzed sample with its engine hint', async () => {
+        const plan = await parsePlan(ORACLE_JSON, 'oracle');
         expect(plan.driver).toBe('oracle');
         expect(plan.root.node_type).toBe('SELECT STATEMENT');
         expect(plan.has_analyze_data).toBe(true);
@@ -125,15 +125,15 @@ describe('parsePlan', () => {
         expect(customers.filter).toBe(`"C"."REGION"='West'`);
     });
 
-    it('auto-detects a captured DBMS_XPLAN report', () => {
-        const plan = parsePlan(ORACLE_TEXT, 'auto');
+    it('auto-detects a captured DBMS_XPLAN report', async () => {
+        const plan = await parsePlan(ORACLE_TEXT, 'auto');
         expect(plan.driver).toBe('oracle');
         expect(plan.root.node_type).toBe('SELECT STATEMENT');
         expect(plan.root.children[0].node_type).toContain('SORT');
     });
 
-    it('parses the output of the documented PLAN_TABLE query', () => {
-        const plan = parsePlan(ORACLE_PLAN_TABLE_ESTIMATED, 'auto');
+    it('parses the output of the documented PLAN_TABLE query', async () => {
+        const plan = await parsePlan(ORACLE_PLAN_TABLE_ESTIMATED, 'auto');
         expect(plan.driver).toBe('oracle');
         expect(plan.root.node_type).toBe('SELECT STATEMENT');
         expect(plan.root.total_cost).toBe(3);
@@ -141,15 +141,15 @@ describe('parsePlan', () => {
         expect(plan.execution_time_ms).toBeNull();
     });
 
-    it("auto-detects each sample's engine", () => {
-        expect(parsePlan(sample('postgres'), 'auto').root.node_type).toBe('Hash Join');
-        expect(parsePlan(sample('mysql'), 'auto').driver).toBe('mysql');
-        expect(parsePlan(sample('sqlite'), 'auto').driver).toBe('sqlite');
-        expect(parsePlan(sample('sqlserver'), 'auto').driver).toBe('sqlserver');
-        expect(parsePlan(sample('oracle'), 'auto').driver).toBe('oracle');
+    it("auto-detects each sample's engine", async () => {
+        expect((await parsePlan(sample('postgres'), 'auto')).root.node_type).toBe('Hash Join');
+        expect((await parsePlan(sample('mysql'), 'auto')).driver).toBe('mysql');
+        expect((await parsePlan(sample('sqlite'), 'auto')).driver).toBe('sqlite');
+        expect((await parsePlan(sample('sqlserver'), 'auto')).driver).toBe('sqlserver');
+        expect((await parsePlan(sample('oracle'), 'auto')).driver).toBe('oracle');
     });
 
-    it('parses Postgres EXPLAIN (FORMAT JSON) output', () => {
+    it('parses Postgres EXPLAIN (FORMAT JSON) output', async () => {
         const json = JSON.stringify([
             {
                 Plan: {
@@ -163,29 +163,29 @@ describe('parsePlan', () => {
                 'Planning Time': 0.1,
             },
         ]);
-        const plan = parsePlan(json, 'auto');
+        const plan = await parsePlan(json, 'auto');
         expect(plan.root.node_type).toBe('Seq Scan');
         expect(plan.root.relation).toBe('users');
     });
 
-    it('rejects empty input', () => {
-        expect(() => parsePlan('   ', 'auto')).toThrow(/Paste an EXPLAIN/);
+    it('rejects empty input', async () => {
+        await expect(parsePlan('   ', 'auto')).rejects.toThrow(/Paste an EXPLAIN/);
     });
 
-    it('explains what to do when nothing matches', () => {
-        expect(() => parsePlan('not a plan at all', 'auto')).toThrow(/Could not detect/);
+    it('explains what to do when nothing matches', async () => {
+        await expect(parsePlan('not a plan at all', 'auto')).rejects.toThrow(/Could not detect/);
     });
 });
 
 describe('detectEngine', () => {
-    it('detects the engine of each sample', () => {
+    it('detects the engine of each sample', async () => {
         for (const {engine, text} of SAMPLES) {
-            expect(detectEngine(text)).toBe(engine);
+            expect(await detectEngine(text)).toBe(engine);
         }
     });
 
-    it('returns null for empty or unknown input', () => {
-        expect(detectEngine('   ')).toBeNull();
-        expect(detectEngine('not a plan at all')).toBeNull();
+    it('returns null for empty or unknown input', async () => {
+        expect(await detectEngine('   ')).toBeNull();
+        expect(await detectEngine('not a plan at all')).toBeNull();
     });
 });
