@@ -33,7 +33,7 @@
         "react-dom": "19.2.8",
         "react-dropzone": "20.1.2",
         "react-i18next": "16.6.6",
-        "react-router-dom": "7.18.4",
+        "react-router-dom": "7.18.5",
         "react-simple-code-editor": "0.14.1"
     },
     "devDependencies": {
