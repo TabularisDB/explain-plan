@@ -49,11 +49,13 @@ describe('prettifyXml', () => {
         );
     });
 
-    it('formats a single-line SHOWPLAN and keeps it parseable', () => {
+    it('formats a single-line SHOWPLAN and keeps it parseable', async () => {
         const formatted = prettifyXml(SQLSERVER_TRIVIAL_SCAN);
         expect(formatted).not.toBeNull();
         expect(formatted!.split('\n').length).toBeGreaterThan(10);
-        expect(parsePlan(formatted!, 'sqlserver').root).toEqual(parsePlan(SQLSERVER_TRIVIAL_SCAN, 'sqlserver').root);
+        expect((await parsePlan(formatted!, 'sqlserver')).root).toEqual(
+            (await parsePlan(SQLSERVER_TRIVIAL_SCAN, 'sqlserver')).root,
+        );
     });
 
     it('leaves non-XML and unbalanced markup alone', () => {
@@ -75,10 +77,12 @@ describe('formatPlan and compactPlan', () => {
         expect(formatPlan(sample('postgres'))).toBe(sample('postgres'));
     });
 
-    it('removes the indentation that formatPlan adds', () => {
+    it('removes the indentation that formatPlan adds', async () => {
         for (const engine of ['mysql', 'sqlserver', 'oracle'] as const) {
             const text = sample(engine);
-            expect(parsePlan(compactPlan(formatPlan(text)), engine).root).toEqual(parsePlan(text, engine).root);
+            expect((await parsePlan(compactPlan(formatPlan(text)), engine)).root).toEqual(
+                (await parsePlan(text, engine)).root,
+            );
         }
     });
 
