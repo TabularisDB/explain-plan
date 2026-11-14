@@ -4,9 +4,9 @@ allowBuilds:
     esbuild: false
     '@parcel/watcher': false
     workerd: true
+# Our own packages are published by our own CI, so they skip pnpm's
+# minimum-release-age gate. Without this, a parser fix released minutes ago
+# could not be installed until the next day.
 minimumReleaseAgeExclude:
-    - '@tabularis/explain@0.2.0'
-    - '@tabularis/explain-sqlserver@1.0.0-beta.2'
-    - '@tabularis/explain-oracle@0.1.2'
-    - '@tabularis/explain-db2@0.1.1'
+    - '@tabularis/*'
 saveExact: true

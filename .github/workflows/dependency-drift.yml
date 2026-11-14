@@ -1,0 +1,42 @@
+name: Dependency drift
+
+# Opens an issue when the site has been behind a @tabularis/* release for more
+# than 48 hours and closes it once it is current again. This is the safety net
+# for Dependabot, which can stop opening PRs without any visible error.
+
+on:
+    schedule:
+        - cron: '0 7 * * *'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    issues: write
+
+jobs:
+    drift:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+              with:
+                  node-version: 24
+            - id: check
+              run: node .github/scripts/check-tabularis-drift.mjs "$RUNNER_TEMP/drift.md"
+            - name: Open, update or close the drift issue
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  STALE: ${{ steps.check.outputs.stale }}
+                  TITLE: '@tabularis/* parsers on the site are out of date'
+              run: |
+                  issue=$(gh issue list --label dependency-drift --state open --json number --jq '.[0].number // empty')
+                  if [ "$STALE" = "true" ]; then
+                      if [ -n "$issue" ]; then
+                          gh issue edit "$issue" --body-file "$RUNNER_TEMP/drift.md"
+                      else
+                          gh label create dependency-drift --color D93F0B --description 'Site behind a @tabularis/* release' --force
+                          gh issue create --title "$TITLE" --label dependency-drift --body-file "$RUNNER_TEMP/drift.md"
+                      fi
+                  elif [ -n "$issue" ]; then
+                      gh issue close "$issue" --comment 'All `@tabularis/*` packages are current again.'
+                  fi

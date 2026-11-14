@@ -21,11 +21,11 @@ importers:
         specifier: 0.1.1
         version: 0.1.1(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))
       '@tabularis/explain-oracle':
-        specifier: 0.1.2
-        version: 0.1.2(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))
+        specifier: 0.1.3
+        version: 0.1.3(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))
       '@tabularis/explain-sqlserver':
-        specifier: 1.0.0-beta.2
-        version: 1.0.0-beta.2(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))
+        specifier: 1.0.1
+        version: 1.0.1(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))
       '@xyflow/react':
         specifier: 12.11.2
         version: 12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -917,14 +917,14 @@ packages:
     peerDependencies:
       '@tabularis/explain': ^0.2.0
 
-  '@tabularis/explain-oracle@0.1.2':
-    resolution: {integrity: sha512-OVDYKQHjDSWDU8PValM85D3AT80CKweJ4WjzoB6JPrqfe22+S+OQP3eX1n7qKekdEb+NALbJbrt0xqc5AumSFQ==}
+  '@tabularis/explain-oracle@0.1.3':
+    resolution: {integrity: sha512-ncwPooEaWDyIJhw0UHglSXiR7Pc3q2OuEnLAQHebYvJH3jieq+/0cu/JCxgKofc/vnwLVBT2LmREyiKOEnuD8A==}
     engines: {node: '>=20'}
     peerDependencies:
       '@tabularis/explain': ^0.2.0
 
-  '@tabularis/explain-sqlserver@1.0.0-beta.2':
-    resolution: {integrity: sha512-kAbR57b+g3e0jq9AuAjz4gDgt0hN4SfbTzDhCSsFSaslfkTijBreLrYKu23XS47/iu7jDT3scosOsvUg9TVUxw==}
+  '@tabularis/explain-sqlserver@1.0.1':
+    resolution: {integrity: sha512-OjSetB3lVj5TQNVzv/mHVIKYx09Y9djdAVEineD5tg5C37ehOCJymXr0Sufl5ZM6Qbc1xBflFPmEgoTa1eRwjg==}
     engines: {node: '>=20'}
     peerDependencies:
       '@tabularis/explain': ^0.2.0
@@ -2938,11 +2938,11 @@ snapshots:
     dependencies:
       '@tabularis/explain': 0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8)
 
-  '@tabularis/explain-oracle@0.1.2(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))':
+  '@tabularis/explain-oracle@0.1.3(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))':
     dependencies:
       '@tabularis/explain': 0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8)
 
-  '@tabularis/explain-sqlserver@1.0.0-beta.2(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))':
+  '@tabularis/explain-sqlserver@1.0.1(@tabularis/explain@0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8))':
     dependencies:
       '@tabularis/explain': 0.2.0(@xyflow/react@12.11.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(dagre@0.8.5)(lucide-react@0.563.0(react@19.2.8))(react-i18next@16.6.6(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react@19.2.8)
 
